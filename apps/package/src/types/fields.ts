@@ -1,4 +1,4 @@
-export type FieldType = "text";
+export type FieldType = "text" | "number" | "checkbox";
 
 export type FieldDef = {
   name: string;
