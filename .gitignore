@@ -45,6 +45,9 @@ reports
 # Mac file to ignore
 .ds_store
 .DS_Store
+
+# Windows metadata files
+*:Zone.Identifier
 .env.staging
 
 # Ignore test-related files
