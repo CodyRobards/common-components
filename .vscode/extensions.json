@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint",
+    "christian-kohler.npm-intellisense",
+    "streetsidesoftware.code-spell-checker",
+    "paulshen.paul-typescript-toolkit",
+    "infeng.vscode-react-typescript"
+  ],
+  "unwantedRecommendations": []
+}

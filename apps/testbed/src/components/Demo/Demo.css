@@ -1,0 +1,14 @@
+.demoContainer{
+   
+    width:auto;
+    height:fit-content;
+    padding:10px;
+    border-radius: 5px;
+    
+}
+
+.demoSelect {
+    margin-bottom: 15px;
+    background-color: rgb(255, 255, 255);
+    outline: none;
+}

@@ -1,0 +1,51 @@
+export const cards = [
+  {
+    id: 1,
+    image: "https://howtocut.it/wp-content/uploads/IMG_4391-copy-e1665175443163.jpg",
+    title: "Card 1",
+    description: "Info which directs to the other page.",
+    path: "https://www.simon.com/",
+  },
+  {
+    id: 2,
+    image: "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Neo.The-Matrix.webp",
+    title: "Card 2",
+    description: "Info which directs to the other page.",
+    path: "https://www.thematrix.com/",
+  },
+  {
+    id: 3,
+    image: "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Trinity.The-Matrix.webp",
+    title: "Card 3",
+    description: "Info which directs to the other page.",
+    path: "https://en.wikipedia.org/wiki/The_Matrix_Resurrections",
+  },
+  {
+    id: 4,
+    image: "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Trinity.The-Matrix.webp",
+    title: "Card 4",
+    description: "Info which directs to the other page.",
+    path: "https://www.trinity.edu/",
+  },
+  {
+    id: 5,
+    image: "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Neo.The-Matrix.webp",
+    title: "Card 5",
+    description: "Info which directs to the other page.",
+    path: "https://en.wikipedia.org/wiki/ARCH_Motorcycle",
+  },
+  {
+    id: 6,
+    image: "https://howtocut.it/wp-content/uploads/IMG_4391-copy-e1665175443163.jpg",
+    title: "Card 6",
+    description: "Info which directs to the other page.",
+    path: "https://www.simon.com/",
+  },
+  {
+    id: 7,
+    image: "https://a1cf74336522e87f135f-2f21ace9a6cf0052456644b80fa06d4f.ssl.cf2.rackcdn.com/images/characters/large/800/Neo.The-Matrix.webp",
+    title: "Card 7",
+    description: "Info which directs to the other page.",
+    path: "https://en.wikipedia.org/wiki/John_Wick",
+  },
+];

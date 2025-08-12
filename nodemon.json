@@ -1,0 +1,5 @@
+{
+  "watch": ["apps/package/src"],
+  "ext": "ts,tsx,js,jsx",
+  "exec": "npm run build:package"
+}

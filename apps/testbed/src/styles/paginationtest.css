@@ -1,0 +1,107 @@
+.pagination {
+  display: flex;
+}
+
+
+.dropcentervariant {
+  position: relative;
+  left: -40px;
+  top: -20px
+}
+
+.mydropvariant {
+ position: absolute;
+ z-index: 3;
+ max-height: 200px;
+ overflow:scroll;
+}
+
+.rangenumbersvariant {
+  display: flex;
+}
+
+.dropcentervariant {
+  position: relative;
+  left: -47px;
+  top: -20px
+}
+
+.mydropvariant {
+ position: absolute;
+ z-index: 3;
+ max-height: 200px;
+ overflow:scroll;
+} 
+
+.mydroplistvariant {
+  color: #000000;
+  background-color: white;
+  padding: 10px 30px;
+  text-decoration: none;
+  display: block;
+  width: 80px;
+}
+
+.mydroplistvariant:hover {
+  background-color: lightgray;
+}
+
+/*---- button pagination ---*/
+/* .ButtonpaginComp {
+  display: flex;
+} */
+
+/* .ButtonpaginComp button{
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 1px;
+  font-size: 16px;
+  height: 55px;
+  width: 40px;
+  box-shadow: 4px 2px 4px darkslategray;
+  border-radius: 50%;
+  margin: 3px;
+}
+
+.ButtonpaginComp button:disabled{
+  background-color: rgb(226, 223, 223);
+}
+
+.ButtonpaginComp button:hover{
+  background-color: #49baf7;
+}
+
+.ButtonpaginComp button.active {
+  background-color: #8FD8FF;
+} */
+
+/* .rangenumbers {
+  display: flex;
+} */
+
+.dropcenter {
+  position: relative;
+  left: -40px;
+  top: -20px
+}
+
+.mydrop {
+ position: absolute;
+ z-index: 3;
+ max-height: 200px;
+ overflow:scroll;
+} 
+
+.mydroplist {
+  color: #000000;
+  background-color: white;
+  padding: 10px 30px;
+  text-decoration: none;
+  display: block;
+  width: 80px;
+}
+
+.mydroplist:hover {
+  background-color: lightgray;
+}

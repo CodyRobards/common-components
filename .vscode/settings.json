@@ -1,0 +1,91 @@
+{
+  "cSpell.words": [
+    "autodocs",
+    "bgcolor",
+    "channelone",
+    "codepaths",
+    "colorish",
+    "compat",
+    "CSFD",
+    "defaultsx",
+    "describedby",
+    "electronuserland",
+    "endregion",
+    "eslintcache",
+    "EWAR",
+    "fileloc",
+    "flexbox",
+    "fontsource",
+    "fouo",
+    "fvey",
+    "horry",
+    "jscoverage",
+    "jsxs",
+    "labeledby",
+    "labelledby",
+    "leftside",
+    "manyplaneid",
+    "Menusx",
+    "Nevermind",
+    "Notifs",
+    "npmjs",
+    "npmr",
+    "numberof",
+    "numberofplanes",
+    "numofplanes",
+    "nvimlog",
+    "oppie",
+    "Oulined",
+    "Pallete",
+    "planesgradient",
+    "planesopacity",
+    "prismjs",
+    "propin",
+    "rapidref",
+    "Rapidref",
+    "rdpatch",
+    "recommnded",
+    "relido",
+    "rightside",
+    "Searchbar",
+    "Snackbars",
+    "Spungos",
+    "testid",
+    "textdecoration",
+    "tsbuildinfo",
+    "tseslint",
+    "tsup",
+    "txtcolor",
+    "Unclickable",
+    "verty",
+    "WavelengthAppLogo",
+    "wlimage",
+    "Xlink"
+  ],
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "cSpell.ignoreWords": ["rdlabel", "wavelengthw"],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

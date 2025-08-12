@@ -1,0 +1,114 @@
+import React, { useEffect, useImperativeHandle, useRef } from "react";
+import { z } from "zod";
+
+// ---- Types that mirror the web component's API ----
+interface WavelengthFormElement extends HTMLElement {
+  schema?: unknown;
+  value?: Record<string, unknown>;
+  validate?: () => boolean;
+  addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
+  removeEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
+}
+
+export type FormInvalidDetail = { issues: z.ZodIssue[] };
+export type FormValidDetail<T> = { value: T };
+export type FormChangeDetail<T> = { value: Partial<T> };
+
+export interface WavelengthFormProps<T extends object = Record<string, unknown>> {
+  /** A Zod object schema */
+  schema: z.ZodTypeAny; // we’ll narrow later; MVP accepts any zod schema
+  /** Initial or controlled value (partial OK) */
+  value?: Partial<T>;
+
+  /** Standard React props */
+  className?: string;
+  style?: React.CSSProperties;
+
+  /** Event callbacks (straight from web component custom events) */
+  onChange?: (value: Partial<T>) => void;
+  onValid?: (value: T) => void;
+  onInvalid?: (issues: z.ZodIssue[]) => void;
+}
+
+export interface WavelengthFormRef<T extends object = Record<string, unknown>> {
+  /** Runs the component’s internal validation and returns boolean */
+  validate: () => boolean;
+  /** Read current value (as the element holds it) */
+  getValue: () => Partial<T> | undefined;
+  /** Imperatively set the value */
+  setValue: (v: Partial<T>) => void;
+}
+
+function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
+  const fnRef = useRef(fn);
+  useEffect(() => {
+    fnRef.current = fn;
+  }, [fn]);
+  return (...args: Parameters<F>) => fnRef.current?.(...args);
+}
+
+const WavelengthForm = React.forwardRef<WavelengthFormRef, WavelengthFormProps>(function WavelengthForm<T extends object = Record<string, unknown>>(
+  { schema, value, className, style, onChange, onValid, onInvalid }: WavelengthFormProps<T>,
+  ref,
+) {
+  const hostRef = useRef<WavelengthFormElement | null>(null);
+
+  const onChangeStable = useStableCallback<NonNullable<typeof onChange>>(onChange as any);
+  const onValidStable = useStableCallback<NonNullable<typeof onValid>>(onValid as any);
+  const onInvalidStable = useStableCallback<NonNullable<typeof onInvalid>>(onInvalid as any);
+
+  // Set properties & bind events
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+
+    // Set schema/value as *properties* (not attributes)
+    el.schema = schema;
+    if (value) el.value = value as any;
+  }, [schema, value]);
+
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+
+    const handleChange = (e: Event) => {
+      const detail = (e as CustomEvent<FormChangeDetail<T>>).detail;
+      onChangeStable?.(detail?.value ?? {});
+    };
+    const handleValid = (e: Event) => {
+      const detail = (e as CustomEvent<FormValidDetail<T>>).detail;
+      onValidStable?.(detail?.value as T);
+    };
+    const handleInvalid = (e: Event) => {
+      const detail = (e as CustomEvent<FormInvalidDetail>).detail;
+      onInvalidStable?.(detail?.issues ?? []);
+    };
+
+    el.addEventListener("form-change", handleChange as EventListener);
+    el.addEventListener("form-valid", handleValid as EventListener);
+    el.addEventListener("form-invalid", handleInvalid as EventListener);
+
+    return () => {
+      el.removeEventListener("form-change", handleChange as EventListener);
+      el.removeEventListener("form-valid", handleValid as EventListener);
+      el.removeEventListener("form-invalid", handleInvalid as EventListener);
+    };
+  }, [onChangeStable, onValidStable, onInvalidStable]);
+
+  // Expose an imperative API (validate/getValue/setValue)
+  useImperativeHandle(
+    ref,
+    () => ({
+      validate: () => hostRef.current?.validate?.() ?? false,
+      getValue: () => hostRef.current?.value as any,
+      setValue: (v) => {
+        if (hostRef.current) hostRef.current.value = v as any;
+      },
+    }),
+    [],
+  );
+
+  return <wavelength-form ref={hostRef as any} className={className} style={style} />;
+});
+
+export default WavelengthForm;

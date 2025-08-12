@@ -1,0 +1,73 @@
+{
+  "name": "@wavelengthusaf/components",
+  "author": "563 EWS - Wavelength",
+  "license": "MIT",
+  "version": "3.3.7",
+  "description": "Common component library used by Wavelength developers",
+  "main": "/dist/cjs/index.cjs",
+  "module": "/dist/esm/index.js",
+  "types": "/dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
+    }
+  },
+  "type": "module",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "compile": "tsc",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "jest --runInBand --coverage",
+    "build:esm": "tsup src/index.ts --format esm --dts --outDir dist/esm && mkdir -p dist/styles/ dist/fonts && cp -R src/styles/ dist/styles/ && cp -R src/fonts/ dist/fonts/",
+    "build:cjs": "tsup src/index.ts --format cjs --outDir dist/cjs && mkdir -p dist/styles/ dist/fonts && cp -R src/styles/ dist/styles/ && cp -R src/fonts/ dist/fonts/",
+    "build": "npm run build:esm && npm run build:cjs",
+    "watch:esm": "tsup src/index.ts --format esm --dts --outDir dist/esm --watch && tsc --jsx react-jsx --project ./tsconfig.json",
+    "watch:cjs": "tsup src/index.ts --format cjs --outDir dist/cjs --watch && tsc --jsx react-jsx --project ./tsconfig.json",
+    "watch": "concurrently -k \"npm run watch:esm\" \"npm run watch:cjs\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.wavelengthusaf.com/wavelength1/common-components"
+  },
+  "keywords": [
+    "usaf",
+    "components"
+  ],
+  "directories": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.25.7",
+    "@testing-library/react": "^16.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "babel-plugin-prismjs": "^2.1.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^8.56.0",
+    "eslint-config-love": "^64.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.33.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.1"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.16.5",
+    "@mui/material": "^5.15.7",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.26.2",
+    "styled-components": "^6.1.12",
+    "typescript": "^5.5.2"
+  }
+}

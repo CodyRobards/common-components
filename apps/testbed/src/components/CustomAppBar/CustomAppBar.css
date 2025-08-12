@@ -1,0 +1,148 @@
+@media  screen and (min-width: 800px) {
+    .rightside{
+
+        width: 70%;
+        display: flex;
+        
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+        margin-left: 30px;
+        flex-shrink: 1;
+    }
+    .leftside{
+        width: 30%;
+    }
+    #wavelengthHome{
+      margin-left: 20px;
+     
+      } 
+      .search{
+        width: 45%;
+    }
+
+    #demo-positioned-button{
+        display: none;
+    }
+    #req{
+      min-width: min-content;
+      color: black;
+      text-transform: none;
+      font-family: "Lato", sans-serif;
+      font-weight: 500;
+      font-style: normal;
+      
+    }
+   
+    .version-number{
+      width: fit-content;
+    }
+    .drawer{
+      display: none;
+    }
+    #search-icon{
+      display: none;
+    } 
+   
+    .header-icons{
+      border-radius: 50%;
+      border: 1px solid transparent;
+    }
+    .header-icons:hover{
+      border: 1px solid #405661;
+    }
+}
+
+@media  screen and (max-width: 600px) {
+  .leftside{
+    width: 50%;
+  }
+    .rightside{
+       width: 400px;
+        display: flex;
+        
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+       
+ 
+     
+    }
+   
+    #req{
+        display: none;
+    }
+    
+      .search{
+        display: none;
+      }
+
+      #search-icon{
+        display: none;
+      } 
+      #demo-positioned-button{
+        display: inline;  
+        height: 30px;
+        width: 30px;
+        margin-bottom: 12px;
+      }
+      #wavelengthHome{
+        margin-left: 3px;
+       
+        } 
+        .header-icons{
+          border-radius: 50%;
+          border: 1px solid transparent;
+          height: 35px;
+          width: 35px;
+        }
+        .header-icons:hover{
+          border: 1px solid #405661;
+          height: 35px;
+          width: 35px;
+        }
+}
+@media  screen and (min-width: 600px)  and (max-width:800px){
+  .leftside{
+    width: 50%;
+  }
+    .rightside{
+       width: 400px;
+        display: flex;
+        
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+       
+ 
+     
+    }
+   
+    #req{
+        display: none;
+    }
+    
+      .search{
+        display: none;
+      }
+    #demo-positioned-button{
+      display: inline;  
+    }
+    #wavelengthHome{
+      margin-left: 3px;
+     
+      }
+      #search-icon{
+        /* margin-right: 100px; */
+        display: none;
+      }  
+      .header-icons{
+        border-radius: 50%;
+        border: 1px solid transparent;
+       
+      }
+      .header-icons:hover{
+        border: 1px solid #405661;
+        
+      }
+}
