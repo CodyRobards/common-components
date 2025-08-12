@@ -10,9 +10,10 @@ interface WavelengthFormElement extends HTMLElement {
   removeEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
 }
 
-export type FormInvalidDetail = { issues: z.ZodIssue[] };
-export type FormValidDetail<T> = { value: T };
-export type FormChangeDetail<T> = { value: Partial<T> };
+export type FormDetail<T> = { value: T; issues: z.ZodIssue[] };
+export type FormInvalidDetail<T> = FormDetail<Partial<T>>;
+export type FormValidDetail<T> = FormDetail<T>;
+export type FormChangeDetail<T> = FormDetail<Partial<T>>;
 
 export interface WavelengthFormProps<T extends object = Record<string, unknown>> {
   /** A Zod object schema */
@@ -25,9 +26,9 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   style?: React.CSSProperties;
 
   /** Event callbacks (straight from web component custom events) */
-  onChange?: (value: Partial<T>) => void;
-  onValid?: (value: T) => void;
-  onInvalid?: (issues: z.ZodIssue[]) => void;
+  onChange?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
+  onValid?: (value: T, issues: z.ZodIssue[]) => void;
+  onInvalid?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
 }
 
 export interface WavelengthFormRef<T extends object = Record<string, unknown>> {
@@ -73,15 +74,15 @@ const WavelengthForm = React.forwardRef<WavelengthFormRef, WavelengthFormProps>(
 
     const handleChange = (e: Event) => {
       const detail = (e as CustomEvent<FormChangeDetail<T>>).detail;
-      onChangeStable?.(detail?.value ?? {});
+      onChangeStable?.(detail?.value ?? {}, detail?.issues ?? []);
     };
     const handleValid = (e: Event) => {
       const detail = (e as CustomEvent<FormValidDetail<T>>).detail;
-      onValidStable?.(detail?.value as T);
+      onValidStable?.(detail?.value as T, detail?.issues ?? []);
     };
     const handleInvalid = (e: Event) => {
-      const detail = (e as CustomEvent<FormInvalidDetail>).detail;
-      onInvalidStable?.(detail?.issues ?? []);
+      const detail = (e as CustomEvent<FormInvalidDetail<T>>).detail;
+      onInvalidStable?.(detail?.value ?? {}, detail?.issues ?? []);
     };
 
     el.addEventListener("form-change", handleChange as EventListener);
