@@ -1,5 +1,5 @@
 import { ZodObject, ZodRawShape } from "zod";
-import { zodToTextFields } from "../form/zodToFields";
+import { zodToFields } from "../form/zodToFields";
 import { FieldDef, FormValue } from "../types/fields";
 import { Validator } from "../form/Validator"; // file 4 will re-export your existing Validator
 
@@ -31,7 +31,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   set schema(s: ZodObject<Shape> | undefined) {
     this._schema = s;
     this._validator = s ? new Validator<T>(s as unknown as any) : undefined;
-    this._fields = s ? zodToTextFields(s) : [];
+    this._fields = s ? zodToFields(s) : [];
     // reset errors when schema changes
     this._errors = {};
     this.render();
@@ -71,9 +71,16 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     for (const f of this._fields) {
       const el = this.queryFieldEl(f.name);
       if (!el) continue;
-      // wavelength-input exposes .value as string
-      const val = (el as any).value ?? "";
-      next[f.name] = val;
+
+      if (f.type === "checkbox") {
+        next[f.name] = (el as HTMLInputElement).checked;
+      } else if (f.type === "number") {
+        const val = (el as any).value ?? "";
+        next[f.name] = val === "" ? undefined : Number(val);
+      } else {
+        const val = (el as any).value ?? "";
+        next[f.name] = val;
+      }
     }
     return next;
   }
@@ -133,8 +140,19 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   };
 
   private onBlur = (name: string) => {
+    const field = this._fields.find((f) => f.name === name);
     const el = this.queryFieldEl(name);
-    const value = (el as any)?.value ?? "";
+    if (!field || !el) return;
+
+    let value: unknown;
+    if (field.type === "checkbox") {
+      value = (el as HTMLInputElement).checked;
+    } else if (field.type === "number") {
+      const raw = (el as any).value ?? "";
+      value = raw === "" ? undefined : Number(raw);
+    } else {
+      value = (el as any).value ?? "";
+    }
     this.validateField(name, value);
   };
 
@@ -165,34 +183,62 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     form.noValidate = true;
     form.addEventListener("submit", this.onSubmit);
 
-    // one wavelength-input per string field
+    // create an element per schema field
     for (const f of this._fields) {
       const row = document.createElement("div");
       row.className = "row";
 
-      const input = document.createElement("wavelength-input") as HTMLElement & {
-        value: string;
-        setAttribute: (k: string, v?: string) => void;
-        removeAttribute: (k: string) => void;
-      };
+      if (f.type === "checkbox") {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.setAttribute("data-name", f.name);
+        input.name = f.name;
+        if (this._value[f.name] !== undefined) {
+          input.checked = Boolean(this._value[f.name]);
+        }
 
-      input.setAttribute("data-name", f.name);
-      input.setAttribute("name", f.name);
-      input.setAttribute("label", f.label);
-      input.setAttribute("validation-type", "manual"); // form drives error visuals
-      if (this._value[f.name] !== null) {
-        input.value = String(this._value[f.name] ?? "");
+        input.addEventListener("change", () => {
+          this.onInputChange(f.name, input.checked);
+        });
+        input.addEventListener("blur", () => this.onBlur(f.name));
+
+        label.appendChild(input);
+        label.append(f.label);
+        row.appendChild(label);
+      } else {
+        const input = document.createElement("wavelength-input") as HTMLElement & {
+          value: string;
+          setAttribute: (k: string, v?: string) => void;
+          removeAttribute: (k: string) => void;
+        };
+
+        input.setAttribute("data-name", f.name);
+        input.setAttribute("name", f.name);
+        input.setAttribute("label", f.label);
+        input.setAttribute("validation-type", "manual"); // form drives error visuals
+        if (f.type === "number") {
+          input.setAttribute("input-type", "number");
+        }
+        if (this._value[f.name] !== null && this._value[f.name] !== undefined) {
+          input.value = String(this._value[f.name]);
+        }
+
+        // bridge events
+        input.addEventListener("inputChange", ((e: Event) => {
+          const detail = (e as CustomEvent).detail ?? {};
+          let val: unknown = detail.value ?? "";
+          if (f.type === "number") {
+            val = val === "" ? "" : Number(val);
+          }
+          this.onInputChange(f.name, val);
+        }) as EventListener);
+
+        input.addEventListener("blur", (() => this.onBlur(f.name)) as EventListener);
+
+        row.appendChild(input);
       }
 
-      // bridge events
-      input.addEventListener("inputChange", ((e: Event) => {
-        const detail = (e as CustomEvent).detail ?? {};
-        this.onInputChange(f.name, detail.value ?? "");
-      }) as EventListener);
-
-      input.addEventListener("blur", (() => this.onBlur(f.name)) as EventListener);
-
-      row.appendChild(input);
       form.appendChild(row);
     }
 

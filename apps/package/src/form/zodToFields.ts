@@ -19,31 +19,37 @@ function unwrap(t: ZodTypeAny): ZodTypeAny {
 }
 
 /**
- * Robust-ish check for ZodString without relying on deprecated enums or instanceof.
+ * Robust-ish check for Zod primitives without relying on deprecated enums or instanceof.
  * Falls back to constructor name if typeName is unavailable.
  */
-function isZodString(core: ZodTypeAny): boolean {
+function isZodType(core: ZodTypeAny, type: string): boolean {
   const anyCore: any = core;
   const typeName = anyCore?._def?.typeName;
-  if (typeof typeName === "string" && typeName === "ZodString") return true;
+  if (typeof typeName === "string" && typeName === type) return true;
   const ctorName = anyCore?.constructor?.name;
-  return ctorName === "ZodString";
+  return ctorName === type;
 }
 
 /**
- * Convert a Zod object schema into a list of simple text fields (MVP: strings only).
+ * Convert a Zod object schema into a list of basic field definitions.
  */
-export function zodToTextFields(schema: ZodObject<Shape>): FieldDef[] {
+export function zodToFields(schema: ZodObject<Shape>): FieldDef[] {
   const fields: FieldDef[] = [];
   const shape = (schema as any).shape as Record<string, ZodTypeAny>; // tolerate Zod typing drift
 
   for (const [name, zt] of Object.entries(shape)) {
     const core = unwrap(zt);
-    if (isZodString(core)) {
+    let type: FieldDef["type"] | undefined;
+
+    if (isZodType(core, "ZodString")) type = "text";
+    else if (isZodType(core, "ZodNumber")) type = "number";
+    else if (isZodType(core, "ZodBoolean")) type = "checkbox";
+
+    if (type) {
       fields.push({
         name,
         label: name.charAt(0).toUpperCase() + name.slice(1),
-        type: "text",
+        type,
       });
     }
   }
