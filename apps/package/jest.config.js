@@ -7,6 +7,6 @@ export default {
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   transformIgnorePatterns: ["node_modules"],
-  testMatch: ["**/**/**/*.test.(ts|tsx)"],
+  testMatch: ["<rootDir>/jest/**/*.test.ts", "<rootDir>/jest/**/*.test.tsx"],
   setupFilesAfterEnv: ["./jest.setup.js"],
 };
