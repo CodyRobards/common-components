@@ -1,4 +1,4 @@
-import { ZodObject, ZodRawShape } from "zod";
+import { ZodObject, ZodRawShape, ZodIssue } from "zod";
 import { zodToFields } from "../form/zodToFields";
 import { FieldDef, FormValue } from "../types/fields";
 import { Validator } from "../form/Validator"; // file 4 will re-export your existing Validator
@@ -57,7 +57,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
    * Returns true if the current form values are valid.
    */
   public validate(): boolean {
-    return this.validateAll();
+    return this.validateAll().isValid;
   }
 
   connectedCallback() {
@@ -115,28 +115,38 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     }
   }
 
-  private validateAll(): boolean {
-    if (!this._validator) return true;
+  private validateAll(): { isValid: boolean; value: FormValue; issues: ZodIssue[] } {
+    if (!this._validator) {
+      return { isValid: true, value: this.collectValues(), issues: [] };
+    }
     const values = this.collectValues();
 
     // clear all first
     for (const f of this._fields) this.setFieldError(f.name, undefined);
 
     const res = this._validator.validate(values as unknown);
-    if (res.isValid) return true;
+    if (res.isValid) {
+      return { isValid: true, value: res.value as unknown as FormValue, issues: [] };
+    }
 
     res.issues?.forEach((issue) => {
       const field = (issue.path?.[0] as string) || "";
       if (field) this.setFieldError(field, issue.message);
     });
-    return false;
+    return { isValid: false, value: values, issues: res.issues ?? [] };
   }
 
   // --- Event handlers ---
 
   private onInputChange = (name: string, rawValue: unknown) => {
     this._value = { ...this._value, [name]: rawValue };
-    this.dispatchEvent(new CustomEvent("form-change", { detail: { ...this._value } }));
+    const res = this._validator?.validate(this._value as unknown);
+    const issues = res && !res.isValid ? res.issues ?? [] : [];
+    this.dispatchEvent(
+      new CustomEvent("form-change", {
+        detail: { value: { ...this._value }, issues },
+      }),
+    );
   };
 
   private onBlur = (name: string) => {
@@ -158,12 +168,17 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
   private onSubmit = (e: Event) => {
     e.preventDefault();
-    const ok = this.validateAll();
-    if (ok) {
-      const data = this.collectValues();
-      this.dispatchEvent(new CustomEvent("form-valid", { detail: data }));
+    const res = this.validateAll();
+    if (res.isValid) {
+      this.dispatchEvent(
+        new CustomEvent("form-valid", { detail: { value: res.value, issues: [] } }),
+      );
     } else {
-      this.dispatchEvent(new CustomEvent("form-invalid", { detail: { errors: { ...this._errors } } }));
+      this.dispatchEvent(
+        new CustomEvent("form-invalid", {
+          detail: { value: res.value, issues: res.issues },
+        }),
+      );
     }
   };
 
