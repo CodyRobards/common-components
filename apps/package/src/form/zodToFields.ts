@@ -11,9 +11,16 @@ type Shape = ZodRawShape;
  */
 function unwrap(t: ZodTypeAny): ZodTypeAny {
   let cur: any = t;
-  // Walk through possible wrapper keys until we reach a core type
-  while (cur && cur._def && (cur._def.innerType || cur._def.type || cur._def.schema)) {
-    cur = cur._def.innerType ?? cur._def.type ?? cur._def.schema;
+  // Walk through wrapper keys until reaching a primitive type. In Zod v4 the
+  // `_def.type` for primitives is a string (e.g. "string"), so only unwrap when
+  // these keys point to another Zod type object.
+  while (cur && cur._def) {
+    const next = cur._def.innerType || cur._def.schema || cur._def.type;
+    if (next && typeof next === "object") {
+      cur = next;
+    } else {
+      break;
+    }
   }
   return cur as ZodTypeAny;
 }
