@@ -17,7 +17,7 @@ export type FormChangeDetail<T> = FormDetail<Partial<T>>;
 
 export interface WavelengthFormProps<T extends object = Record<string, unknown>> {
   /** A Zod object schema */
-  schema: z.ZodTypeAny; // we’ll narrow later; MVP accepts any zod schema
+  schema: z.ZodType<T>;
   /** Initial or controlled value (partial OK) */
   value?: Partial<T>;
 
@@ -48,15 +48,15 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
   return (...args: Parameters<F>) => fnRef.current?.(...args);
 }
 
-const WavelengthForm = React.forwardRef<WavelengthFormRef, WavelengthFormProps>(function WavelengthForm<T extends object = Record<string, unknown>>(
+function WavelengthFormInner<T extends object = Record<string, unknown>>(
   { schema, value, className, style, onChange, onValid, onInvalid }: WavelengthFormProps<T>,
-  ref,
+  ref: React.ForwardedRef<WavelengthFormRef<T>>,
 ) {
   const hostRef = useRef<WavelengthFormElement | null>(null);
 
-  const onChangeStable = useStableCallback<NonNullable<typeof onChange>>(onChange as any);
-  const onValidStable = useStableCallback<NonNullable<typeof onValid>>(onValid as any);
-  const onInvalidStable = useStableCallback<NonNullable<typeof onInvalid>>(onInvalid as any);
+  const onChangeStable = useStableCallback(onChange);
+  const onValidStable = useStableCallback(onValid);
+  const onInvalidStable = useStableCallback(onInvalid);
 
   // Set properties & bind events
   useEffect(() => {
@@ -110,6 +110,10 @@ const WavelengthForm = React.forwardRef<WavelengthFormRef, WavelengthFormProps>(
   );
 
   return <wavelength-form ref={hostRef as any} className={className} style={style} />;
-});
+}
+
+const WavelengthForm = React.forwardRef(WavelengthFormInner) as <T extends object = Record<string, unknown>>(
+  props: WavelengthFormProps<T> & React.RefAttributes<WavelengthFormRef<T>>,
+) => React.ReactElement | null;
 
 export default WavelengthForm;
