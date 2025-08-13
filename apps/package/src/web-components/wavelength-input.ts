@@ -583,6 +583,13 @@ export class WavelengthInput extends HTMLElement {
       case "helper-message":
         this._applyValidationHint();
         break;
+      case "error-message":
+      case "force-error":
+        this._applyAttributes();
+        if (!this.hasAttribute("error-message") && !this.hasAttribute("force-error")) {
+          this._clearError(this.getAttribute("helper-message") || "");
+        }
+        break;
       case "validation-type":
         this.validationType = validTypes.includes(newValue as string) ? (newValue as typeof this.validationType) : "none";
         break;
