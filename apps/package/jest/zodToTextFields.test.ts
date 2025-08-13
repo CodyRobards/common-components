@@ -10,9 +10,9 @@ describe("zodToTextFields", () => {
     });
 
     expect(zodToTextFields(schema)).toEqual([
-      { name: "name", label: "Name", type: "text" },
-      { name: "age", label: "Age", type: "number" },
-      { name: "subscribed", label: "Subscribed", type: "checkbox" },
+      { name: "name", label: "Name", type: "text", required: true },
+      { name: "age", label: "Age", type: "number", required: true },
+      { name: "subscribed", label: "Subscribed", type: "checkbox", required: true },
     ]);
   });
 
@@ -24,9 +24,26 @@ describe("zodToTextFields", () => {
     });
 
     expect(zodToTextFields(schema)).toEqual([
-      { name: "title", label: "Title", type: "text" },
-      { name: "count", label: "Count", type: "number" },
-      { name: "active", label: "Active", type: "checkbox" },
+      { name: "title", label: "Title", type: "text", required: false },
+      { name: "count", label: "Count", type: "number", required: false },
+      { name: "active", label: "Active", type: "checkbox", required: false },
+    ]);
+  });
+
+  test("extracts min and max length for strings", () => {
+    const schema = z.object({
+      username: z.string().min(3).max(10),
+    });
+
+    expect(zodToTextFields(schema)).toEqual([
+      {
+        name: "username",
+        label: "Username",
+        type: "text",
+        required: true,
+        minLength: 3,
+        maxLength: 10,
+      },
     ]);
   });
 

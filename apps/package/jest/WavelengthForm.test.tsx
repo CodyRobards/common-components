@@ -16,14 +16,7 @@ describe("WavelengthForm (React Wrapper)", () => {
 
     const schema = z.object({ name: z.string() });
 
-    render(
-      <WavelengthForm
-        schema={schema}
-        onChange={onChange}
-        onValid={onValid}
-        onInvalid={onInvalid}
-      />,
-    );
+    render(<WavelengthForm schema={schema} onChange={onChange} onValid={onValid} onInvalid={onInvalid} />);
 
     const host = document.querySelector("wavelength-form")!;
 
