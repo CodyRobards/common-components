@@ -25,6 +25,7 @@ const meta: Meta<typeof WavelengthForm> = {
           <p>Import the component, create a schema, and pass it along with an optional value object:</p>
           <Source
             code={`import { WavelengthForm } from '@wavelengthusaf/components';
+
 const schema = z.object({ firstName: z.string(), lastName: z.string() });
 <WavelengthForm schema={schema} value={{ firstName: 'Clark', lastName: 'Kent' }} />`}
             language="tsx"
