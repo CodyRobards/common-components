@@ -332,37 +332,50 @@ export class WavelengthInput extends HTMLElement {
       return true;
     }
 
-    const shouldValidate = bypassTypeCheck || force || validationType === "always" || (validationType === "onBlur" && this.hasBlurred);
+    const shouldValidate =
+      bypassTypeCheck ||
+      validationType === "always" ||
+      (validationType === "onBlur" && this.hasBlurred);
     const errors: string[] = [];
 
     if (force) {
-      errors.push(errorMessage ?? "Invalid input.");
-    }
-
-    if (isRequired && isEmpty && shouldValidate) {
-      errors.push("This field is required.");
-    }
-
-    if (regexAttr && !isEmpty && shouldValidate) {
-      try {
-        const regex = new RegExp(regexAttr);
-        if (!regex.test(value)) {
-          errors.push(errorMessage ?? "Input does not match the required pattern.");
-        }
-      } catch (e) {
-        console.warn(`[WavelengthInput] Invalid regex pattern: "${regexAttr}"`, e);
-        errors.push("Invalid regex pattern.");
+      if (errorMessage) {
+        errors.push(errorMessage);
+      } else {
+        errors.push("This field is required.");
       }
     }
 
-    const min = parseInt(minLengthAttr ?? "", 10);
-    if (!isNaN(min) && value.length < min && shouldValidate) {
-      errors.push(minLengthMessage ?? `MINIMUM length is ${min} characters.`);
-    }
+    if (!force) {
+      if (isRequired && isEmpty && shouldValidate) {
+        if (this.hasAttribute("error-message") && errorMessage) {
+          errors.push(errorMessage);
+        } else {
+          errors.push("This field is required.");
+        }
+      }
 
-    const max = parseInt(maxLengthAttr ?? "", 10);
-    if (!isNaN(max) && value.length > max && shouldValidate) {
-      errors.push(maxLengthMessage ?? `MAXIMUM length is ${max} characters.`);
+      if (regexAttr && !isEmpty && shouldValidate) {
+        try {
+          const regex = new RegExp(regexAttr);
+          if (!regex.test(value)) {
+            errors.push(errorMessage ?? "Input does not match the required pattern.");
+          }
+        } catch (e) {
+          console.warn(`[WavelengthInput] Invalid regex pattern: "${regexAttr}"`, e);
+          errors.push("Invalid regex pattern.");
+        }
+      }
+
+      const min = parseInt(minLengthAttr ?? "", 10);
+      if (!isNaN(min) && value.length < min && shouldValidate) {
+        errors.push(minLengthMessage ?? `MINIMUM length is ${min} characters.`);
+      }
+
+      const max = parseInt(maxLengthAttr ?? "", 10);
+      if (!isNaN(max) && value.length > max && shouldValidate) {
+        errors.push(maxLengthMessage ?? `MAXIMUM length is ${max} characters.`);
+      }
     }
 
     if (errors.length > 0) {

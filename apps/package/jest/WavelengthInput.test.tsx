@@ -146,4 +146,25 @@ describe("WavelengthInput (React Wrapper)", () => {
     expect(el).toHaveAttribute("focus-color", "#444");
     expect(el).toHaveAttribute("helper-color", "#666");
   });
+
+  test("defaults to required message when forceError without errorMessage", () => {
+    render(<WavelengthInput data-testid="wavelength-input" forceError required />);
+    const el = screen.getByTestId("wavelength-input") as HTMLElement;
+    const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
+    expect(helper.textContent).toBe("This field is required.");
+  });
+
+  test("uses provided errorMessage when present with forceError", () => {
+    render(
+      <WavelengthInput
+        data-testid="wavelength-input"
+        forceError
+        required
+        errorMessage="Custom error"
+      />,
+    );
+    const el = screen.getByTestId("wavelength-input") as HTMLElement;
+    const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
+    expect(helper.textContent).toContain("Custom error");
+  });
 });
