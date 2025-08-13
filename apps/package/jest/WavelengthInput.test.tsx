@@ -162,15 +162,25 @@ describe("WavelengthInput (React Wrapper)", () => {
   });
 
   test("shows error message only once when blurred multiple times", () => {
-    render(<WavelengthInput data-testid="wavelength-input" required validationType="onBlur" />);
+    render(
+      <WavelengthInput
+        data-testid="wavelength-input"
+        required
+        validationType="onBlur"
+        errorMessage="Username is required."
+      />,
+    );
     const el = screen.getByTestId("wavelength-input") as HTMLElement;
     const input = el.shadowRoot?.querySelector("input") as HTMLInputElement;
 
+    fireEvent.focus(input);
     fireEvent.blur(input);
+    fireEvent.focus(input);
     fireEvent.blur(input);
+    fireEvent.focus(input);
     fireEvent.blur(input);
 
     const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
-    expect(helper.innerHTML).toBe("This field is required.");
+    expect(helper.textContent).toBe("Username is required.");
   });
 });
