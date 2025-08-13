@@ -20,6 +20,8 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   schema: z.ZodType<T>;
   /** Initial or controlled value (partial OK) */
   value?: Partial<T>;
+  /** Label for the submit button */
+  submitLabel?: string;
 
   /** Standard React props */
   className?: string;
@@ -49,7 +51,7 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
 }
 
 function WavelengthFormInner<T extends object = Record<string, unknown>>(
-  { schema, value, className, style, onChange, onValid, onInvalid }: WavelengthFormProps<T>,
+  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel }: WavelengthFormProps<T>,
   ref: React.ForwardedRef<WavelengthFormRef<T>>,
 ) {
   const hostRef = useRef<WavelengthFormElement | null>(null);
@@ -109,7 +111,14 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     [],
   );
 
-  return <wavelength-form ref={hostRef as any} className={className} style={style} />;
+  return (
+    <wavelength-form
+      ref={hostRef as any}
+      className={className}
+      style={style}
+      submit-label={submitLabel}
+    />
+  );
 }
 
 const WavelengthForm = React.forwardRef(WavelengthFormInner) as <T extends object = Record<string, unknown>>(

@@ -42,7 +42,9 @@ declare namespace JSX {
       id?: string;
     };
 
-    "wavelength-form": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    "wavelength-form": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+      "submit-label"?: string;
+    };
 
     "wavelength-progress-bar": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
 
