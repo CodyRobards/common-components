@@ -147,6 +147,7 @@ export class WavelengthInput extends HTMLElement {
   private _bgObserver: MutationObserver | null = null;
   private _debounceValidate: () => void = () => {};
   private _debounceTimeout: number | null = null;
+  private _lastErrorMessage = "";
   private internals: ElementInternals;
   static formAssociated = true;
 
@@ -332,26 +333,23 @@ export class WavelengthInput extends HTMLElement {
       return true;
     }
 
-    const shouldValidate =
-      bypassTypeCheck ||
-      validationType === "always" ||
-      (validationType === "onBlur" && this.hasBlurred);
-    const errors: string[] = [];
+    const shouldValidate = bypassTypeCheck || validationType === "always" || (validationType === "onBlur" && this.hasBlurred);
+    const errors = new Set<string>();
 
     if (force) {
       if (errorMessage) {
-        errors.push(errorMessage);
+        errors.add(errorMessage);
       } else {
-        errors.push("This field is required.");
+        errors.add("This field is required.");
       }
     }
 
     if (!force) {
       if (isRequired && isEmpty && shouldValidate) {
         if (this.hasAttribute("error-message") && errorMessage) {
-          errors.push(errorMessage);
+          errors.add(errorMessage);
         } else {
-          errors.push("This field is required.");
+          errors.add("This field is required.");
         }
       }
 
@@ -359,27 +357,30 @@ export class WavelengthInput extends HTMLElement {
         try {
           const regex = new RegExp(regexAttr);
           if (!regex.test(value)) {
-            errors.push(errorMessage ?? "Input does not match the required pattern.");
+            errors.add(errorMessage ?? "Input does not match the required pattern.");
           }
         } catch (e) {
           console.warn(`[WavelengthInput] Invalid regex pattern: "${regexAttr}"`, e);
-          errors.push("Invalid regex pattern.");
+          errors.add("Invalid regex pattern.");
         }
       }
 
       const min = parseInt(minLengthAttr ?? "", 10);
       if (!isNaN(min) && value.length < min && shouldValidate) {
-        errors.push(minLengthMessage ?? `MINIMUM length is ${min} characters.`);
+        errors.add(minLengthMessage ?? `MINIMUM length is ${min} characters.`);
       }
 
       const max = parseInt(maxLengthAttr ?? "", 10);
       if (!isNaN(max) && value.length > max && shouldValidate) {
-        errors.push(maxLengthMessage ?? `MAXIMUM length is ${max} characters.`);
+        errors.add(maxLengthMessage ?? `MAXIMUM length is ${max} characters.`);
       }
     }
 
-    if (errors.length > 0) {
-      this._showError(errors.join("\n"));
+    if (errors.size > 0) {
+      const message = Array.from(errors).join("\n");
+      if (message !== this._lastErrorMessage) {
+        this._showError(message);
+      }
       return false;
     }
 
@@ -395,6 +396,7 @@ export class WavelengthInput extends HTMLElement {
     this.helperEl.style.color = "red";
     this.inputEl.setAttribute("aria-invalid", "true");
     this.setAttribute("data-error", "true");
+    this._lastErrorMessage = message;
   }
 
   private _clearError(helperText: string) {
@@ -408,6 +410,7 @@ export class WavelengthInput extends HTMLElement {
     this.inputEl.setAttribute("aria-invalid", "false");
     this.removeAttribute("data-error");
     this._applyValidationHint();
+    this._lastErrorMessage = "";
   }
 
   private _applyAttributes() {
