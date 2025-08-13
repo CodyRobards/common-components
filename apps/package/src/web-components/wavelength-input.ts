@@ -390,6 +390,10 @@ export class WavelengthInput extends HTMLElement {
 
   private _showError(message: string) {
     const htmlMessage = message.replace(/\n/g, "<br>");
+    if (this.helperEl.innerHTML === htmlMessage) {
+      this._lastErrorMessage = message;
+      return;
+    }
     this.helperEl.innerHTML = htmlMessage;
     this.helperEl.classList.add("error");
     this.inputEl.style.borderColor = "red";
