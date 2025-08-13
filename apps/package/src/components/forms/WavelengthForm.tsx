@@ -1,11 +1,14 @@
 import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { z } from "zod";
+import type { WavelengthButtonProps } from "../buttons/WavelengthButton/WavelengthButton";
 
 // ---- Types that mirror the web component's API ----
 interface WavelengthFormElement extends HTMLElement {
   schema?: unknown;
   value?: Record<string, unknown>;
   validate?: () => boolean;
+  submitLabel?: string;
+  submitButtonProps?: Record<string, unknown>;
   addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
   removeEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
 }
@@ -22,6 +25,8 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   value?: Partial<T>;
   /** Label for the submit button */
   submitLabel?: string;
+  /** Props forwarded to the internal wavelength-button */
+  submitButtonProps?: Omit<WavelengthButtonProps, "children" | "onClick">;
 
   /** Standard React props */
   className?: string;
@@ -51,7 +56,7 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
 }
 
 function WavelengthFormInner<T extends object = Record<string, unknown>>(
-  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel }: WavelengthFormProps<T>,
+  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel, submitButtonProps }: WavelengthFormProps<T>,
   ref: React.ForwardedRef<WavelengthFormRef<T>>,
 ) {
   const hostRef = useRef<WavelengthFormElement | null>(null);
@@ -68,7 +73,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     // Set schema/value as *properties* (not attributes)
     el.schema = schema;
     if (value) el.value = value as any;
-  }, [schema, value]);
+    if (submitLabel !== undefined) el.submitLabel = submitLabel;
+    if (submitButtonProps) el.submitButtonProps = submitButtonProps as any;
+  }, [schema, value, submitLabel, submitButtonProps]);
 
   useEffect(() => {
     const el = hostRef.current;
@@ -111,7 +118,7 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     [],
   );
 
-  return <wavelength-form ref={hostRef as any} className={className} style={style} submit-label={submitLabel} />;
+  return <wavelength-form ref={hostRef as any} className={className} style={style} />;
 }
 
 const WavelengthForm = React.forwardRef(WavelengthFormInner) as <T extends object = Record<string, unknown>>(

@@ -42,4 +42,18 @@ describe("WavelengthForm (React Wrapper)", () => {
     );
     expect(onValid).toHaveBeenCalledWith({ name: "Hello" }, []);
   });
+
+  test("forwards submit props", async () => {
+    const schema = z.object({ name: z.string() });
+    render(<WavelengthForm schema={schema} submitLabel="Go" submitButtonProps={{ variant: "contained", colorOne: "red" }} />);
+
+    const host = document.querySelector("wavelength-form") as any;
+    // wait for effects
+    await new Promise((r) => setTimeout(r, 0));
+
+    const button = host.shadowRoot.querySelector("wavelength-button");
+    expect(button).toHaveAttribute("variant", "contained");
+    expect(button).toHaveAttribute("color-one", "red");
+    expect(button.textContent).toContain("Go");
+  });
 });
