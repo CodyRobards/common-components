@@ -120,9 +120,11 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     if (!el) return;
 
     if (message !== undefined && message !== null) {
-      el.setAttribute("error-message", message);
+      const existing = this._errors[name];
+      const combined = existing ? `${existing}\n${message}` : message;
+      el.setAttribute("error-message", combined);
       el.setAttribute("force-error", "");
-      this._errors[name] = message;
+      this._errors[name] = combined;
     } else {
       el.removeAttribute("force-error");
       el.removeAttribute("error-message");
@@ -136,8 +138,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     if (res.isValid) {
       this.setFieldError(name, undefined);
     } else {
-      const issue = res.issues?.find((i) => (i.path?.[0] as string) === name);
-      this.setFieldError(name, issue?.message ?? "Invalid value");
+      const issues = res.issues?.filter((i) => (i.path?.[0] as string) === name) ?? [];
+      const messages = issues.map((i) => i.message).join("\n");
+      this.setFieldError(name, issues.length > 0 ? messages : "Invalid value");
     }
   }
 
@@ -155,10 +158,13 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       return { isValid: true, value: res.value as unknown as FormValue, issues: [] };
     }
 
-    res.issues?.forEach((issue) => {
-      const field = (issue.path?.[0] as string) || "";
-      if (field) this.setFieldError(field, issue.message);
-    });
+    for (const f of this._fields) {
+      const issues = res.issues?.filter((i) => (i.path?.[0] as string) === f.name) ?? [];
+      if (issues.length > 0) {
+        const messages = issues.map((i) => i.message).join("\n");
+        this.setFieldError(f.name, messages);
+      }
+    }
     return { isValid: false, value: values, issues: res.issues ?? [] };
   }
 
