@@ -22,8 +22,8 @@ describe("wavelength-form web component", () => {
     fireEvent(input, new CustomEvent("inputChange", { detail: { value: "A" } }));
     expect(change).toHaveBeenCalledWith({ value: { name: "A" }, issues: [] });
 
-    const form = el.shadowRoot!.querySelector("form")!;
-    fireEvent.submit(form);
+    const button = el.shadowRoot!.querySelector("wavelength-button")!;
+    fireEvent.click(button);
     expect(valid).toHaveBeenCalledWith({ value: { name: "A" }, issues: [] });
   });
 
@@ -35,9 +35,16 @@ describe("wavelength-form web component", () => {
     const invalid = jest.fn();
     el.addEventListener("form-invalid", (e: Event) => invalid((e as CustomEvent).detail));
 
-    const form = el.shadowRoot!.querySelector("form")!;
-    fireEvent.submit(form);
+    const button = el.shadowRoot!.querySelector("wavelength-button")!;
+    fireEvent.click(button);
     expect(invalid).toHaveBeenCalled();
     expect(invalid.mock.calls[0][0].issues.length).toBeGreaterThan(0);
+  });
+
+  test("submit-label attribute controls button text", () => {
+    document.body.innerHTML = `<wavelength-form submit-label="Go"></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    const button = el.shadowRoot!.querySelector("wavelength-button")!;
+    expect(button.textContent).toBe("Go");
   });
 });

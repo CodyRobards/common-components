@@ -2,6 +2,7 @@ import { ZodObject, ZodRawShape, ZodIssue } from "zod";
 import { zodToFields } from "../form/zodToFields";
 import { FieldDef, FormValue } from "../types/fields";
 import { Validator } from "../form/Validator"; // file 4 will re-export your existing Validator
+import "./wavelength-button";
 
 type Shape = ZodRawShape;
 
@@ -12,10 +13,11 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _fields: FieldDef[] = [];
   private _value: FormValue = {};
   private _errors: Record<string, string> = {};
+  private _submitLabel = "Submit";
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return [];
+    return ["submit-label"];
   }
 
   constructor() {
@@ -52,6 +54,14 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     return this.collectValues();
   }
 
+  set submitLabel(label: string) {
+    this._submitLabel = label;
+    this.setAttribute("submit-label", label);
+  }
+  get submitLabel(): string {
+    return this._submitLabel;
+  }
+
   /**
    * Imperative validation without submitting.
    * Returns true if the current form values are valid.
@@ -62,6 +72,13 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
   connectedCallback() {
     this.render();
+  }
+
+  attributeChangedCallback(name: string, _old: string | null, value: string | null) {
+    if (name === "submit-label") {
+      this._submitLabel = value ?? "Submit";
+      this.render();
+    }
   }
 
   // --- Internal helpers ---
@@ -191,7 +208,6 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       form { display: grid; gap: 12px; }
       .row { display: grid; gap: 6px; }
       .actions { margin-top: 8px; }
-      button { padding: 10px 14px; border: 0; border-radius: 6px; cursor: pointer; }
     `;
 
     const form = document.createElement("form");
@@ -260,9 +276,16 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     // basic submit button
     const actions = document.createElement("div");
     actions.className = "actions";
-    const submit = document.createElement("button");
-    submit.type = "submit";
-    submit.textContent = "Submit";
+    const submit = document.createElement("wavelength-button");
+    submit.textContent = this._submitLabel;
+    submit.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (typeof (form as any).requestSubmit === "function") {
+        (form as any).requestSubmit();
+      } else {
+        form.dispatchEvent(new Event("submit", { cancelable: true }));
+      }
+    });
     actions.appendChild(submit);
     form.appendChild(actions);
 
