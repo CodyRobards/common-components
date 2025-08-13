@@ -42,8 +42,8 @@ describe("wavelength-form web component", () => {
     expect(invalid.mock.calls[0][0].issues.length).toBeGreaterThan(0);
 
     const input = el.shadowRoot!.querySelector("wavelength-input")!;
-    expect(input.getAttribute("error-message")).toBe("");
-    expect(input.hasAttribute("force-error")).toBe(true);
+    expect(input.getAttribute("error-message")).toBeNull();
+    expect(input.hasAttribute("force-error")).toBe(false);
   });
 
   test("renders multiple error messages", () => {
@@ -60,7 +60,7 @@ describe("wavelength-form web component", () => {
     expect(input.getAttribute("error-message")).toBe("Too short\nMust include capital");
 
     const helper = input.shadowRoot!.getElementById("helper")!;
-    expect(helper.innerHTML).toContain("Too short<br>Must include capital");
+    expect(helper.innerHTML).toContain("Too short<br>Must include capital<br>This field is required.");
   });
 
   test("submit-label attribute controls button text", () => {

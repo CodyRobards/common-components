@@ -119,7 +119,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     const el = this.queryFieldEl(name);
     if (!el) return;
 
-    if (message !== undefined && message !== null) {
+    if (message) {
       const existing = this._errors[name];
       const combined = existing ? `${existing}\n${message}` : message;
       el.setAttribute("error-message", combined);
