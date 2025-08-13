@@ -14,6 +14,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _value: FormValue = {};
   private _errors: Record<string, string> = {};
   private _submitLabel = "Submit";
+  private _submitButtonProps: Record<string, unknown> = {};
 
   static get observedAttributes() {
     // schema is a property, not an attribute
@@ -60,6 +61,14 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   }
   get submitLabel(): string {
     return this._submitLabel;
+  }
+
+  set submitButtonProps(v: Record<string, unknown> | undefined) {
+    this._submitButtonProps = v ?? {};
+    this.render();
+  }
+  get submitButtonProps(): Record<string, unknown> {
+    return this._submitButtonProps;
   }
 
   /**
@@ -281,6 +290,22 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     actions.className = "actions";
     const submit = document.createElement("wavelength-button");
     submit.textContent = this._submitLabel;
+    for (const [key, val] of Object.entries(this._submitButtonProps)) {
+      if (key === "className") {
+        submit.className = String(val ?? "");
+        continue;
+      }
+      if (key === "style" && typeof val === "object") {
+        Object.assign((submit as HTMLElement).style, val as Record<string, any>);
+        continue;
+      }
+      const attr = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+      if (typeof val === "boolean") {
+        if (val) submit.setAttribute(attr, "");
+      } else {
+        submit.setAttribute(attr, String(val));
+      }
+    }
     submit.addEventListener("click", (e) => {
       e.preventDefault();
       if (typeof (form as any).requestSubmit === "function") {

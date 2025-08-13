@@ -29,6 +29,11 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
 <WavelengthForm schema={schema} value={{ firstName: 'Clark', lastName: 'Kent' }} />`}
             language="tsx"
           />
+          <p>
+            Customize the submit button text with <code>submitLabel</code> or pass
+            <code>submitButtonProps</code> to forward attributes to the internal
+            <code>&lt;wavelength-button&gt;</code>.
+          </p>
           <h2>Example</h2>
           <Canvas />
           <h2>Props</h2>
@@ -41,6 +46,11 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
   argTypes: {
     schema: { control: "object", description: "Zod schema defining form shape" },
     value: { control: "object", description: "Initial form values" },
+    submitLabel: { control: "text", description: "Label for the submit button" },
+    submitButtonProps: {
+      control: "object",
+      description: "Props forwarded to the internal wavelength-button",
+    },
   },
   args: {
     schema: sampleSchema,
@@ -54,5 +64,15 @@ export default meta;
 type Story = StoryObj<typeof WavelengthForm>;
 
 export const Default: Story = {
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const CustomSubmitButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    submitLabel: "Register",
+    submitButtonProps: { variant: "contained", colorOne: "#2e7d32", colorTwo: "#fff" },
+  },
   render: (args) => <WavelengthForm {...args} />,
 };
