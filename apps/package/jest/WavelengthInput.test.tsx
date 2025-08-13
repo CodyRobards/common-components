@@ -155,16 +155,22 @@ describe("WavelengthInput (React Wrapper)", () => {
   });
 
   test("uses provided errorMessage when present with forceError", () => {
-    render(
-      <WavelengthInput
-        data-testid="wavelength-input"
-        forceError
-        required
-        errorMessage="Custom error"
-      />,
-    );
+    render(<WavelengthInput data-testid="wavelength-input" forceError required errorMessage="Custom error" />);
     const el = screen.getByTestId("wavelength-input") as HTMLElement;
     const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
     expect(helper.textContent).toContain("Custom error");
+  });
+
+  test("shows error message only once when blurred multiple times", () => {
+    render(<WavelengthInput data-testid="wavelength-input" required validationType="onBlur" />);
+    const el = screen.getByTestId("wavelength-input") as HTMLElement;
+    const input = el.shadowRoot?.querySelector("input") as HTMLInputElement;
+
+    fireEvent.blur(input);
+    fireEvent.blur(input);
+    fireEvent.blur(input);
+
+    const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
+    expect(helper.innerHTML).toBe("This field is required.");
   });
 });

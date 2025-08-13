@@ -50,10 +50,7 @@ describe("wavelength-form web component", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
     el.schema = z.object({
-      password: z
-        .string()
-        .min(5, { message: "Too short" })
-        .regex(/[A-Z]/, { message: "Must include capital" }),
+      password: z.string().min(5, { message: "Too short" }).regex(/[A-Z]/, { message: "Must include capital" }),
     });
 
     const button = el.shadowRoot!.querySelector("wavelength-button")!;
