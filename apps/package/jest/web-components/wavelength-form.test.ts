@@ -27,10 +27,10 @@ describe("wavelength-form web component", () => {
     expect(valid).toHaveBeenCalledWith({ value: { name: "A" }, issues: [] });
   });
 
-  test("emits invalid event on failed submission", () => {
+  test("emits invalid event and shows empty error message", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
-    el.schema = z.object({ name: z.string().min(1) });
+    el.schema = z.object({ name: z.string().min(1, { message: "" }) });
 
     const invalid = jest.fn();
     el.addEventListener("form-invalid", (e: Event) => invalid((e as CustomEvent).detail));
@@ -39,6 +39,10 @@ describe("wavelength-form web component", () => {
     fireEvent.click(button);
     expect(invalid).toHaveBeenCalled();
     expect(invalid.mock.calls[0][0].issues.length).toBeGreaterThan(0);
+
+    const input = el.shadowRoot!.querySelector("wavelength-input")!;
+    expect(input.getAttribute("error-message")).toBe("");
+    expect(input.hasAttribute("force-error")).toBe(true);
   });
 
   test("submit-label attribute controls button text", () => {
