@@ -336,7 +336,7 @@ export class WavelengthInput extends HTMLElement {
     const errors: string[] = [];
 
     if (force) {
-      errors.push(errorMessage || "Invalid input.");
+      errors.push(errorMessage ?? "Invalid input.");
     }
 
     if (isRequired && isEmpty && shouldValidate) {
@@ -347,7 +347,7 @@ export class WavelengthInput extends HTMLElement {
       try {
         const regex = new RegExp(regexAttr);
         if (!regex.test(value)) {
-          errors.push(errorMessage || "Input does not match the required pattern.");
+          errors.push(errorMessage ?? "Input does not match the required pattern.");
         }
       } catch (e) {
         console.warn(`[WavelengthInput] Invalid regex pattern: "${regexAttr}"`, e);
@@ -357,12 +357,12 @@ export class WavelengthInput extends HTMLElement {
 
     const min = parseInt(minLengthAttr ?? "", 10);
     if (!isNaN(min) && value.length < min && shouldValidate) {
-      errors.push(minLengthMessage || `MINIMUM length is ${min} characters.`);
+      errors.push(minLengthMessage ?? `MINIMUM length is ${min} characters.`);
     }
 
     const max = parseInt(maxLengthAttr ?? "", 10);
     if (!isNaN(max) && value.length > max && shouldValidate) {
-      errors.push(maxLengthMessage || `MAXIMUM length is ${max} characters.`);
+      errors.push(maxLengthMessage ?? `MAXIMUM length is ${max} characters.`);
     }
 
     if (errors.length > 0) {

@@ -137,7 +137,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       this.setFieldError(name, undefined);
     } else {
       const issue = res.issues?.find((i) => (i.path?.[0] as string) === name);
-      this.setFieldError(name, issue?.message || "Invalid value");
+      this.setFieldError(name, issue?.message ?? "Invalid value");
     }
   }
 
