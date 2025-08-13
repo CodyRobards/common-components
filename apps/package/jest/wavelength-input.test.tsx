@@ -128,6 +128,22 @@ describe("<wavelength-input>", () => {
     expect(helper.textContent).toContain("Forced error");
   });
 
+  test("clears error when force-error and error-message removed", () => {
+    element.setAttribute("helper-message", "help text");
+    element.setAttribute("force-error", "");
+    element.setAttribute("error-message", "Forced error");
+
+    let helper = element.shadowRoot!.querySelector(".helper-message")!;
+    expect(helper.textContent).toContain("Forced error");
+
+    element.removeAttribute("force-error");
+    element.removeAttribute("error-message");
+
+    helper = element.shadowRoot!.querySelector(".helper-message")!;
+    expect(helper.textContent).toBe("help text");
+    expect(element.hasAttribute("data-error")).toBe(false);
+  });
+
   test("sets accessibility attributes on input", () => {
     element.setAttribute("required", "");
     document.body.innerHTML = `<wavelength-input required></wavelength-input>`;
@@ -246,6 +262,8 @@ describe("<wavelength-input>", () => {
   test.each([
     ["label", null, "Test"],
     ["helper-message", null, "Text"],
+    ["error-message", null, "Error"],
+    ["force-error", null, ""],
     ["validation-type", "none", "always"],
     ["value", "abc", "xyz"],
     ["clearable", null, ""],
