@@ -158,7 +158,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private onInputChange = (name: string, rawValue: unknown) => {
     this._value = { ...this._value, [name]: rawValue };
     const res = this._validator?.validate(this._value as unknown);
-    const issues = res && !res.isValid ? res.issues ?? [] : [];
+    const issues = res && !res.isValid ? (res.issues ?? []) : [];
     this.dispatchEvent(
       new CustomEvent("form-change", {
         detail: { value: { ...this._value }, issues },
@@ -187,15 +187,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     e.preventDefault();
     const res = this.validateAll();
     if (res.isValid) {
-      this.dispatchEvent(
-        new CustomEvent("form-valid", { detail: { value: res.value, issues: [] } }),
-      );
+      this.dispatchEvent(new CustomEvent("form-valid", { detail: { value: res.value, issues: [] } }));
     } else {
-      this.dispatchEvent(
-        new CustomEvent("form-invalid", {
-          detail: { value: res.value, issues: res.issues },
-        }),
-      );
+      this.dispatchEvent(new CustomEvent("form-invalid", { detail: { value: res.value, issues: res.issues } }));
     }
   };
 
@@ -250,6 +244,15 @@ export class WavelengthForm<T extends object> extends HTMLElement {
         input.setAttribute("validation-type", "manual"); // form drives error visuals
         if (f.type === "number") {
           input.setAttribute("input-type", "number");
+        }
+        if (f.required) {
+          input.setAttribute("required", "");
+        }
+        if (f.minLength !== undefined) {
+          input.setAttribute("min-length", String(f.minLength));
+        }
+        if (f.maxLength !== undefined) {
+          input.setAttribute("max-length", String(f.maxLength));
         }
         if (this._value[f.name] !== null && this._value[f.name] !== undefined) {
           input.value = String(this._value[f.name]);

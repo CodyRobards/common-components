@@ -111,14 +111,7 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     [],
   );
 
-  return (
-    <wavelength-form
-      ref={hostRef as any}
-      className={className}
-      style={style}
-      submit-label={submitLabel}
-    />
-  );
+  return <wavelength-form ref={hostRef as any} className={className} style={style} submit-label={submitLabel} />;
 }
 
 const WavelengthForm = React.forwardRef(WavelengthFormInner) as <T extends object = Record<string, unknown>>(

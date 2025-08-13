@@ -53,11 +53,30 @@ export function zodToFields(schema: ZodObject<Shape>): FieldDef[] {
     else if (isZodType(core, "ZodBoolean")) type = "checkbox";
 
     if (type) {
-      fields.push({
+      const anyZt: any = zt;
+      const field: FieldDef = {
         name,
         label: name.charAt(0).toUpperCase() + name.slice(1),
         type,
-      });
+        required: typeof anyZt.isOptional === "function" ? !anyZt.isOptional() : true,
+      };
+
+      if (type === "text") {
+        const checks: any[] = (core as any)?._def?.checks ?? [];
+        for (const chk of checks) {
+          const kind = chk.kind || chk._zod?.def?.check;
+          const min = chk.value ?? chk._zod?.def?.minimum;
+          const max = chk.value ?? chk._zod?.def?.maximum;
+          if ((kind === "min" || kind === "min_length") && typeof min === "number") {
+            field.minLength = min;
+          }
+          if ((kind === "max" || kind === "max_length") && typeof max === "number") {
+            field.maxLength = max;
+          }
+        }
+      }
+
+      fields.push(field);
     }
   }
 
