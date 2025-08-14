@@ -339,18 +339,16 @@ export class WavelengthInput extends HTMLElement {
     if (force) {
       if (errorMessage) {
         errors.add(errorMessage);
-      } else {
-        errors.add("This field is required.");
       }
+      errors.add("This field is required.");
     }
 
     if (!force) {
       if (isRequired && isEmpty && shouldValidate) {
-        if (this.hasAttribute("error-message") && errorMessage) {
+        if (errorMessage) {
           errors.add(errorMessage);
-        } else {
-          errors.add("This field is required.");
         }
+        errors.add("This field is required.");
       }
 
       if (regexAttr && !isEmpty && shouldValidate) {
