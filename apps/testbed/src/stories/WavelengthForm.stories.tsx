@@ -1,6 +1,6 @@
 import { Canvas, Controls, Source, Stories } from "@storybook/blocks";
 import type { Meta, StoryObj } from "@storybook/react";
-import WavelengthForm from "@wavelengthusaf/components";
+import { WavelengthForm } from "@wavelengthusaf/components";
 import { z } from "zod";
 
 const sampleSchema = z.object({
@@ -24,7 +24,8 @@ const meta: Meta<typeof WavelengthForm> = {
           <h2>Usage</h2>
           <p>Import the component, create a schema, and pass it along with an optional value object:</p>
           <Source
-            code={`import WavelengthForm from '@wavelengthusaf/components';
+            code={`import { WavelengthForm } from '@wavelengthusaf/components';
+
 const schema = z.object({ firstName: z.string(), lastName: z.string() });
 <WavelengthForm schema={schema} value={{ firstName: 'Clark', lastName: 'Kent' }} />`}
             language="tsx"
