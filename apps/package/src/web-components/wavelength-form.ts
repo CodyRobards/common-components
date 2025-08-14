@@ -12,7 +12,8 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _shadow: ShadowRoot;
   private _fields: FieldDef[] = [];
   private _value: FormValue = {};
-  private _errors: Record<string, string> = {};
+  // store unique error messages per field
+  private _errors: Record<string, Set<string>> = {};
   private _submitLabel = "Submit";
   private _submitButtonProps: Record<string, unknown> = {};
 
@@ -120,11 +121,11 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     if (!el) return;
 
     if (message) {
-      const existing = this._errors[name];
-      const combined = existing ? `${existing}\n${message}` : message;
+      const unique = new Set(message.split("\n").filter(Boolean));
+      this._errors[name] = unique;
+      const combined = Array.from(unique).join("\n");
       el.setAttribute("error-message", combined);
       el.setAttribute("force-error", "");
-      this._errors[name] = combined;
     } else {
       el.removeAttribute("force-error");
       el.removeAttribute("error-message");
@@ -328,8 +329,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     this._shadow.appendChild(form);
 
     // reapply existing error state if any (e.g., after re-render)
-    for (const [name, msg] of Object.entries(this._errors)) {
-      this.setFieldError(name, msg);
+    for (const [name, msgs] of Object.entries(this._errors)) {
+      const el = this.queryFieldEl(name);
+      if (!el) continue;
+      const combined = Array.from(msgs).join("\n");
+      el.setAttribute("error-message", combined);
+      el.setAttribute("force-error", "");
     }
   }
 }
