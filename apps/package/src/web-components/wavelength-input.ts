@@ -344,11 +344,8 @@ export class WavelengthInput extends HTMLElement {
     const shouldValidate = bypassTypeCheck || validationType === "always" || (validationType === "onBlur" && this.hasBlurred);
     const errors = new Set<string>();
 
-    if (force) {
-      if (errorMessage) {
-        errors.add(errorMessage);
-      }
-      errors.add("This field is required.");
+    if (force && errorMessage) {
+      errors.add(errorMessage);
     }
 
     if (!force) {
@@ -387,6 +384,11 @@ export class WavelengthInput extends HTMLElement {
       if (message !== this._lastErrorMessage) {
         this._showError(message);
       }
+      return false;
+    }
+
+    if (force) {
+      this._showError("");
       return false;
     }
 

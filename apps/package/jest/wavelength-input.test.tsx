@@ -128,6 +128,14 @@ describe("<wavelength-input>", () => {
     expect(helper.textContent).toContain("Forced error");
   });
 
+  test("force-error shows red border without message", async () => {
+    element.setAttribute("force-error", "");
+    const result = (element as any).validate(true);
+    const helper = element.shadowRoot!.querySelector(".helper-message")!;
+    expect(helper.textContent).toBe("");
+    expect(result).toBe(false);
+  });
+
   test("clears error when force-error and error-message removed", () => {
     element.setAttribute("helper-message", "help text");
     element.setAttribute("force-error", "");

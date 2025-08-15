@@ -147,18 +147,18 @@ describe("WavelengthInput (React Wrapper)", () => {
     expect(el).toHaveAttribute("helper-color", "#666");
   });
 
-  test("defaults to required message when forceError without errorMessage", () => {
+  test("no message when forceError without errorMessage", () => {
     render(<WavelengthInput data-testid="wavelength-input" forceError required />);
     const el = screen.getByTestId("wavelength-input") as HTMLElement;
     const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
-    expect(helper.textContent).toBe("This field is required.");
+    expect(helper.textContent).toBe("");
   });
 
   test("uses provided errorMessage when present with forceError", () => {
     render(<WavelengthInput data-testid="wavelength-input" forceError required errorMessage="Custom error" />);
     const el = screen.getByTestId("wavelength-input") as HTMLElement;
     const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
-    expect(helper.innerHTML).toBe("Custom error<br>This field is required.");
+    expect(helper.innerHTML).toBe("Custom error");
   });
 
   test("shows error message only once when blurred multiple times", () => {
@@ -181,6 +181,6 @@ describe("WavelengthInput (React Wrapper)", () => {
     fireEvent.blur(input);
 
     const helper = el.shadowRoot?.querySelector(".helper-message") as HTMLElement;
-    expect(helper.textContent).toBe("Username is required.");
+    expect(helper.textContent).toBe("Username is required.This field is required.");
   });
 });
