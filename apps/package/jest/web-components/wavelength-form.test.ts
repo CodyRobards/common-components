@@ -63,6 +63,23 @@ describe("wavelength-form web component", () => {
     expect(helper.innerHTML).toContain("Too short<br>Must include capital<br>This field is required.");
   });
 
+  test("deduplicates error messages on re-render and blur", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.schema = z.object({ name: z.string().min(1, { message: "Required" }) });
+
+    let input = el.shadowRoot!.querySelector("wavelength-input") as any;
+    fireEvent.blur(input);
+    expect(input.getAttribute("error-message")).toBe("Required");
+
+    // Re-render the form and blur again
+    el.render();
+    input = el.shadowRoot!.querySelector("wavelength-input") as any;
+    fireEvent.blur(input);
+    fireEvent.blur(input);
+    expect(input.getAttribute("error-message")).toBe("Required");
+  });
+
   test("submit-label attribute controls button text", () => {
     document.body.innerHTML = `<wavelength-form submit-label="Go"></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
