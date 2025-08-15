@@ -34,6 +34,7 @@ import PageFileDownloader from "./pages/PageFileDownloader";
 import PageDropdown from "./pages/PageDropdown";
 import PageSlider from "./pages/PageSlider";
 import PageFaq from "./pages/PageFaq";
+import PagePlayground from "./pages/PagePlayground";
 import { WavelengthFooter } from "@wavelengthusaf/components";
 import PageStyledButton from "./pages/PageStyledButton";
 // import PageTextField from "./pages/PageTextField";
@@ -71,6 +72,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PageHome />} />
           <Route path="/Faqs" element={<PageFaq />} />
+          <Route path="/Playground" element={<PagePlayground />} />
           <Route path="/Button" element={<PageButton />} />
           <Route path="/SearchBar" element={<PageSearchBar />} />
           <Route path="/Title&Subtitle" element={<PageTitle />} />

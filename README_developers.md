@@ -6,6 +6,10 @@
 
 2. Be a Maintainer/Owner for the `@wavelengthusaf/components` npm package.
 
+### Playground
+
+The testbed includes a `Playground` page (`/Playground`) that acts as a blank canvas for experimenting with components outside of Storybook.
+
 ## Instructions
 
 1. After cloning the repo from GitLab, run the command `git checkout -b <branch>`. If you are working a ticket, make sure that you name your branch after the corresponding ticket number.
