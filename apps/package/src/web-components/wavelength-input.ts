@@ -302,9 +302,17 @@ export class WavelengthInput extends HTMLElement {
     }
 
     const shouldValidate = this.validationType === "onBlur" || this.validationType === "always";
+    let isValid = true;
+    if (shouldValidate) {
+      isValid = this._validate();
+    }
+
+    const hasError = this.hasAttribute("data-error") || this.hasAttribute("force-error");
+    if (hasError) {
+      return;
+    }
 
     if (shouldValidate) {
-      const isValid = this._validate();
       if (isValid) {
         this.inputEl.style.borderColor = this.getAttribute("border-color") || "#cccccc";
       }
