@@ -121,7 +121,8 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
     if (message) {
       const existing = this._errors[name];
-      const combined = existing ? `${existing}\n${message}` : message;
+      const pieces = [...(existing ? existing.split("\n") : []), ...message.split("\n")].filter((m) => m !== "");
+      const combined = Array.from(new Set(pieces)).join("\n");
       el.setAttribute("error-message", combined);
       el.setAttribute("force-error", "");
       this._errors[name] = combined;
