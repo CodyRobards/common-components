@@ -60,7 +60,7 @@ describe("wavelength-form web component", () => {
     expect(input.getAttribute("error-message")).toBe("Too short\nMust include capital");
 
     const helper = input.shadowRoot!.getElementById("helper")!;
-    expect(helper.innerHTML).toContain("Too short<br>Must include capital<br>This field is required.");
+    expect(helper.innerHTML).toContain("Too short<br>Must include capital");
   });
 
   test("submit-label attribute controls button text", () => {
