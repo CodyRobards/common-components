@@ -134,6 +134,15 @@ template.innerHTML = `
 <div class="helper-message" id="helper"></div>
 `;
 
+function getAncestor(el: HTMLElement | null): HTMLElement | null {
+  if (!el) return null;
+  if (el.parentElement) {
+    return el.parentElement;
+  }
+  const root = el.getRootNode();
+  return root instanceof ShadowRoot ? (root.host as HTMLElement) : null;
+}
+
 export class WavelengthInput extends HTMLElement {
   private inputEl: HTMLInputElement;
   private labelEl: HTMLLabelElement;
@@ -245,13 +254,13 @@ export class WavelengthInput extends HTMLElement {
       requestAnimationFrame(() => this._applyColors());
     });
 
-    let ancestor: HTMLElement | null = this.parentElement;
+    let ancestor: HTMLElement | null = getAncestor(this);
     while (ancestor && ancestor !== document.body) {
       this._bgObserver.observe(ancestor, {
         attributes: true,
         attributeFilter: ["class", "style"],
       });
-      ancestor = ancestor.parentElement;
+      ancestor = getAncestor(ancestor);
     }
 
     this._bgObserver.observe(document.body, {
@@ -353,10 +362,7 @@ export class WavelengthInput extends HTMLElement {
 
     if (!force) {
       if (isRequired && isEmpty && shouldValidate) {
-        if (errorMessage) {
-          errors.add(errorMessage);
-        }
-        errors.add("This field is required.");
+        errors.add(errorMessage ?? "This field is required.");
       }
 
       if (regexAttr && !isEmpty && shouldValidate) {
@@ -549,7 +555,7 @@ export class WavelengthInput extends HTMLElement {
         containerBg = bg;
         break;
       }
-      el = el.parentElement;
+      el = getAncestor(el);
     }
 
     this.inputEl.style.backgroundColor = InputBg;

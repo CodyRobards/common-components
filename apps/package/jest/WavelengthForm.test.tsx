@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import WavelengthForm from "../src/components/forms/WavelengthForm";
 import "../src/web-components/wavelength-form";
+import "../src/web-components/wavelength-input";
 
 // This test focuses on the React wrapper receiving the correct
 // detail payloads from the custom events.
@@ -55,5 +56,23 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(button).toHaveAttribute("variant", "contained");
     expect(button).toHaveAttribute("color-one", "red");
     expect(button.textContent).toContain("Go");
+  });
+
+  test("propagates container background to inputs", async () => {
+    const schema = z.object({ name: z.string() });
+    const color = "rgb(1, 2, 3)";
+    const { container } = render(
+      <div style={{ backgroundColor: color }}>
+        <WavelengthForm schema={schema} />
+      </div>,
+    );
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = container.querySelector("wavelength-form") as any;
+    const input = host.shadowRoot.querySelector("wavelength-input") as any;
+    const label = input.shadowRoot.getElementById("floating-label") as HTMLElement;
+
+    expect(label.style.getPropertyValue("--wavelength-container-background")).toBe(color);
   });
 });
