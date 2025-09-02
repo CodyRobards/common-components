@@ -91,4 +91,17 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(label.htmlFor).toBe("test-agree");
     expect(text.getAttribute("id")).toBe("test-name");
   });
+
+  test("renders title with alignment", async () => {
+    const schema = z.object({ name: z.string() });
+    render(<WavelengthForm schema={schema} title="My Form" titleAlign="center" />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const heading = host.shadowRoot!.querySelector("h2") as HTMLElement;
+    expect(heading).toBeInTheDocument();
+    expect(heading.textContent).toBe("My Form");
+    expect(heading.style.textAlign).toBe("center");
+  });
 });

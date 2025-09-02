@@ -10,6 +10,8 @@ interface WavelengthFormElement extends HTMLElement {
   submitLabel?: string;
   submitButtonProps?: Record<string, unknown>;
   idPrefix?: string;
+  title: string;
+  titleAlign?: string;
   addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
   removeEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
 }
@@ -30,6 +32,10 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   submitButtonProps?: Omit<WavelengthButtonProps, "children" | "onClick">;
   /** Prefix applied to generated input IDs */
   idPrefix?: string;
+  /** Optional heading text displayed above the form */
+  title?: string;
+  /** Alignment for the heading text (default: left) */
+  titleAlign?: React.CSSProperties["textAlign"];
 
   /** Standard React props */
   className?: string;
@@ -59,7 +65,7 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
 }
 
 function WavelengthFormInner<T extends object = Record<string, unknown>>(
-  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel, submitButtonProps, idPrefix }: WavelengthFormProps<T>,
+  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel, submitButtonProps, idPrefix, title, titleAlign }: WavelengthFormProps<T>,
   ref: React.ForwardedRef<WavelengthFormRef<T>>,
 ) {
   const hostRef = useRef<WavelengthFormElement | null>(null);
@@ -79,7 +85,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     if (submitLabel !== undefined) el.submitLabel = submitLabel;
     if (submitButtonProps) el.submitButtonProps = submitButtonProps as any;
     el.idPrefix = idPrefix as any;
-  }, [schema, value, submitLabel, submitButtonProps, idPrefix]);
+    if (title !== undefined) el.title = title;
+    if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
+  }, [schema, value, submitLabel, submitButtonProps, idPrefix, title, titleAlign]);
 
   useEffect(() => {
     const el = hostRef.current;
