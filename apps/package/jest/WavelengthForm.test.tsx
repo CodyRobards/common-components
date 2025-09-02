@@ -128,4 +128,18 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(input).toHaveAttribute("placeholder", "Override");
     expect(input).toHaveAttribute("label", "Override");
   });
+
+  test("forwards layout and formWidth", async () => {
+    const schema = z.object({ a: z.string(), b: z.string(), c: z.string() });
+    render(<WavelengthForm schema={schema} layout={[2, 1]} formWidth="350px" />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const rows = host.shadowRoot!.querySelectorAll(".field-row");
+    expect(rows.length).toBe(2);
+    expect(rows[0].children.length).toBe(2);
+    const form = host.shadowRoot!.querySelector("form") as HTMLFormElement;
+    expect(form.style.width).toBe("350px");
+  });
 });

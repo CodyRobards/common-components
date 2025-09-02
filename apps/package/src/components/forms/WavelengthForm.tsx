@@ -12,6 +12,8 @@ interface WavelengthFormElement extends HTMLElement {
   idPrefix?: string;
   title: string;
   titleAlign?: string;
+  formWidth?: string;
+  layout?: number[];
   addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
   removeEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
 }
@@ -38,6 +40,10 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   titleAlign?: React.CSSProperties["textAlign"];
   /** Per-field placeholder overrides */
   placeholders?: Partial<Record<keyof T & string, string>>;
+  /** CSS width applied to the underlying form element */
+  formWidth?: string;
+  /** Array defining how many fields appear in each row */
+  layout?: number[];
 
   /** Standard React props */
   className?: string;
@@ -84,6 +90,8 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     title,
     titleAlign,
     placeholders,
+    formWidth,
+    layout,
   } = props;
   const hostRef = useRef<WavelengthFormElement | null>(null);
 
@@ -121,7 +129,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     el.idPrefix = idPrefix as any;
     if (title !== undefined) el.title = title;
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
-  }, [schema, value, submitLabel, submitButtonProps, idPrefix, title, titleAlign, placeholders]);
+    if (formWidth !== undefined) el.formWidth = formWidth;
+    if (layout !== undefined) el.layout = layout;
+  }, [schema, value, submitLabel, submitButtonProps, idPrefix, title, titleAlign, placeholders, formWidth, layout]);
 
   useEffect(() => {
     const el = hostRef.current;

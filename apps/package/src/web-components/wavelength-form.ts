@@ -18,10 +18,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _idPrefix = "";
   private _title = "";
   private _titleAlign: string = "left";
+  private _formWidth: string = "";
+  private _layout?: number[];
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return ["submit-label", "id-prefix", "title", "title-align"];
+    return ["submit-label", "id-prefix", "title", "title-align", "form-width"];
   }
 
   constructor() {
@@ -106,6 +108,29 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     return this._titleAlign;
   }
 
+  /** Width applied to the form element */
+  set formWidth(v: string | undefined) {
+    this._formWidth = v ?? "";
+    if (v === undefined) {
+      this.removeAttribute("form-width");
+    } else {
+      this.setAttribute("form-width", this._formWidth);
+    }
+    this.render();
+  }
+  get formWidth(): string | undefined {
+    return this._formWidth || undefined;
+  }
+
+  /** Array describing how many fields appear in each row */
+  set layout(v: number[] | undefined) {
+    this._layout = v;
+    this.render();
+  }
+  get layout(): number[] | undefined {
+    return this._layout;
+  }
+
   /**
    * Imperative validation without submitting.
    * Returns true if the current form values are valid.
@@ -130,6 +155,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       this.render();
     } else if (name === "title-align") {
       this._titleAlign = value ?? "left";
+      this.render();
+    } else if (name === "form-width") {
+      this._formWidth = value ?? "";
       this.render();
     }
   }
@@ -260,6 +288,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     const css = /*css*/ `
       :host { display: block; font: 14px/1.4 system-ui, sans-serif; }
       form { display: grid; gap: 12px; }
+      .field-row { display: grid; gap: 12px; }
       .row { display: grid; gap: 6px; }
       .checkbox-row { display: flex; align-items: center; gap: 6px; }
       .actions { margin-top: 8px; }
@@ -268,83 +297,104 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     const form = document.createElement("form");
     form.noValidate = true;
     form.addEventListener("submit", this.onSubmit);
+    if (this._formWidth) {
+      form.style.width = this._formWidth;
+    }
 
-    // create an element per schema field
-    for (const f of this._fields) {
-      const row = document.createElement("div");
-      row.className = f.type === "checkbox" ? "row checkbox-row" : "row";
-      const id = this._idPrefix ? `${this._idPrefix}-${f.name}` : f.name;
+    // determine layout rows
+    const layout: number[] = this._layout && this._layout.length > 0 ? [...this._layout] : [];
+    let total = layout.reduce((a, b) => a + b, 0);
+    while (total < this._fields.length) {
+      layout.push(1);
+      total += 1;
+    }
 
-      if (f.type === "checkbox") {
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.id = id;
-        input.setAttribute("data-name", f.name);
-        input.name = f.name;
-        if (this._value[f.name] !== undefined) {
-          input.checked = Boolean(this._value[f.name]);
-        }
+    let fieldIndex = 0;
+    for (const cols of layout) {
+      if (fieldIndex >= this._fields.length) break;
+      const rowWrap = document.createElement("div");
+      rowWrap.className = "field-row";
+      rowWrap.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
-        input.addEventListener("change", () => {
-          this.onInputChange(f.name, input.checked);
-        });
-        input.addEventListener("blur", () => this.onBlur(f.name));
+      for (let i = 0; i < cols && fieldIndex < this._fields.length; i++) {
+        const f = this._fields[fieldIndex++];
+        const cell = document.createElement("div");
+        cell.className = f.type === "checkbox" ? "row checkbox-row" : "row";
+        const id = this._idPrefix ? `${this._idPrefix}-${f.name}` : f.name;
 
-        const label = document.createElement("label");
-        label.htmlFor = id;
-        label.textContent = f.label;
-
-        row.appendChild(input);
-        row.appendChild(label);
-      } else {
-        const input = document.createElement("wavelength-input") as HTMLElement & {
-          value: string;
-          setAttribute: (k: string, v?: string) => void;
-          removeAttribute: (k: string) => void;
-        };
-
-        input.setAttribute("data-name", f.name);
-        input.setAttribute("name", f.name);
-        if (f.placeholder !== undefined) {
-          input.setAttribute("placeholder", f.placeholder);
-          input.setAttribute("label", f.placeholder);
-        } else {
-          input.setAttribute("label", f.label);
-        }
-        input.setAttribute("validation-type", "manual"); // form drives error visuals
-        input.setAttribute("id", id);
-        if (f.type === "number") {
-          input.setAttribute("input-type", "number");
-        }
-        if (f.required) {
-          input.setAttribute("required", "");
-        }
-        if (f.minLength !== undefined) {
-          input.setAttribute("min-length", String(f.minLength));
-        }
-        if (f.maxLength !== undefined) {
-          input.setAttribute("max-length", String(f.maxLength));
-        }
-        if (this._value[f.name] !== null && this._value[f.name] !== undefined) {
-          input.value = String(this._value[f.name]);
-        }
-
-        // bridge events
-        input.addEventListener("inputChange", ((e: Event) => {
-          const detail = (e as CustomEvent).detail ?? {};
-          let val: unknown = detail.value ?? "";
-          if (f.type === "number") {
-            val = val === "" ? "" : Number(val);
+        if (f.type === "checkbox") {
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.id = id;
+          input.setAttribute("data-name", f.name);
+          input.name = f.name;
+          if (this._value[f.name] !== undefined) {
+            input.checked = Boolean(this._value[f.name]);
           }
-          this.onInputChange(f.name, val);
-        }) as EventListener);
 
-        input.addEventListener("blur", (() => this.onBlur(f.name)) as EventListener);
+          input.addEventListener("change", () => {
+            this.onInputChange(f.name, input.checked);
+          });
+          input.addEventListener("blur", () => this.onBlur(f.name));
 
-        row.appendChild(input);
+          const label = document.createElement("label");
+          label.htmlFor = id;
+          label.textContent = f.label;
+
+          cell.appendChild(input);
+          cell.appendChild(label);
+        } else {
+          const input = document.createElement("wavelength-input") as HTMLElement & {
+            value: string;
+            setAttribute: (k: string, v?: string) => void;
+            removeAttribute: (k: string) => void;
+          };
+
+          input.setAttribute("data-name", f.name);
+          input.setAttribute("name", f.name);
+          if (f.placeholder !== undefined) {
+            input.setAttribute("placeholder", f.placeholder);
+            input.setAttribute("label", f.placeholder);
+          } else {
+            input.setAttribute("label", f.label);
+          }
+          input.setAttribute("validation-type", "manual"); // form drives error visuals
+          input.setAttribute("id", id);
+          if (f.type === "number") {
+            input.setAttribute("input-type", "number");
+          }
+          if (f.required) {
+            input.setAttribute("required", "");
+          }
+          if (f.minLength !== undefined) {
+            input.setAttribute("min-length", String(f.minLength));
+          }
+          if (f.maxLength !== undefined) {
+            input.setAttribute("max-length", String(f.maxLength));
+          }
+          if (this._value[f.name] !== null && this._value[f.name] !== undefined) {
+            input.value = String(this._value[f.name]);
+          }
+
+          // bridge events
+          input.addEventListener("inputChange", ((e: Event) => {
+            const detail = (e as CustomEvent).detail ?? {};
+            let val: unknown = detail.value ?? "";
+            if (f.type === "number") {
+              val = val === "" ? "" : Number(val);
+            }
+            this.onInputChange(f.name, val);
+          }) as EventListener);
+
+          input.addEventListener("blur", (() => this.onBlur(f.name)) as EventListener);
+
+          cell.appendChild(input);
+        }
+
+        rowWrap.appendChild(cell);
       }
 
-      form.appendChild(row);
+      form.appendChild(rowWrap);
     }
 
     // basic submit button

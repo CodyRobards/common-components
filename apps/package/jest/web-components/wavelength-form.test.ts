@@ -101,4 +101,38 @@ describe("wavelength-form web component", () => {
     expect(label.htmlFor).toBe("form-agree");
     expect(text.getAttribute("id")).toBe("form-name");
   });
+
+  test("applies layout rows and columns", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.layout = [2, 1];
+    el.schema = z.object({ a: z.string(), b: z.string(), c: z.string() });
+
+    const rows = el.shadowRoot!.querySelectorAll(".field-row");
+    expect(rows.length).toBe(2);
+    expect(rows[0].children.length).toBe(2);
+    expect(rows[1].children.length).toBe(1);
+    expect((rows[0] as HTMLElement).style.gridTemplateColumns).toBe("repeat(2, 1fr)");
+    expect((rows[1] as HTMLElement).style.gridTemplateColumns).toBe("repeat(1, 1fr)");
+  });
+
+  test("defaults to single column when layout omitted", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.schema = z.object({ a: z.string(), b: z.string() });
+
+    const rows = el.shadowRoot!.querySelectorAll(".field-row");
+    expect(rows.length).toBe(2);
+    expect(Array.from(rows).every((r) => (r as HTMLElement).children.length === 1)).toBe(true);
+  });
+
+  test("applies formWidth style", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.formWidth = "300px";
+    el.schema = z.object({ a: z.string() });
+
+    const form = el.shadowRoot!.querySelector("form") as HTMLFormElement;
+    expect(form.style.width).toBe("300px");
+  });
 });

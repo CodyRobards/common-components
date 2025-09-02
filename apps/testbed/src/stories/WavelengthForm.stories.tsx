@@ -62,6 +62,8 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
       options: ["left", "center", "right"],
       description: "Alignment for the heading text",
     },
+    formWidth: { control: "text", description: "CSS width applied to the form" },
+    layout: { control: "object", description: "Array of column counts per row" },
   },
   args: {
     schema: sampleSchema,
@@ -103,6 +105,16 @@ export const WithTitle: Story = {
     value: { firstName: "Jane", lastName: "Doe" },
     title: "Registration",
     titleAlign: "center",
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithLayout: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    layout: [2],
+    formWidth: "400px",
   },
   render: (args) => <WavelengthForm {...args} />,
 };
