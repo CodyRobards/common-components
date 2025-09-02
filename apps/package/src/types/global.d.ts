@@ -47,6 +47,7 @@ declare namespace JSX {
       "id-prefix"?: string;
       title?: string;
       "title-align"?: string;
+      "form-width"?: string;
     };
 
     "wavelength-progress-bar": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
