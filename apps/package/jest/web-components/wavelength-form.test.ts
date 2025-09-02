@@ -86,4 +86,19 @@ describe("wavelength-form web component", () => {
     const button = el.shadowRoot!.querySelector("wavelength-button")!;
     expect(button.textContent).toBe("Go");
   });
+
+  test("generates ids and links checkbox labels", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.idPrefix = "form";
+    el.schema = z.object({ agree: z.boolean(), name: z.string() });
+
+    const checkbox = el.shadowRoot!.querySelector("input[type='checkbox']")! as HTMLInputElement;
+    const label = el.shadowRoot!.querySelector("label")! as HTMLLabelElement;
+    const text = el.shadowRoot!.querySelector("wavelength-input")!;
+
+    expect(checkbox.id).toBe("form-agree");
+    expect(label.htmlFor).toBe("form-agree");
+    expect(text.getAttribute("id")).toBe("form-name");
+  });
 });

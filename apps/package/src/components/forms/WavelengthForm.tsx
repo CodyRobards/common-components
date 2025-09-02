@@ -9,6 +9,7 @@ interface WavelengthFormElement extends HTMLElement {
   validate?: () => boolean;
   submitLabel?: string;
   submitButtonProps?: Record<string, unknown>;
+  idPrefix?: string;
   addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
   removeEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
 }
@@ -27,6 +28,8 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   submitLabel?: string;
   /** Props forwarded to the internal wavelength-button */
   submitButtonProps?: Omit<WavelengthButtonProps, "children" | "onClick">;
+  /** Prefix applied to generated input IDs */
+  idPrefix?: string;
 
   /** Standard React props */
   className?: string;
@@ -56,7 +59,7 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
 }
 
 function WavelengthFormInner<T extends object = Record<string, unknown>>(
-  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel, submitButtonProps }: WavelengthFormProps<T>,
+  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel, submitButtonProps, idPrefix }: WavelengthFormProps<T>,
   ref: React.ForwardedRef<WavelengthFormRef<T>>,
 ) {
   const hostRef = useRef<WavelengthFormElement | null>(null);
@@ -75,7 +78,8 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     if (value) el.value = value as any;
     if (submitLabel !== undefined) el.submitLabel = submitLabel;
     if (submitButtonProps) el.submitButtonProps = submitButtonProps as any;
-  }, [schema, value, submitLabel, submitButtonProps]);
+    el.idPrefix = idPrefix as any;
+  }, [schema, value, submitLabel, submitButtonProps, idPrefix]);
 
   useEffect(() => {
     const el = hostRef.current;
