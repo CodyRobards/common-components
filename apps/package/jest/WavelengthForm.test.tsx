@@ -75,4 +75,20 @@ describe("WavelengthForm (React Wrapper)", () => {
 
     expect(label.style.getPropertyValue("--wavelength-container-background")).toBe(color);
   });
+
+  test("applies idPrefix to generated inputs", async () => {
+    const schema = z.object({ agree: z.boolean(), name: z.string() });
+    render(<WavelengthForm schema={schema} idPrefix="test" />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const checkbox = host.shadowRoot!.querySelector("input[type='checkbox']")! as HTMLInputElement;
+    const label = host.shadowRoot!.querySelector("label")! as HTMLLabelElement;
+    const text = host.shadowRoot!.querySelector("wavelength-input")!;
+
+    expect(checkbox.id).toBe("test-agree");
+    expect(label.htmlFor).toBe("test-agree");
+    expect(text.getAttribute("id")).toBe("test-name");
+  });
 });

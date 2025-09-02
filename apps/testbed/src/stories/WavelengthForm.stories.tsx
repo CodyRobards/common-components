@@ -52,6 +52,7 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
       control: "object",
       description: "Props forwarded to the internal wavelength-button",
     },
+    idPrefix: { control: "text", description: "Prefix applied to generated input IDs" },
   },
   args: {
     schema: sampleSchema,
@@ -74,6 +75,15 @@ export const CustomSubmitButton: Story = {
     value: { firstName: "Jane", lastName: "Doe" },
     submitLabel: "Register",
     submitButtonProps: { variant: "contained", colorOne: "#2e7d32", colorTwo: "#fff" },
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithIdPrefix: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    idPrefix: "person",
   },
   render: (args) => <WavelengthForm {...args} />,
 };

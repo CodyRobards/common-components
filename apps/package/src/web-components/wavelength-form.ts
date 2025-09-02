@@ -15,10 +15,11 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _errors: Record<string, string> = {};
   private _submitLabel = "Submit";
   private _submitButtonProps: Record<string, unknown> = {};
+  private _idPrefix = "";
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return ["submit-label"];
+    return ["submit-label", "id-prefix"];
   }
 
   constructor() {
@@ -71,6 +72,14 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     return this._submitButtonProps;
   }
 
+  set idPrefix(v: string | undefined) {
+    this._idPrefix = v ?? "";
+    this.render();
+  }
+  get idPrefix(): string | undefined {
+    return this._idPrefix || undefined;
+  }
+
   /**
    * Imperative validation without submitting.
    * Returns true if the current form values are valid.
@@ -86,6 +95,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   attributeChangedCallback(name: string, _old: string | null, value: string | null) {
     if (name === "submit-label") {
       this._submitLabel = value ?? "Submit";
+      this.render();
+    } else if (name === "id-prefix") {
+      this._idPrefix = value ?? "";
       this.render();
     }
   }
@@ -217,6 +229,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       :host { display: block; font: 14px/1.4 system-ui, sans-serif; }
       form { display: grid; gap: 12px; }
       .row { display: grid; gap: 6px; }
+      .checkbox-row { display: flex; align-items: center; gap: 6px; }
       .actions { margin-top: 8px; }
     `;
 
@@ -227,12 +240,13 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     // create an element per schema field
     for (const f of this._fields) {
       const row = document.createElement("div");
-      row.className = "row";
+      row.className = f.type === "checkbox" ? "row checkbox-row" : "row";
+      const id = this._idPrefix ? `${this._idPrefix}-${f.name}` : f.name;
 
       if (f.type === "checkbox") {
-        const label = document.createElement("label");
         const input = document.createElement("input");
         input.type = "checkbox";
+        input.id = id;
         input.setAttribute("data-name", f.name);
         input.name = f.name;
         if (this._value[f.name] !== undefined) {
@@ -244,8 +258,11 @@ export class WavelengthForm<T extends object> extends HTMLElement {
         });
         input.addEventListener("blur", () => this.onBlur(f.name));
 
-        label.appendChild(input);
-        label.append(f.label);
+        const label = document.createElement("label");
+        label.htmlFor = id;
+        label.textContent = f.label;
+
+        row.appendChild(input);
         row.appendChild(label);
       } else {
         const input = document.createElement("wavelength-input") as HTMLElement & {
@@ -258,6 +275,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
         input.setAttribute("name", f.name);
         input.setAttribute("label", f.label);
         input.setAttribute("validation-type", "manual"); // form drives error visuals
+        input.setAttribute("id", id);
         if (f.type === "number") {
           input.setAttribute("input-type", "number");
         }
