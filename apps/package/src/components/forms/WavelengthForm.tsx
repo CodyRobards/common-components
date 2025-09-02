@@ -36,6 +36,8 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   title?: string;
   /** Alignment for the heading text (default: left) */
   titleAlign?: React.CSSProperties["textAlign"];
+  /** Per-field placeholder overrides */
+  placeholders?: Partial<Record<keyof T & string, string>>;
 
   /** Standard React props */
   className?: string;
@@ -65,9 +67,24 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
 }
 
 function WavelengthFormInner<T extends object = Record<string, unknown>>(
-  { schema, value, className, style, onChange, onValid, onInvalid, submitLabel, submitButtonProps, idPrefix, title, titleAlign }: WavelengthFormProps<T>,
+  props: WavelengthFormProps<T>,
   ref: React.ForwardedRef<WavelengthFormRef<T>>,
 ) {
+  const {
+    schema,
+    value,
+    className,
+    style,
+    onChange,
+    onValid,
+    onInvalid,
+    submitLabel,
+    submitButtonProps,
+    idPrefix,
+    title,
+    titleAlign,
+    placeholders,
+  } = props;
   const hostRef = useRef<WavelengthFormElement | null>(null);
 
   const onChangeStable = useStableCallback(onChange);
@@ -80,14 +97,31 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     if (!el) return;
 
     // Set schema/value as *properties* (not attributes)
-    el.schema = schema;
+    let finalSchema: unknown = schema;
+    if (placeholders) {
+      const shape: any = (schema as any)?.shape;
+      if (shape) {
+        const overrides: Record<string, any> = {};
+        for (const [key, ph] of Object.entries(placeholders)) {
+          const field = shape[key];
+          if (field && typeof (field as any).meta === "function") {
+            const curMeta = (field as any).meta() || {};
+            overrides[key] = (field as any).meta({ ...curMeta, placeholder: ph });
+          }
+        }
+        if (Object.keys(overrides).length > 0 && typeof (schema as any).extend === "function") {
+          finalSchema = (schema as any).extend(overrides);
+        }
+      }
+    }
+    el.schema = finalSchema as any;
     if (value) el.value = value as any;
     if (submitLabel !== undefined) el.submitLabel = submitLabel;
     if (submitButtonProps) el.submitButtonProps = submitButtonProps as any;
     el.idPrefix = idPrefix as any;
     if (title !== undefined) el.title = title;
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
-  }, [schema, value, submitLabel, submitButtonProps, idPrefix, title, titleAlign]);
+  }, [schema, value, submitLabel, submitButtonProps, idPrefix, title, titleAlign, placeholders]);
 
   useEffect(() => {
     const el = hostRef.current;

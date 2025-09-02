@@ -10,9 +10,9 @@ describe("zodToTextFields", () => {
     });
 
     expect(zodToTextFields(schema)).toEqual([
-      { name: "name", label: "Name", type: "text", required: true },
-      { name: "age", label: "Age", type: "number", required: true },
-      { name: "subscribed", label: "Subscribed", type: "checkbox", required: true },
+      { name: "name", label: "Name", type: "text", required: true, placeholder: "Name" },
+      { name: "age", label: "Age", type: "number", required: true, placeholder: "Age" },
+      { name: "subscribed", label: "Subscribed", type: "checkbox", required: true, placeholder: "Subscribed" },
     ]);
   });
 
@@ -24,9 +24,9 @@ describe("zodToTextFields", () => {
     });
 
     expect(zodToTextFields(schema)).toEqual([
-      { name: "title", label: "Title", type: "text", required: false },
-      { name: "count", label: "Count", type: "number", required: false },
-      { name: "active", label: "Active", type: "checkbox", required: false },
+      { name: "title", label: "Title", type: "text", required: false, placeholder: "Title" },
+      { name: "count", label: "Count", type: "number", required: false, placeholder: "Count" },
+      { name: "active", label: "Active", type: "checkbox", required: false, placeholder: "Active" },
     ]);
   });
 
@@ -43,7 +43,22 @@ describe("zodToTextFields", () => {
         required: true,
         minLength: 3,
         maxLength: 10,
+        placeholder: "Username",
       },
+    ]);
+  });
+
+  test("populates placeholders from meta or description", () => {
+    const schema = z.object({
+      meta: z.string().meta({ placeholder: "Meta" }),
+      desc: z.string().describe("Desc"),
+      none: z.string(),
+    });
+
+    expect(zodToTextFields(schema)).toEqual([
+      { name: "meta", label: "Meta", type: "text", required: true, placeholder: "Meta" },
+      { name: "desc", label: "Desc", type: "text", required: true, placeholder: "Desc" },
+      { name: "none", label: "None", type: "text", required: true, placeholder: "None" },
     ]);
   });
 
