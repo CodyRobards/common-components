@@ -61,6 +61,16 @@ export function zodToFields(schema: ZodObject<Shape>): FieldDef[] {
         required: typeof anyZt.isOptional === "function" ? !anyZt.isOptional() : true,
       };
 
+      const placeholder =
+        (typeof anyZt.meta === "function" ? anyZt.meta()?.placeholder : undefined) ??
+        anyZt?.description ??
+        anyZt?._def?.description ??
+        (typeof (core as any).meta === "function" ? (core as any).meta()?.placeholder : undefined) ??
+        (core as any)?.description ??
+        (core as any)?._def?.description ??
+        field.label;
+      field.placeholder = placeholder;
+
       if (type === "text") {
         const checks: any[] = (core as any)?._def?.checks ?? [];
         for (const chk of checks) {

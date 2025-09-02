@@ -305,7 +305,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
         input.setAttribute("data-name", f.name);
         input.setAttribute("name", f.name);
-        input.setAttribute("label", f.label);
+        if (f.placeholder !== undefined) {
+          input.setAttribute("placeholder", f.placeholder);
+          input.setAttribute("label", f.placeholder);
+        } else {
+          input.setAttribute("label", f.label);
+        }
         input.setAttribute("validation-type", "manual"); // form drives error visuals
         input.setAttribute("id", id);
         if (f.type === "number") {

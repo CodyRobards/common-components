@@ -104,4 +104,28 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(heading.textContent).toBe("My Form");
     expect(heading.style.textAlign).toBe("center");
   });
+
+  test("uses placeholder from schema and mirrors label", async () => {
+    const schema = z.object({ name: z.string().describe("Your name") });
+    render(<WavelengthForm schema={schema} />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const input = host.shadowRoot!.querySelector("wavelength-input")!;
+    expect(input).toHaveAttribute("placeholder", "Your name");
+    expect(input).toHaveAttribute("label", "Your name");
+  });
+
+  test("placeholders prop overrides schema", async () => {
+    const schema = z.object({ name: z.string().describe("Schema") });
+    render(<WavelengthForm schema={schema} placeholders={{ name: "Override" }} />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const input = host.shadowRoot!.querySelector("wavelength-input")!;
+    expect(input).toHaveAttribute("placeholder", "Override");
+    expect(input).toHaveAttribute("label", "Override");
+  });
 });
