@@ -35,6 +35,9 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
             <code>submitButtonProps</code> to forward attributes to the internal
             <code>&lt;wavelength-button&gt;</code>.
           </p>
+          <p>
+            Provide a <code>title</code> to render a heading above the form and control its alignment with <code>titleAlign</code>.
+          </p>
           <h2>Example</h2>
           <Canvas />
           <h2>Props</h2>
@@ -53,6 +56,12 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
       description: "Props forwarded to the internal wavelength-button",
     },
     idPrefix: { control: "text", description: "Prefix applied to generated input IDs" },
+    title: { control: "text", description: "Heading text displayed above the form" },
+    titleAlign: {
+      control: "select",
+      options: ["left", "center", "right"],
+      description: "Alignment for the heading text",
+    },
   },
   args: {
     schema: sampleSchema,
@@ -84,6 +93,16 @@ export const WithIdPrefix: Story = {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
     idPrefix: "person",
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithTitle: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    title: "Registration",
+    titleAlign: "center",
   },
   render: (args) => <WavelengthForm {...args} />,
 };

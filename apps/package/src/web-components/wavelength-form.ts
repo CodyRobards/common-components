@@ -16,10 +16,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _submitLabel = "Submit";
   private _submitButtonProps: Record<string, unknown> = {};
   private _idPrefix = "";
+  private _title = "";
+  private _titleAlign: string = "left";
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return ["submit-label", "id-prefix"];
+    return ["submit-label", "id-prefix", "title", "title-align"];
   }
 
   constructor() {
@@ -80,6 +82,30 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     return this._idPrefix || undefined;
   }
 
+  /** Heading text displayed above the form */
+  set title(v: string) {
+    this._title = v ?? "";
+    if (v === "") {
+      this.removeAttribute("title");
+    } else {
+      this.setAttribute("title", v);
+    }
+    this.render();
+  }
+  get title(): string {
+    return this._title;
+  }
+
+  /** CSS text-align value applied to the heading */
+  set titleAlign(v: string | undefined) {
+    this._titleAlign = v ?? "left";
+    this.setAttribute("title-align", this._titleAlign);
+    this.render();
+  }
+  get titleAlign(): string {
+    return this._titleAlign;
+  }
+
   /**
    * Imperative validation without submitting.
    * Returns true if the current form values are valid.
@@ -98,6 +124,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       this.render();
     } else if (name === "id-prefix") {
       this._idPrefix = value ?? "";
+      this.render();
+    } else if (name === "title") {
+      this._title = value ?? "";
+      this.render();
+    } else if (name === "title-align") {
+      this._titleAlign = value ?? "left";
       this.render();
     }
   }
@@ -344,6 +376,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
     // mount
     this._shadow.innerHTML = `<style>${css}</style>`;
+    if (this._title) {
+      const heading = document.createElement("h2");
+      heading.textContent = this._title;
+      heading.style.textAlign = this._titleAlign;
+      this._shadow.appendChild(heading);
+    }
     this._shadow.appendChild(form);
 
     // reapply existing error state if any (e.g., after re-render)

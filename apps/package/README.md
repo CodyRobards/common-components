@@ -14,6 +14,11 @@ npm install @wavelengthusaf/components
 
 ## Release Notes
 
+### 3.3.8
+
+- 8/12/2025
+- Added optional `title` and `titleAlign` props to `WavelengthForm` for displaying a heading above the form.
+
 ### 3.3.7
 
 - 8/11/2025
