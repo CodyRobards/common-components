@@ -55,6 +55,9 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
       control: "object",
       description: "Props forwarded to the internal wavelength-button",
     },
+    showSubmit: { control: "boolean", description: "Toggle internal submit button" },
+    backLabel: { control: "text", description: "Label for a back button" },
+    backButtonProps: { control: "object", description: "Props for the back button" },
     idPrefix: { control: "text", description: "Prefix applied to generated input IDs" },
     title: { control: "text", description: "Heading text displayed above the form" },
     titleAlign: {
@@ -117,4 +120,22 @@ export const WithLayout: Story = {
     formWidth: "400px",
   },
   render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithoutSubmitButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    showSubmit: false,
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithBackButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    backLabel: "Back",
+  },
+  render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} />,
 };

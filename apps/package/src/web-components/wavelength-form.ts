@@ -15,6 +15,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _errors: Record<string, string> = {};
   private _submitLabel = "Submit";
   private _submitButtonProps: Record<string, unknown> = {};
+  private _showSubmit = true;
+  private _backLabel = "";
+  private _backButtonProps: Record<string, unknown> = {};
   private _idPrefix = "";
   private _title = "";
   private _titleAlign: string = "left";
@@ -23,7 +26,15 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return ["submit-label", "id-prefix", "title", "title-align", "form-width"];
+    return [
+      "submit-label",
+      "id-prefix",
+      "title",
+      "title-align",
+      "form-width",
+      "show-submit",
+      "back-label",
+    ];
   }
 
   constructor() {
@@ -74,6 +85,40 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   }
   get submitButtonProps(): Record<string, unknown> {
     return this._submitButtonProps;
+  }
+
+  set showSubmit(v: boolean | undefined) {
+    this._showSubmit = v !== false;
+    if (v === undefined) {
+      this.removeAttribute("show-submit");
+    } else {
+      this.setAttribute("show-submit", String(this._showSubmit));
+    }
+    this.render();
+  }
+  get showSubmit(): boolean {
+    return this._showSubmit;
+  }
+
+  set backLabel(v: string | undefined) {
+    this._backLabel = v ?? "";
+    if (v === undefined) {
+      this.removeAttribute("back-label");
+    } else {
+      this.setAttribute("back-label", this._backLabel);
+    }
+    this.render();
+  }
+  get backLabel(): string | undefined {
+    return this._backLabel || undefined;
+  }
+
+  set backButtonProps(v: Record<string, unknown> | undefined) {
+    this._backButtonProps = v ?? {};
+    this.render();
+  }
+  get backButtonProps(): Record<string, unknown> {
+    return this._backButtonProps;
   }
 
   set idPrefix(v: string | undefined) {
@@ -158,6 +203,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       this.render();
     } else if (name === "form-width") {
       this._formWidth = value ?? "";
+      this.render();
+    } else if (name === "show-submit") {
+      this._showSubmit = value !== "false";
+      this.render();
+    } else if (name === "back-label") {
+      this._backLabel = value ?? "";
       this.render();
     }
   }
@@ -291,7 +342,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       .field-row { display: grid; gap: 12px; }
       .row { display: grid; gap: 6px; }
       .checkbox-row { display: flex; align-items: center; gap: 6px; }
-      .actions { margin-top: 8px; }
+      .actions {
+        margin-top: 8px;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
     `;
 
     const form = document.createElement("form");
@@ -397,37 +453,69 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       form.appendChild(rowWrap);
     }
 
-    // basic submit button
     const actions = document.createElement("div");
     actions.className = "actions";
-    const submit = document.createElement("wavelength-button");
-    submit.textContent = this._submitLabel;
-    for (const [key, val] of Object.entries(this._submitButtonProps)) {
-      if (key === "className") {
-        submit.className = String(val ?? "");
-        continue;
+
+    if (this._backLabel) {
+      const back = document.createElement("button");
+      back.type = "button";
+      back.textContent = this._backLabel;
+      for (const [key, val] of Object.entries(this._backButtonProps)) {
+        if (key === "className") {
+          back.className = String(val ?? "");
+          continue;
+        }
+        if (key === "style" && typeof val === "object") {
+          Object.assign((back as HTMLElement).style, val as Record<string, any>);
+          continue;
+        }
+        const attr = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+        if (typeof val === "boolean") {
+          if (val) back.setAttribute(attr, "");
+        } else {
+          back.setAttribute(attr, String(val));
+        }
       }
-      if (key === "style" && typeof val === "object") {
-        Object.assign((submit as HTMLElement).style, val as Record<string, any>);
-        continue;
-      }
-      const attr = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-      if (typeof val === "boolean") {
-        if (val) submit.setAttribute(attr, "");
-      } else {
-        submit.setAttribute(attr, String(val));
-      }
+      back.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.dispatchEvent(new CustomEvent("form-back"));
+      });
+      actions.appendChild(back);
     }
-    submit.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (typeof (form as any).requestSubmit === "function") {
-        (form as any).requestSubmit();
-      } else {
-        form.dispatchEvent(new Event("submit", { cancelable: true }));
+
+    if (this._showSubmit) {
+      const submit = document.createElement("wavelength-button");
+      submit.textContent = this._submitLabel;
+      for (const [key, val] of Object.entries(this._submitButtonProps)) {
+        if (key === "className") {
+          submit.className = String(val ?? "");
+          continue;
+        }
+        if (key === "style" && typeof val === "object") {
+          Object.assign((submit as HTMLElement).style, val as Record<string, any>);
+          continue;
+        }
+        const attr = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+        if (typeof val === "boolean") {
+          if (val) submit.setAttribute(attr, "");
+        } else {
+          submit.setAttribute(attr, String(val));
+        }
       }
-    });
-    actions.appendChild(submit);
-    form.appendChild(actions);
+      submit.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (typeof (form as any).requestSubmit === "function") {
+          (form as any).requestSubmit();
+        } else {
+          form.dispatchEvent(new Event("submit", { cancelable: true }));
+        }
+      });
+      actions.appendChild(submit);
+    }
+
+    if (actions.children.length > 0) {
+      form.appendChild(actions);
+    }
 
     // mount
     this._shadow.innerHTML = `<style>${css}</style>`;

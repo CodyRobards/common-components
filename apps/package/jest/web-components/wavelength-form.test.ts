@@ -135,4 +135,26 @@ describe("wavelength-form web component", () => {
     const form = el.shadowRoot!.querySelector("form") as HTMLFormElement;
     expect(form.style.width).toBe("300px");
   });
+
+  test("can hide submit button", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.showSubmit = false;
+    el.schema = z.object({ name: z.string() });
+    const button = el.shadowRoot!.querySelector("wavelength-button");
+    expect(button).toBeNull();
+  });
+
+  test("emits form-back when back button clicked", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.backLabel = "Back";
+    el.schema = z.object({ name: z.string() });
+
+    const handler = jest.fn();
+    el.addEventListener("form-back", handler);
+    const back = el.shadowRoot!.querySelector("button")!;
+    fireEvent.click(back);
+    expect(handler).toHaveBeenCalled();
+  });
 });

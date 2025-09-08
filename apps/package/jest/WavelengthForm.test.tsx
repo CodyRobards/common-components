@@ -142,4 +142,14 @@ describe("WavelengthForm (React Wrapper)", () => {
     const form = host.shadowRoot!.querySelector("form") as HTMLFormElement;
     expect(form.style.width).toBe("350px");
   });
+
+  test("onBack fires from custom event", () => {
+    const schema = z.object({ name: z.string() });
+    const onBack = jest.fn();
+    render(<WavelengthForm schema={schema} backLabel="Back" onBack={onBack} />);
+
+    const host = document.querySelector("wavelength-form")!;
+    host.dispatchEvent(new CustomEvent("form-back"));
+    expect(onBack).toHaveBeenCalled();
+  });
 });
