@@ -86,7 +86,8 @@ export function WavelengthVariationPagination({ totalPages, current, variant, ha
                         key={item}
                         onClick={() => {
                           // Handle item click here
-                          handleChangePage(item), setIsOpen(false); // Close dropdown after click
+                          handleChangePage(item);
+                          setIsOpen(false); // Close dropdown after click
                         }}
                       >
                         {item}
@@ -110,7 +111,8 @@ export function WavelengthVariationPagination({ totalPages, current, variant, ha
                         key={item}
                         onClick={() => {
                           // Handle item click here
-                          handleChangePage(item), setIsOpen(false); // Close dropdown after click
+                          handleChangePage(item);
+                          setIsOpen(false); // Close dropdown after click
                         }}
                       >
                         {item}
