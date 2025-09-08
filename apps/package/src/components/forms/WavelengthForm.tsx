@@ -1,17 +1,20 @@
 import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { z } from "zod";
-import type { WavelengthButtonProps } from "../buttons/WavelengthButton/WavelengthButton";
 
 // ---- Types that mirror the web component's API ----
+interface ButtonConfig {
+  label?: string;
+  buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+  eventName?: string;
+}
+
 interface WavelengthFormElement extends HTMLElement {
   schema?: unknown;
   value?: Record<string, unknown>;
   validate?: () => boolean;
-  submitLabel?: string;
-  submitButtonProps?: Record<string, unknown>;
-  showSubmit?: boolean;
-  backLabel?: string;
-  backButtonProps?: Record<string, unknown>;
+  leftButton?: ButtonConfig;
+  centerButton?: ButtonConfig;
+  rightButton?: ButtonConfig;
   idPrefix?: string;
   title: string;
   titleAlign?: string;
@@ -31,16 +34,12 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   schema: z.ZodType<T>;
   /** Initial or controlled value (partial OK) */
   value?: Partial<T>;
-  /** Label for the submit button */
-  submitLabel?: string;
-  /** Props forwarded to the internal wavelength-button */
-  submitButtonProps?: Omit<WavelengthButtonProps, "children" | "onClick">;
-  /** Whether to show the internal submit button */
-  showSubmit?: boolean;
-  /** Label for a back button */
-  backLabel?: string;
-  /** Props forwarded to the back button */
-  backButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+  /** Configuration for an optional left-aligned button */
+  leftButton?: ButtonConfig;
+  /** Configuration for an optional center-aligned button */
+  centerButton?: ButtonConfig;
+  /** Configuration for an optional right-aligned button */
+  rightButton?: ButtonConfig;
   /** Prefix applied to generated input IDs */
   idPrefix?: string;
   /** Optional heading text displayed above the form */
@@ -62,7 +61,7 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   onChange?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
   onValid?: (value: T, issues: z.ZodIssue[]) => void;
   onInvalid?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
-  /** Fired when the back button is clicked */
+  /** Fired when the default back event is triggered */
   onBack?: () => void;
 }
 
@@ -95,11 +94,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     onChange,
     onValid,
     onInvalid,
-    submitLabel,
-    submitButtonProps,
-    showSubmit,
-    backLabel,
-    backButtonProps,
+    leftButton,
+    centerButton,
+    rightButton,
     idPrefix,
     title,
     titleAlign,
@@ -140,11 +137,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     }
     el.schema = finalSchema as any;
     if (value) el.value = value as any;
-    if (submitLabel !== undefined) el.submitLabel = submitLabel;
-    if (submitButtonProps) el.submitButtonProps = submitButtonProps as any;
-    if (showSubmit !== undefined) el.showSubmit = showSubmit;
-    if (backLabel !== undefined) el.backLabel = backLabel;
-    if (backButtonProps) el.backButtonProps = backButtonProps as any;
+    if (leftButton !== undefined) el.leftButton = leftButton as any;
+    if (centerButton !== undefined) el.centerButton = centerButton as any;
+    if (rightButton !== undefined) el.rightButton = rightButton as any;
     el.idPrefix = idPrefix as any;
     if (title !== undefined) el.title = title;
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
@@ -153,11 +148,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
   }, [
     schema,
     value,
-    submitLabel,
-    submitButtonProps,
-    showSubmit,
-    backLabel,
-    backButtonProps,
+    leftButton,
+    centerButton,
+    rightButton,
     idPrefix,
     title,
     titleAlign,
