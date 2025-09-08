@@ -2,6 +2,12 @@ import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { z } from "zod";
 import type { WavelengthButtonProps } from "../buttons/WavelengthButton/WavelengthButton";
 
+export interface FormActionConfig {
+  label?: string;
+  buttonProps?: Partial<HTMLButtonElement>;
+  onClick?: () => void;
+}
+
 // ---- Types that mirror the web component's API ----
 interface WavelengthFormElement extends HTMLElement {
   schema?: unknown;
@@ -9,9 +15,9 @@ interface WavelengthFormElement extends HTMLElement {
   validate?: () => boolean;
   submitLabel?: string;
   submitButtonProps?: Record<string, unknown>;
-  showSubmit?: boolean;
-  backLabel?: string;
-  backButtonProps?: Record<string, unknown>;
+  leftButton?: { label?: string; buttonProps?: Record<string, unknown> };
+  centerButton?: { label?: string; buttonProps?: Record<string, unknown> };
+  rightButton?: { label?: string; buttonProps?: Record<string, unknown> };
   idPrefix?: string;
   title: string;
   titleAlign?: string;
@@ -35,11 +41,11 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   submitLabel?: string;
   /** Props forwarded to the internal wavelength-button */
   submitButtonProps?: Omit<WavelengthButtonProps, "children" | "onClick">;
-  /** Whether to show the internal submit button */
+  /** @deprecated Use rightButton to control visibility */
   showSubmit?: boolean;
-  /** Label for a back button */
+  /** @deprecated Use leftButton.label */
   backLabel?: string;
-  /** Props forwarded to the back button */
+  /** @deprecated Use leftButton.buttonProps */
   backButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   /** Prefix applied to generated input IDs */
   idPrefix?: string;
@@ -62,8 +68,12 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   onChange?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
   onValid?: (value: T, issues: z.ZodIssue[]) => void;
   onInvalid?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
-  /** Fired when the back button is clicked */
+  /** @deprecated Use leftButton.onClick */
   onBack?: () => void;
+
+  leftButton?: FormActionConfig;
+  centerButton?: FormActionConfig;
+  rightButton?: FormActionConfig;
 }
 
 export interface WavelengthFormRef<T extends object = Record<string, unknown>> {
@@ -83,10 +93,7 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
   return (...args: Parameters<F>) => fnRef.current?.(...args);
 }
 
-function WavelengthFormInner<T extends object = Record<string, unknown>>(
-  props: WavelengthFormProps<T>,
-  ref: React.ForwardedRef<WavelengthFormRef<T>>,
-) {
+function WavelengthFormInner<T extends object = Record<string, unknown>>(props: WavelengthFormProps<T>, ref: React.ForwardedRef<WavelengthFormRef<T>>) {
   const {
     schema,
     value,
@@ -107,13 +114,18 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     formWidth,
     layout,
     onBack,
+    leftButton,
+    centerButton,
+    rightButton,
   } = props;
   const hostRef = useRef<WavelengthFormElement | null>(null);
 
   const onChangeStable = useStableCallback(onChange);
   const onValidStable = useStableCallback(onValid);
   const onInvalidStable = useStableCallback(onInvalid);
-  const onBackStable = useStableCallback(onBack);
+  const leftClickStable = useStableCallback(leftButton?.onClick ?? onBack);
+  const centerClickStable = useStableCallback(centerButton?.onClick);
+  const rightClickStable = useStableCallback(rightButton?.onClick);
 
   // Set properties & bind events
   useEffect(() => {
@@ -142,9 +154,29 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     if (value) el.value = value as any;
     if (submitLabel !== undefined) el.submitLabel = submitLabel;
     if (submitButtonProps) el.submitButtonProps = submitButtonProps as any;
-    if (showSubmit !== undefined) el.showSubmit = showSubmit;
-    if (backLabel !== undefined) el.backLabel = backLabel;
-    if (backButtonProps) el.backButtonProps = backButtonProps as any;
+
+    const derivedLeft = leftButton ?? (backLabel !== undefined || backButtonProps || onBack ? { label: backLabel, buttonProps: backButtonProps as any } : undefined);
+    if (derivedLeft) el.leftButton = { label: derivedLeft.label, buttonProps: derivedLeft.buttonProps as any };
+    else el.leftButton = undefined;
+
+    if (centerButton) {
+      el.centerButton = {
+        label: centerButton.label,
+        buttonProps: centerButton.buttonProps as any,
+      };
+    } else {
+      el.centerButton = undefined;
+    }
+
+    const derivedRight = rightButton ?? (showSubmit === false ? undefined : { label: submitLabel, buttonProps: submitButtonProps as any });
+    if (derivedRight) {
+      el.rightButton = {
+        label: derivedRight.label,
+        buttonProps: derivedRight.buttonProps as any,
+      };
+    } else {
+      el.rightButton = undefined;
+    }
     el.idPrefix = idPrefix as any;
     if (title !== undefined) el.title = title;
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
@@ -158,6 +190,10 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     showSubmit,
     backLabel,
     backButtonProps,
+    onBack,
+    leftButton,
+    centerButton,
+    rightButton,
     idPrefix,
     title,
     titleAlign,
@@ -186,15 +222,22 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     el.addEventListener("form-change", handleChange as EventListener);
     el.addEventListener("form-valid", handleValid as EventListener);
     el.addEventListener("form-invalid", handleInvalid as EventListener);
-    el.addEventListener("form-back", onBackStable as EventListener);
+    el.addEventListener("left-button-click", leftClickStable as EventListener);
+    el.addEventListener("center-button-click", centerClickStable as EventListener);
+    el.addEventListener("right-button-click", rightClickStable as EventListener);
+    // Backwards compatibility
+    el.addEventListener("form-back", leftClickStable as EventListener);
 
     return () => {
       el.removeEventListener("form-change", handleChange as EventListener);
       el.removeEventListener("form-valid", handleValid as EventListener);
       el.removeEventListener("form-invalid", handleInvalid as EventListener);
-      el.removeEventListener("form-back", onBackStable as EventListener);
+      el.removeEventListener("left-button-click", leftClickStable as EventListener);
+      el.removeEventListener("center-button-click", centerClickStable as EventListener);
+      el.removeEventListener("right-button-click", rightClickStable as EventListener);
+      el.removeEventListener("form-back", leftClickStable as EventListener);
     };
-  }, [onChangeStable, onValidStable, onInvalidStable, onBackStable]);
+  }, [onChangeStable, onValidStable, onInvalidStable, leftClickStable, centerClickStable, rightClickStable]);
 
   // Expose an imperative API (validate/getValue/setValue)
   useImperativeHandle(

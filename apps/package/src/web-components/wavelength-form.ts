@@ -26,15 +26,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return [
-      "submit-label",
-      "id-prefix",
-      "title",
-      "title-align",
-      "form-width",
-      "show-submit",
-      "back-label",
-    ];
+    return ["submit-label", "id-prefix", "title", "title-align", "form-width", "show-submit", "back-label"];
   }
 
   constructor() {

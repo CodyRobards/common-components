@@ -106,7 +106,8 @@ export function WavelengthButtonPagination({ totalPages, current, handleChangePa
                       <MyDroplistItems
                         key={item}
                         onClick={() => {
-                          handleChangePage(item), setIsOpen(false); // Close dropdown after click
+                          handleChangePage(item);
+                          setIsOpen(false);
                         }}
                       >
                         {item}
@@ -128,7 +129,8 @@ export function WavelengthButtonPagination({ totalPages, current, handleChangePa
                       <MyDroplistItems
                         key={item}
                         onClick={() => {
-                          handleChangePage(item), setIsOpen(false); // Close dropdown after click
+                          handleChangePage(item);
+                          setIsOpen(false);
                         }}
                       >
                         {item}

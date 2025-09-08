@@ -44,18 +44,14 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(onValid).toHaveBeenCalledWith({ name: "Hello" }, []);
   });
 
-  test("forwards submit props", async () => {
+  test("forwards right button props", async () => {
     const schema = z.object({ name: z.string() });
-    render(<WavelengthForm schema={schema} submitLabel="Go" submitButtonProps={{ variant: "contained", colorOne: "red" }} />);
+    render(<WavelengthForm schema={schema} rightButton={{ label: "Go", buttonProps: { id: "btn" } }} />);
 
     const host = document.querySelector("wavelength-form") as any;
-    // wait for effects
     await new Promise((r) => setTimeout(r, 0));
 
-    const button = host.shadowRoot.querySelector("wavelength-button");
-    expect(button).toHaveAttribute("variant", "contained");
-    expect(button).toHaveAttribute("color-one", "red");
-    expect(button.textContent).toContain("Go");
+    expect(host.rightButton).toEqual({ label: "Go", buttonProps: { id: "btn" } });
   });
 
   test("propagates container background to inputs", async () => {
@@ -143,13 +139,27 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(form.style.width).toBe("350px");
   });
 
-  test("onBack fires from custom event", () => {
+  test("leftButton onClick fires from custom event", () => {
     const schema = z.object({ name: z.string() });
-    const onBack = jest.fn();
-    render(<WavelengthForm schema={schema} backLabel="Back" onBack={onBack} />);
+    const onClick = jest.fn();
+    render(<WavelengthForm schema={schema} leftButton={{ label: "Back", onClick }} />);
 
     const host = document.querySelector("wavelength-form")!;
-    host.dispatchEvent(new CustomEvent("form-back"));
+    host.dispatchEvent(new CustomEvent("left-button-click"));
+    expect(onClick).toHaveBeenCalled();
+  });
+
+  test("deprecated onBack prop maps to leftButton", async () => {
+    const schema = z.object({ name: z.string() });
+    const onBack = jest.fn();
+    render(<WavelengthForm schema={schema} onBack={onBack} backLabel="Back" />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form") as any;
+    expect(host.leftButton).toEqual({ label: "Back", buttonProps: undefined });
+
+    host.dispatchEvent(new CustomEvent("left-button-click"));
     expect(onBack).toHaveBeenCalled();
   });
 });
