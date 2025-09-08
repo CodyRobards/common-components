@@ -9,6 +9,9 @@ interface WavelengthFormElement extends HTMLElement {
   validate?: () => boolean;
   submitLabel?: string;
   submitButtonProps?: Record<string, unknown>;
+  showSubmit?: boolean;
+  backLabel?: string;
+  backButtonProps?: Record<string, unknown>;
   idPrefix?: string;
   title: string;
   titleAlign?: string;
@@ -32,6 +35,12 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   submitLabel?: string;
   /** Props forwarded to the internal wavelength-button */
   submitButtonProps?: Omit<WavelengthButtonProps, "children" | "onClick">;
+  /** Whether to show the internal submit button */
+  showSubmit?: boolean;
+  /** Label for a back button */
+  backLabel?: string;
+  /** Props forwarded to the back button */
+  backButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   /** Prefix applied to generated input IDs */
   idPrefix?: string;
   /** Optional heading text displayed above the form */
@@ -53,6 +62,8 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   onChange?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
   onValid?: (value: T, issues: z.ZodIssue[]) => void;
   onInvalid?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
+  /** Fired when the back button is clicked */
+  onBack?: () => void;
 }
 
 export interface WavelengthFormRef<T extends object = Record<string, unknown>> {
@@ -86,18 +97,23 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     onInvalid,
     submitLabel,
     submitButtonProps,
+    showSubmit,
+    backLabel,
+    backButtonProps,
     idPrefix,
     title,
     titleAlign,
     placeholders,
     formWidth,
     layout,
+    onBack,
   } = props;
   const hostRef = useRef<WavelengthFormElement | null>(null);
 
   const onChangeStable = useStableCallback(onChange);
   const onValidStable = useStableCallback(onValid);
   const onInvalidStable = useStableCallback(onInvalid);
+  const onBackStable = useStableCallback(onBack);
 
   // Set properties & bind events
   useEffect(() => {
@@ -126,12 +142,29 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     if (value) el.value = value as any;
     if (submitLabel !== undefined) el.submitLabel = submitLabel;
     if (submitButtonProps) el.submitButtonProps = submitButtonProps as any;
+    if (showSubmit !== undefined) el.showSubmit = showSubmit;
+    if (backLabel !== undefined) el.backLabel = backLabel;
+    if (backButtonProps) el.backButtonProps = backButtonProps as any;
     el.idPrefix = idPrefix as any;
     if (title !== undefined) el.title = title;
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
     if (formWidth !== undefined) el.formWidth = formWidth;
     if (layout !== undefined) el.layout = layout;
-  }, [schema, value, submitLabel, submitButtonProps, idPrefix, title, titleAlign, placeholders, formWidth, layout]);
+  }, [
+    schema,
+    value,
+    submitLabel,
+    submitButtonProps,
+    showSubmit,
+    backLabel,
+    backButtonProps,
+    idPrefix,
+    title,
+    titleAlign,
+    placeholders,
+    formWidth,
+    layout,
+  ]);
 
   useEffect(() => {
     const el = hostRef.current;
@@ -153,13 +186,15 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     el.addEventListener("form-change", handleChange as EventListener);
     el.addEventListener("form-valid", handleValid as EventListener);
     el.addEventListener("form-invalid", handleInvalid as EventListener);
+    el.addEventListener("form-back", onBackStable as EventListener);
 
     return () => {
       el.removeEventListener("form-change", handleChange as EventListener);
       el.removeEventListener("form-valid", handleValid as EventListener);
       el.removeEventListener("form-invalid", handleInvalid as EventListener);
+      el.removeEventListener("form-back", onBackStable as EventListener);
     };
-  }, [onChangeStable, onValidStable, onInvalidStable]);
+  }, [onChangeStable, onValidStable, onInvalidStable, onBackStable]);
 
   // Expose an imperative API (validate/getValue/setValue)
   useImperativeHandle(
