@@ -18,12 +18,14 @@ describe("wavelength-form web component", () => {
     el.addEventListener("form-change", (e: Event) => change((e as CustomEvent).detail));
     el.addEventListener("form-valid", (e: Event) => valid((e as CustomEvent).detail));
 
+    el.rightButton = { label: "Submit" };
+
     const input = el.shadowRoot!.querySelector("wavelength-input") as any;
     input.value = "A";
     fireEvent(input, new CustomEvent("inputChange", { detail: { value: "A" } }));
     expect(change).toHaveBeenCalledWith({ value: { name: "A" }, issues: [] });
 
-    const button = el.shadowRoot!.querySelector("wavelength-button")!;
+    const button = el.shadowRoot!.querySelector("button")!;
     fireEvent.click(button);
     expect(valid).toHaveBeenCalledWith({ value: { name: "A" }, issues: [] });
   });
@@ -36,7 +38,8 @@ describe("wavelength-form web component", () => {
     const invalid = jest.fn();
     el.addEventListener("form-invalid", (e: Event) => invalid((e as CustomEvent).detail));
 
-    const button = el.shadowRoot!.querySelector("wavelength-button")!;
+    el.rightButton = { label: "Submit" };
+    const button = el.shadowRoot!.querySelector("button")!;
     fireEvent.click(button);
     expect(invalid).toHaveBeenCalled();
     expect(invalid.mock.calls[0][0].issues.length).toBeGreaterThan(0);
@@ -53,7 +56,8 @@ describe("wavelength-form web component", () => {
       password: z.string().min(5, { message: "Too short" }).regex(/[A-Z]/, { message: "Must include capital" }),
     });
 
-    const button = el.shadowRoot!.querySelector("wavelength-button")!;
+    el.rightButton = { label: "Submit" };
+    const button = el.shadowRoot!.querySelector("button")!;
     fireEvent.click(button);
 
     const input = el.shadowRoot!.querySelector("wavelength-input") as any;
@@ -80,10 +84,11 @@ describe("wavelength-form web component", () => {
     expect(input.getAttribute("error-message")).toBe("Required");
   });
 
-  test("submit-label attribute controls button text", () => {
-    document.body.innerHTML = `<wavelength-form submit-label="Go"></wavelength-form>`;
+  test("rightButton label controls button text", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
-    const button = el.shadowRoot!.querySelector("wavelength-button")!;
+    el.rightButton = { label: "Go" };
+    const button = el.shadowRoot!.querySelector("button")!;
     expect(button.textContent).toBe("Go");
   });
 
@@ -139,16 +144,15 @@ describe("wavelength-form web component", () => {
   test("can hide submit button", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
-    el.showSubmit = false;
     el.schema = z.object({ name: z.string() });
-    const button = el.shadowRoot!.querySelector("wavelength-button");
+    const button = el.shadowRoot!.querySelector("button");
     expect(button).toBeNull();
   });
 
   test("emits form-back when back button clicked", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
-    el.backLabel = "Back";
+    el.leftButton = { label: "Back" };
     el.schema = z.object({ name: z.string() });
 
     const handler = jest.fn();

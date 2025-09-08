@@ -31,9 +31,9 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
             language="tsx"
           />
           <p>
-            Customize the submit button text with <code>submitLabel</code> or pass
-            <code>submitButtonProps</code> to forward attributes to the internal
-            <code>&lt;wavelength-button&gt;</code>.
+            Optional action buttons can be added via the <code>leftButton</code>,
+            <code>centerButton</code>, and <code>rightButton</code> props. Each accepts a
+            label, standard button props, and an optional custom event name.
           </p>
           <p>
             Provide a <code>title</code> to render a heading above the form and control its alignment with <code>titleAlign</code>.
@@ -50,14 +50,9 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
   argTypes: {
     schema: { control: "object", description: "Zod schema defining form shape" },
     value: { control: "object", description: "Initial form values" },
-    submitLabel: { control: "text", description: "Label for the submit button" },
-    submitButtonProps: {
-      control: "object",
-      description: "Props forwarded to the internal wavelength-button",
-    },
-    showSubmit: { control: "boolean", description: "Toggle internal submit button" },
-    backLabel: { control: "text", description: "Label for a back button" },
-    backButtonProps: { control: "object", description: "Props for the back button" },
+    leftButton: { control: "object", description: "Config for left-aligned button" },
+    centerButton: { control: "object", description: "Config for center-aligned button" },
+    rightButton: { control: "object", description: "Config for right-aligned button" },
     idPrefix: { control: "text", description: "Prefix applied to generated input IDs" },
     title: { control: "text", description: "Heading text displayed above the form" },
     titleAlign: {
@@ -83,12 +78,11 @@ export const Default: Story = {
   render: (args) => <WavelengthForm {...args} />,
 };
 
-export const CustomSubmitButton: Story = {
+export const CustomRightButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
-    submitLabel: "Register",
-    submitButtonProps: { variant: "contained", colorOne: "#2e7d32", colorTwo: "#fff" },
+    rightButton: { label: "Register", buttonProps: { id: "register-btn" } },
   },
   render: (args) => <WavelengthForm {...args} />,
 };
@@ -122,11 +116,10 @@ export const WithLayout: Story = {
   render: (args) => <WavelengthForm {...args} />,
 };
 
-export const WithoutSubmitButton: Story = {
+export const WithoutRightButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
-    showSubmit: false,
   },
   render: (args) => <WavelengthForm {...args} />,
 };
@@ -135,7 +128,7 @@ export const WithBackButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
-    backLabel: "Back",
+    leftButton: { label: "Back" },
   },
   render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} />,
 };

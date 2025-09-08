@@ -2,9 +2,14 @@ import { ZodObject, ZodRawShape, ZodIssue } from "zod";
 import { zodToFields } from "../form/zodToFields";
 import { FieldDef, FormValue } from "../types/fields";
 import { Validator } from "../form/Validator"; // file 4 will re-export your existing Validator
-import "./wavelength-button";
 
 type Shape = ZodRawShape;
+
+type ButtonConfig = {
+  label?: string;
+  buttonProps?: Partial<HTMLButtonElement>;
+  eventName?: string;
+};
 
 export class WavelengthForm<T extends object> extends HTMLElement {
   private _schema?: ZodObject<Shape>;
@@ -13,11 +18,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _fields: FieldDef[] = [];
   private _value: FormValue = {};
   private _errors: Record<string, string> = {};
-  private _submitLabel = "Submit";
-  private _submitButtonProps: Record<string, unknown> = {};
-  private _showSubmit = true;
-  private _backLabel = "";
-  private _backButtonProps: Record<string, unknown> = {};
+  private _leftButton?: ButtonConfig;
+  private _centerButton?: ButtonConfig;
+  private _rightButton?: ButtonConfig;
   private _idPrefix = "";
   private _title = "";
   private _titleAlign: string = "left";
@@ -26,15 +29,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return [
-      "submit-label",
-      "id-prefix",
-      "title",
-      "title-align",
-      "form-width",
-      "show-submit",
-      "back-label",
-    ];
+    return ["id-prefix", "title", "title-align", "form-width"];
   }
 
   constructor() {
@@ -71,54 +66,28 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     return this.collectValues();
   }
 
-  set submitLabel(label: string) {
-    this._submitLabel = label;
-    this.setAttribute("submit-label", label);
-  }
-  get submitLabel(): string {
-    return this._submitLabel;
-  }
-
-  set submitButtonProps(v: Record<string, unknown> | undefined) {
-    this._submitButtonProps = v ?? {};
+  set leftButton(v: ButtonConfig | undefined) {
+    this._leftButton = v;
     this.render();
   }
-  get submitButtonProps(): Record<string, unknown> {
-    return this._submitButtonProps;
+  get leftButton(): ButtonConfig | undefined {
+    return this._leftButton;
   }
 
-  set showSubmit(v: boolean | undefined) {
-    this._showSubmit = v !== false;
-    if (v === undefined) {
-      this.removeAttribute("show-submit");
-    } else {
-      this.setAttribute("show-submit", String(this._showSubmit));
-    }
+  set centerButton(v: ButtonConfig | undefined) {
+    this._centerButton = v;
     this.render();
   }
-  get showSubmit(): boolean {
-    return this._showSubmit;
+  get centerButton(): ButtonConfig | undefined {
+    return this._centerButton;
   }
 
-  set backLabel(v: string | undefined) {
-    this._backLabel = v ?? "";
-    if (v === undefined) {
-      this.removeAttribute("back-label");
-    } else {
-      this.setAttribute("back-label", this._backLabel);
-    }
+  set rightButton(v: ButtonConfig | undefined) {
+    this._rightButton = v;
     this.render();
   }
-  get backLabel(): string | undefined {
-    return this._backLabel || undefined;
-  }
-
-  set backButtonProps(v: Record<string, unknown> | undefined) {
-    this._backButtonProps = v ?? {};
-    this.render();
-  }
-  get backButtonProps(): Record<string, unknown> {
-    return this._backButtonProps;
+  get rightButton(): ButtonConfig | undefined {
+    return this._rightButton;
   }
 
   set idPrefix(v: string | undefined) {
@@ -189,10 +158,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, _old: string | null, value: string | null) {
-    if (name === "submit-label") {
-      this._submitLabel = value ?? "Submit";
-      this.render();
-    } else if (name === "id-prefix") {
+    if (name === "id-prefix") {
       this._idPrefix = value ?? "";
       this.render();
     } else if (name === "title") {
@@ -203,12 +169,6 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       this.render();
     } else if (name === "form-width") {
       this._formWidth = value ?? "";
-      this.render();
-    } else if (name === "show-submit") {
-      this._showSubmit = value !== "false";
-      this.render();
-    } else if (name === "back-label") {
-      this._backLabel = value ?? "";
       this.render();
     }
   }
@@ -345,9 +305,17 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       .actions {
         margin-top: 8px;
         display: flex;
-        justify-content: space-between;
         gap: 8px;
       }
+      .actions > .left,
+      .actions > .center,
+      .actions > .right {
+        flex: 1;
+        display: flex;
+      }
+      .actions > .left { justify-content: flex-start; }
+      .actions > .center { justify-content: center; }
+      .actions > .right { justify-content: flex-end; }
     `;
 
     const form = document.createElement("form");
@@ -456,64 +424,40 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     const actions = document.createElement("div");
     actions.className = "actions";
 
-    if (this._backLabel) {
-      const back = document.createElement("button");
-      back.type = "button";
-      back.textContent = this._backLabel;
-      for (const [key, val] of Object.entries(this._backButtonProps)) {
-        if (key === "className") {
-          back.className = String(val ?? "");
-          continue;
-        }
-        if (key === "style" && typeof val === "object") {
-          Object.assign((back as HTMLElement).style, val as Record<string, any>);
-          continue;
-        }
-        const attr = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-        if (typeof val === "boolean") {
-          if (val) back.setAttribute(attr, "");
-        } else {
-          back.setAttribute(attr, String(val));
-        }
-      }
-      back.addEventListener("click", (e) => {
-        e.preventDefault();
-        this.dispatchEvent(new CustomEvent("form-back"));
+    const leftSlot = document.createElement("div");
+    leftSlot.className = "left";
+    const centerSlot = document.createElement("div");
+    centerSlot.className = "center";
+    const rightSlot = document.createElement("div");
+    rightSlot.className = "right";
+
+    const buildButton = (cfg: ButtonConfig, defaultEvent: string, defaultType: "button" | "submit") => {
+      const btn = document.createElement("button");
+      if (cfg.label) btn.textContent = cfg.label;
+      if (cfg.buttonProps) Object.assign(btn, cfg.buttonProps);
+      btn.type = cfg.buttonProps?.type ?? defaultType;
+      btn.addEventListener("click", (e) => {
+        if (btn.type !== "submit") e.preventDefault();
+        const ev = cfg.eventName ?? defaultEvent;
+        this.dispatchEvent(new CustomEvent(ev));
       });
-      actions.appendChild(back);
+      return btn;
+    };
+
+    if (this._leftButton) {
+      leftSlot.appendChild(buildButton(this._leftButton, "form-back", "button"));
     }
 
-    if (this._showSubmit) {
-      const submit = document.createElement("wavelength-button");
-      submit.textContent = this._submitLabel;
-      for (const [key, val] of Object.entries(this._submitButtonProps)) {
-        if (key === "className") {
-          submit.className = String(val ?? "");
-          continue;
-        }
-        if (key === "style" && typeof val === "object") {
-          Object.assign((submit as HTMLElement).style, val as Record<string, any>);
-          continue;
-        }
-        const attr = key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-        if (typeof val === "boolean") {
-          if (val) submit.setAttribute(attr, "");
-        } else {
-          submit.setAttribute(attr, String(val));
-        }
-      }
-      submit.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (typeof (form as any).requestSubmit === "function") {
-          (form as any).requestSubmit();
-        } else {
-          form.dispatchEvent(new Event("submit", { cancelable: true }));
-        }
-      });
-      actions.appendChild(submit);
+    if (this._centerButton) {
+      centerSlot.appendChild(buildButton(this._centerButton, "form-center", "button"));
     }
 
-    if (actions.children.length > 0) {
+    if (this._rightButton) {
+      rightSlot.appendChild(buildButton(this._rightButton, "form-submit", "submit"));
+    }
+
+    if (leftSlot.children.length + centerSlot.children.length + rightSlot.children.length > 0) {
+      actions.append(leftSlot, centerSlot, rightSlot);
       form.appendChild(actions);
     }
 
