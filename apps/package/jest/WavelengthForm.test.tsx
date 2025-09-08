@@ -63,6 +63,57 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(button.textContent).toContain("Go");
   });
 
+  test("renders buttons only when defined", async () => {
+    const schema = z.object({ name: z.string() });
+    const { rerender } = render(<WavelengthForm schema={schema} />);
+
+    await new Promise((r) => setTimeout(r, 0));
+    let host = document.querySelector("wavelength-form")!;
+    expect(host.shadowRoot!.querySelectorAll("button").length).toBe(0);
+
+    rerender(
+      <WavelengthForm
+        schema={schema}
+        leftButton={{ label: "Back" }}
+        centerButton={{ label: "Center" }}
+        rightButton={{ label: "Next" }}
+      />,
+    );
+    await new Promise((r) => setTimeout(r, 0));
+    host = document.querySelector("wavelength-form")!;
+    expect(host.shadowRoot!.querySelectorAll("button").length).toBe(3);
+  });
+
+  test("buttons emit events and apply props", async () => {
+    const schema = z.object({ name: z.string() });
+    render(
+      <WavelengthForm
+        schema={schema}
+        leftButton={{ label: "Back", buttonProps: { id: "left" }, eventName: "go-back" }}
+        centerButton={{ label: "Center", buttonProps: { id: "center" }, eventName: "go-center" }}
+        rightButton={{ label: "Next", buttonProps: { id: "right" }, eventName: "go-submit" }}
+      />,
+    );
+
+    await new Promise((r) => setTimeout(r, 0));
+    const host = document.querySelector("wavelength-form")!;
+
+    const seen: string[] = [];
+    host.addEventListener("go-back", () => seen.push("back"));
+    host.addEventListener("go-center", () => seen.push("center"));
+    host.addEventListener("go-submit", () => seen.push("submit"));
+
+    const left = host.shadowRoot!.getElementById("left") as HTMLButtonElement;
+    const center = host.shadowRoot!.getElementById("center") as HTMLButtonElement;
+    const right = host.shadowRoot!.getElementById("right") as HTMLButtonElement;
+
+    left.click();
+    center.click();
+    right.click();
+
+    expect(seen).toEqual(["back", "center", "submit"]);
+  });
+
   test("propagates container background to inputs", async () => {
     const schema = z.object({ name: z.string() });
     const color = "rgb(1, 2, 3)";
@@ -148,13 +199,20 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(form.style.width).toBe("350px");
   });
 
-  test("onBack fires from custom event", () => {
+  test("default button events trigger callbacks", () => {
     const schema = z.object({ name: z.string() });
     const onBack = jest.fn();
-    render(<WavelengthForm schema={schema} onBack={onBack} />);
+    const onCenter = jest.fn();
+    const onSubmit = jest.fn();
+    render(<WavelengthForm schema={schema} onBack={onBack} onCenter={onCenter} onSubmit={onSubmit} />);
 
     const host = document.querySelector("wavelength-form")!;
     host.dispatchEvent(new CustomEvent("form-back"));
+    host.dispatchEvent(new CustomEvent("form-center"));
+    host.dispatchEvent(new CustomEvent("form-submit"));
+
     expect(onBack).toHaveBeenCalled();
+    expect(onCenter).toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
   });
 });

@@ -12,7 +12,33 @@ You can install this package the same way that you install everything else
 npm install @wavelengthusaf/components
 ```
 
+## WavelengthForm buttons
+
+`WavelengthForm` exposes configurable action buttons. Provide a `leftButton`,
+`centerButton`, and/or `rightButton` object with a `label`, optional
+`buttonProps` passed to the underlying `<button>`, and an optional `eventName`
+to customize the emitted event. Default events are `form-back`, `form-center`,
+and `form-submit`.
+
+```tsx
+<WavelengthForm
+  schema={schema}
+  leftButton={{ label: "Back", buttonProps: { id: "back-btn" } }}
+  centerButton={{ label: "Save", buttonProps: { id: "save-btn", type: "button" } }}
+  rightButton={{ label: "Next", buttonProps: { id: "next-btn" } }}
+  onBack={() => console.log("back")}
+  onCenter={() => console.log("center")}
+  onSubmit={() => console.log("submit")}
+/>
+```
+
 ## Release Notes
+
+### 3.3.9
+
+- 8/13/2025
+- Added generic button configurations to `WavelengthForm` with optional left,
+  center, and right slots supporting custom events and button properties.
 
 ### 3.3.8
 
