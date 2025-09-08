@@ -128,7 +128,16 @@ export const WithBackButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
-    leftButton: { label: "Back" },
+    leftButton: { label: "Back", buttonProps: { id: "back-btn" } },
   },
   render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} />,
+};
+
+export const WithCenterButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    centerButton: { label: "Help", buttonProps: { id: "help-btn" } },
+  },
+  render: (args) => <WavelengthForm {...args} onCenter={() => console.log("center")} />,
 };

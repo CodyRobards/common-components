@@ -63,6 +63,10 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   onInvalid?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
   /** Fired when the default back event is triggered */
   onBack?: () => void;
+  /** Fired when the default center event is triggered */
+  onCenter?: () => void;
+  /** Fired when the default submit event is triggered */
+  onSubmit?: () => void;
 }
 
 export interface WavelengthFormRef<T extends object = Record<string, unknown>> {
@@ -104,6 +108,8 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     formWidth,
     layout,
     onBack,
+    onCenter,
+    onSubmit,
   } = props;
   const hostRef = useRef<WavelengthFormElement | null>(null);
 
@@ -111,6 +117,8 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
   const onValidStable = useStableCallback(onValid);
   const onInvalidStable = useStableCallback(onInvalid);
   const onBackStable = useStableCallback(onBack);
+  const onCenterStable = useStableCallback(onCenter);
+  const onSubmitStable = useStableCallback(onSubmit);
 
   // Set properties & bind events
   useEffect(() => {
@@ -180,14 +188,18 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     el.addEventListener("form-valid", handleValid as EventListener);
     el.addEventListener("form-invalid", handleInvalid as EventListener);
     el.addEventListener("form-back", onBackStable as EventListener);
+    el.addEventListener("form-center", onCenterStable as EventListener);
+    el.addEventListener("form-submit", onSubmitStable as EventListener);
 
     return () => {
       el.removeEventListener("form-change", handleChange as EventListener);
       el.removeEventListener("form-valid", handleValid as EventListener);
       el.removeEventListener("form-invalid", handleInvalid as EventListener);
       el.removeEventListener("form-back", onBackStable as EventListener);
+      el.removeEventListener("form-center", onCenterStable as EventListener);
+      el.removeEventListener("form-submit", onSubmitStable as EventListener);
     };
-  }, [onChangeStable, onValidStable, onInvalidStable, onBackStable]);
+  }, [onChangeStable, onValidStable, onInvalidStable, onBackStable, onCenterStable, onSubmitStable]);
 
   // Expose an imperative API (validate/getValue/setValue)
   useImperativeHandle(
