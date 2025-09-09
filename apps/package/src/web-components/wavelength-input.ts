@@ -51,18 +51,19 @@ template.innerHTML = `
     opacity: 0;  
   }  
 
-  input {  
-    font-size: 16px;  
-    padding: 16.5px 14px;  
-    border: 1px solid var(--wavelength-border-color, #cccccc);  
-    border-radius: 8px;  
-    width: 100%;  
-    box-sizing: border-box;  
-    background-color: var(--wavelength-background, #ffffff);  
-    transition: border-color 0.2s ease, border-width 0.2s ease;
-    overflow: auto;  
-    font-family: inherit;  
-  }  
+  input {
+    font-size: 16px;
+    padding: 16.5px 14px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--wavelength-background, #ffffff);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    overflow: auto;
+    font-family: inherit;
+    box-shadow: 0 0 0 1px var(--neutral-border-color, #cccccc);
+  }
 
   input:focus {  
     outline: none;  
@@ -300,9 +301,10 @@ export class WavelengthInput extends HTMLElement {
     this.isFocused = true;
     const isValid = this._validate();
     if (isValid) {
-      this.inputEl.style.borderColor = this.getAttribute("focus-color") || "#5e9ed6";
+      const focusColor = this.getAttribute("focus-color") || "#5e9ed6";
+      this.inputEl.style.borderColor = focusColor;
+      this.inputEl.style.boxShadow = `0 0 0 2px ${focusColor}`;
     }
-    this.inputEl.style.borderWidth = "2px";
     this.inputEl.setAttribute("aria-required", this.required.toString());
   };
 
@@ -324,15 +326,9 @@ export class WavelengthInput extends HTMLElement {
       return;
     }
 
-    this.inputEl.style.borderWidth = "1px";
-
-    if (shouldValidate) {
-      if (isValid) {
-        this.inputEl.style.borderColor = this.getAttribute("border-color") || "#cccccc";
-      }
-    } else {
-      this.inputEl.style.borderColor = this.getAttribute("border-color") || "#cccccc";
-    }
+    const borderColor = this.getAttribute("border-color") || "#cccccc";
+    this.inputEl.style.borderColor = borderColor;
+    this.inputEl.style.boxShadow = `0 0 0 1px ${borderColor}`;
   };
 
   private _validate(bypassTypeCheck = false): boolean {
@@ -414,7 +410,7 @@ export class WavelengthInput extends HTMLElement {
     this.helperEl.innerHTML = htmlMessage;
     this.helperEl.classList.add("error");
     this.inputEl.style.borderColor = "red";
-    this.inputEl.style.borderWidth = "2px";
+    this.inputEl.style.boxShadow = "0 0 0 2px red";
     this.helperEl.style.color = "red";
     this.inputEl.setAttribute("aria-invalid", "true");
     this.setAttribute("data-error", "true");
@@ -424,13 +420,13 @@ export class WavelengthInput extends HTMLElement {
   private _clearError(helperText: string) {
     const borderColor = this.isFocused ? this.getAttribute("focus-color") || "#5e9ed6" : this.getAttribute("border-color") || "#cccccc";
     const helperColor = this.getAttribute("helper-color") || "#000000";
-    const borderWidth = this.isFocused ? "2px" : "1px";
+    const boxShadow = this.isFocused ? `0 0 0 2px ${borderColor}` : `0 0 0 1px ${borderColor}`;
 
     this.helperEl.textContent = helperText;
     this.helperEl.classList.remove("error");
     this.helperEl.style.color = helperColor;
     this.inputEl.style.borderColor = borderColor;
-    this.inputEl.style.borderWidth = borderWidth;
+    this.inputEl.style.boxShadow = boxShadow;
     this.inputEl.setAttribute("aria-invalid", "false");
     this.removeAttribute("data-error");
     this._applyValidationHint();
@@ -544,7 +540,7 @@ export class WavelengthInput extends HTMLElement {
 
   private _applyColors() {
     const InputBg = this.getAttribute("background-color") || "#ffffff";
-    const border = this.getAttribute("border-color");
+    const border = this.getAttribute("border-color") || "#cccccc";
     const text = this.getAttribute("text-color") || "#000000";
     const placeholder = this.getAttribute("placeholder-color");
     const labelColor = this.getAttribute("label-color");
@@ -572,7 +568,8 @@ export class WavelengthInput extends HTMLElement {
     this.labelEl.style.setProperty("--wavelength-container-background", containerBg);
     this.labelEl.style.setProperty("--wavelength-label-color", labelColor || "#666666");
 
-    if (border) this.inputEl.style.borderColor = border;
+    this.inputEl.style.borderColor = border;
+    this.inputEl.style.boxShadow = `0 0 0 1px ${border}`;
     if (text) this.inputEl.style.color = text;
     if (placeholder) {
       this.placeholderStyleEl.textContent = `
