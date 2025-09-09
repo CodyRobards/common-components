@@ -16,21 +16,34 @@ npm install @wavelengthusaf/components
 
 `WavelengthForm` exposes configurable action buttons. Provide a `leftButton`,
 `centerButton`, and/or `rightButton` object with a `label`, optional
-`buttonProps` passed to the underlying `<button>`, and an optional `eventName`
-to customize the emitted event. Default events are `form-back`, `form-center`,
-and `form-submit`.
+`buttonProps` forwarded as attributes to the underlying `<wavelength-button>`,
+and an optional `eventName` to customize the emitted event. Default events are
+`form-back`, `form-center`, and `form-submit`.
 
 ```tsx
 <WavelengthForm
   schema={schema}
-  leftButton={{ label: "Back", buttonProps: { id: "back-btn" } }}
-  centerButton={{ label: "Save", buttonProps: { id: "save-btn", type: "button" } }}
-  rightButton={{ label: "Next", buttonProps: { id: "next-btn" } }}
+  leftButton={{
+    label: "Back",
+    buttonProps: { id: "back-btn", variant: "text", size: "small" },
+  }}
+  centerButton={{
+    label: "Save",
+    buttonProps: { id: "save-btn", type: "button", variant: "outlined", size: "medium" },
+  }}
+  rightButton={{
+    label: "Next",
+    buttonProps: { id: "next-btn", variant: "contained", size: "large" },
+  }}
   onBack={() => console.log("back")}
   onCenter={() => console.log("center")}
   onSubmit={() => console.log("submit")}
 />
 ```
+
+The `buttonProps` object is forwarded as attributes to
+`<wavelength-button>`, allowing you to customize each button via properties
+like `variant` or `size`.
 
 ## Release Notes
 

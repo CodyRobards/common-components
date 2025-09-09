@@ -33,7 +33,9 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
           <p>
             Optional action buttons can be added via the <code>leftButton</code>,
             <code>centerButton</code>, and <code>rightButton</code> props. Each accepts a
-            label, standard button props, and an optional custom event name.
+            label, optional <code>buttonProps</code> forwarded to the underlying
+            <code>&lt;wavelength-button&gt;</code> (for example, <code>variant</code> or
+            <code>size</code>), and an optional custom event name.
           </p>
           <p>
             Provide a <code>title</code> to render a heading above the form and control its alignment with <code>titleAlign</code>.
@@ -82,7 +84,10 @@ export const CustomRightButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
-    rightButton: { label: "Register", buttonProps: { id: "register-btn" } },
+    rightButton: {
+      label: "Register",
+      buttonProps: { id: "register-btn", variant: "contained", size: "large" },
+    },
   },
   render: (args) => <WavelengthForm {...args} />,
 };
@@ -128,7 +133,10 @@ export const WithBackButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
-    leftButton: { label: "Back", buttonProps: { id: "back-btn" } },
+    leftButton: {
+      label: "Back",
+      buttonProps: { id: "back-btn", variant: "text", size: "small" },
+    },
   },
   render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} />,
 };
@@ -137,7 +145,10 @@ export const WithCenterButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
-    centerButton: { label: "Help", buttonProps: { id: "help-btn" } },
+    centerButton: {
+      label: "Help",
+      buttonProps: { id: "help-btn", variant: "outlined", size: "medium" },
+    },
   },
   render: (args) => <WavelengthForm {...args} onCenter={() => console.log("center")} />,
 };
