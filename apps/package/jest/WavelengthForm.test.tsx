@@ -90,9 +90,21 @@ describe("WavelengthForm (React Wrapper)", () => {
     render(
       <WavelengthForm
         schema={schema}
-        leftButton={{ label: "Back", buttonProps: { id: "left" }, eventName: "go-back" }}
-        centerButton={{ label: "Center", buttonProps: { id: "center" }, eventName: "go-center" }}
-        rightButton={{ label: "Next", buttonProps: { id: "right" }, eventName: "go-submit" }}
+        leftButton={{
+          label: "Back",
+          buttonProps: { id: "left", "data-test": "back" },
+          eventName: "go-back",
+        }}
+        centerButton={{
+          label: "Center",
+          buttonProps: { id: "center", "data-test": "center" },
+          eventName: "go-center",
+        }}
+        rightButton={{
+          label: "Next",
+          buttonProps: { id: "right", "data-test": "submit" },
+          eventName: "go-submit",
+        }}
       />,
     );
 
@@ -104,9 +116,19 @@ describe("WavelengthForm (React Wrapper)", () => {
     host.addEventListener("go-center", () => seen.push("center"));
     host.addEventListener("go-submit", () => seen.push("submit"));
 
-    const left = host.shadowRoot!.getElementById("left") as HTMLElement;
-    const center = host.shadowRoot!.getElementById("center") as HTMLElement;
-    const right = host.shadowRoot!.getElementById("right") as HTMLElement;
+    const left = host.shadowRoot!.querySelector(
+      "wavelength-button#left",
+    ) as HTMLElement;
+    const center = host.shadowRoot!.querySelector(
+      "wavelength-button#center",
+    ) as HTMLElement;
+    const right = host.shadowRoot!.querySelector(
+      "wavelength-button#right",
+    ) as HTMLElement;
+
+    expect(left).toHaveAttribute("data-test", "back");
+    expect(center).toHaveAttribute("data-test", "center");
+    expect(right).toHaveAttribute("data-test", "submit");
 
     left.click();
     center.click();
@@ -200,17 +222,32 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(form.style.width).toBe("350px");
   });
 
-  test("default button events trigger callbacks", () => {
+  test("default button events trigger callbacks", async () => {
     const schema = z.object({ name: z.string() });
     const onBack = jest.fn();
     const onCenter = jest.fn();
     const onSubmit = jest.fn();
-    render(<WavelengthForm schema={schema} onBack={onBack} onCenter={onCenter} onSubmit={onSubmit} />);
+    render(
+      <WavelengthForm
+        schema={schema}
+        onBack={onBack}
+        onCenter={onCenter}
+        onSubmit={onSubmit}
+        leftButton={{ label: "Back" }}
+        centerButton={{ label: "Center" }}
+        rightButton={{ label: "Next" }}
+      />,
+    );
 
+    await new Promise((r) => setTimeout(r, 0));
     const host = document.querySelector("wavelength-form")!;
-    host.dispatchEvent(new CustomEvent("form-back"));
-    host.dispatchEvent(new CustomEvent("form-center"));
-    host.dispatchEvent(new CustomEvent("form-submit"));
+    const [back, center, submit] = host.shadowRoot!.querySelectorAll(
+      "wavelength-button",
+    ) as any;
+
+    back.click();
+    center.click();
+    submit.click();
 
     expect(onBack).toHaveBeenCalled();
     expect(onCenter).toHaveBeenCalled();
