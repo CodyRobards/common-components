@@ -59,7 +59,7 @@ template.innerHTML = `
     width: 100%;  
     box-sizing: border-box;  
     background-color: var(--wavelength-background, #ffffff);  
-    transition: border-color 0.2s ease;  
+    transition: border-color 0.2s ease, border-width 0.2s ease;
     overflow: auto;  
     font-family: inherit;  
   }  
@@ -298,9 +298,11 @@ export class WavelengthInput extends HTMLElement {
   };
   private _onFocus = () => {
     this.isFocused = true;
-    if (this._validate()) {
+    const isValid = this._validate();
+    if (isValid) {
       this.inputEl.style.borderColor = this.getAttribute("focus-color") || "#5e9ed6";
     }
+    this.inputEl.style.borderWidth = "2px";
     this.inputEl.setAttribute("aria-required", this.required.toString());
   };
 
@@ -321,6 +323,8 @@ export class WavelengthInput extends HTMLElement {
     if (hasError) {
       return;
     }
+
+    this.inputEl.style.borderWidth = "1px";
 
     if (shouldValidate) {
       if (isValid) {
@@ -410,6 +414,7 @@ export class WavelengthInput extends HTMLElement {
     this.helperEl.innerHTML = htmlMessage;
     this.helperEl.classList.add("error");
     this.inputEl.style.borderColor = "red";
+    this.inputEl.style.borderWidth = "2px";
     this.helperEl.style.color = "red";
     this.inputEl.setAttribute("aria-invalid", "true");
     this.setAttribute("data-error", "true");
@@ -419,11 +424,13 @@ export class WavelengthInput extends HTMLElement {
   private _clearError(helperText: string) {
     const borderColor = this.isFocused ? this.getAttribute("focus-color") || "#5e9ed6" : this.getAttribute("border-color") || "#cccccc";
     const helperColor = this.getAttribute("helper-color") || "#000000";
+    const borderWidth = this.isFocused ? "2px" : "1px";
 
     this.helperEl.textContent = helperText;
     this.helperEl.classList.remove("error");
     this.helperEl.style.color = helperColor;
     this.inputEl.style.borderColor = borderColor;
+    this.inputEl.style.borderWidth = borderWidth;
     this.inputEl.setAttribute("aria-invalid", "false");
     this.removeAttribute("data-error");
     this._applyValidationHint();
