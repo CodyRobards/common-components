@@ -1,12 +1,13 @@
 const template = document.createElement("template");
 template.innerHTML = `
-<style>  
-  :host {  
-    display: inline-block;  
-    font-family: sans-serif;  
-    --wavelength-container-background: #f8f8f8;  
-    --wavelength-label-background: #ffffff;  
-  }  
+<style>
+  :host {
+    display: block;
+    width: 100%;
+    font-family: sans-serif;
+    --wavelength-container-background: #f8f8f8;
+    --wavelength-label-background: #ffffff;
+  }
 
   .field-wrapper {  
     position: relative;  
@@ -498,7 +499,8 @@ export class WavelengthInput extends HTMLElement {
   }
 
   private _applyLayout() {
-    const width = this.getAttribute("width") || "320px";
+    const widthAttr = this.getAttribute("width");
+    const width = widthAttr || "100%";
     const rawPadding = this.getAttribute("padding") || "16.5px 14px";
 
     const paddingParts = rawPadding.trim().split(/\s+/);
@@ -521,8 +523,8 @@ export class WavelengthInput extends HTMLElement {
         leftPaddingPx = 14;
     }
 
-    const parsedWidth = parseInt(width, 10);
-    const helperWidth = `${parsedWidth - leftPaddingPx}px`;
+    const isNumericWidth = widthAttr ? /^\d+(px)?$/.test(widthAttr.trim()) : false;
+    const helperWidth = isNumericWidth ? `${parseInt(widthAttr!, 10) - leftPaddingPx}px` : `calc(${width} - ${leftPaddingPx}px)`;
 
     this.inputEl.style.width = width;
     this.inputEl.style.padding = rawPadding;
