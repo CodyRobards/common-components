@@ -2,9 +2,14 @@ import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { z } from "zod";
 
 // ---- Types that mirror the web component's API ----
-interface ButtonConfig {
+/** Attributes passed through to the underlying `wavelength-button` */
+export interface WavelengthButtonAttributes extends React.HTMLAttributes<HTMLElement> {
+  [key: string]: any;
+}
+
+export interface ButtonConfig {
   label?: string;
-  buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+  buttonProps?: WavelengthButtonAttributes;
   eventName?: string;
 }
 
@@ -86,10 +91,7 @@ function useStableCallback<F extends (...args: any[]) => any>(fn?: F) {
   return (...args: Parameters<F>) => fnRef.current?.(...args);
 }
 
-function WavelengthFormInner<T extends object = Record<string, unknown>>(
-  props: WavelengthFormProps<T>,
-  ref: React.ForwardedRef<WavelengthFormRef<T>>,
-) {
+function WavelengthFormInner<T extends object = Record<string, unknown>>(props: WavelengthFormProps<T>, ref: React.ForwardedRef<WavelengthFormRef<T>>) {
   const {
     schema,
     value,
@@ -153,19 +155,7 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
     if (formWidth !== undefined) el.formWidth = formWidth;
     if (layout !== undefined) el.layout = layout;
-  }, [
-    schema,
-    value,
-    leftButton,
-    centerButton,
-    rightButton,
-    idPrefix,
-    title,
-    titleAlign,
-    placeholders,
-    formWidth,
-    layout,
-  ]);
+  }, [schema, value, leftButton, centerButton, rightButton, idPrefix, title, titleAlign, placeholders, formWidth, layout]);
 
   useEffect(() => {
     const el = hostRef.current;
