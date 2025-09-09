@@ -6,6 +6,7 @@ import { z } from "zod";
 import WavelengthForm from "../src/components/forms/WavelengthForm";
 import "../src/web-components/wavelength-form";
 import "../src/web-components/wavelength-input";
+import "../src/web-components/wavelength-button";
 
 // This test focuses on the React wrapper receiving the correct
 // detail payloads from the custom events.
@@ -57,7 +58,7 @@ describe("WavelengthForm (React Wrapper)", () => {
     // wait for effects
     await new Promise((r) => setTimeout(r, 0));
 
-    const button = host.shadowRoot.querySelector("button");
+    const button = host.shadowRoot.querySelector("wavelength-button");
     expect(button).toHaveAttribute("id", "go-btn");
     expect(button).toHaveAttribute("disabled");
     expect(button.textContent).toContain("Go");
@@ -69,7 +70,7 @@ describe("WavelengthForm (React Wrapper)", () => {
 
     await new Promise((r) => setTimeout(r, 0));
     let host = document.querySelector("wavelength-form")!;
-    expect(host.shadowRoot!.querySelectorAll("button").length).toBe(0);
+    expect(host.shadowRoot!.querySelectorAll("wavelength-button").length).toBe(0);
 
     rerender(
       <WavelengthForm
@@ -81,7 +82,7 @@ describe("WavelengthForm (React Wrapper)", () => {
     );
     await new Promise((r) => setTimeout(r, 0));
     host = document.querySelector("wavelength-form")!;
-    expect(host.shadowRoot!.querySelectorAll("button").length).toBe(3);
+    expect(host.shadowRoot!.querySelectorAll("wavelength-button").length).toBe(3);
   });
 
   test("buttons emit events and apply props", async () => {
@@ -103,9 +104,9 @@ describe("WavelengthForm (React Wrapper)", () => {
     host.addEventListener("go-center", () => seen.push("center"));
     host.addEventListener("go-submit", () => seen.push("submit"));
 
-    const left = host.shadowRoot!.getElementById("left") as HTMLButtonElement;
-    const center = host.shadowRoot!.getElementById("center") as HTMLButtonElement;
-    const right = host.shadowRoot!.getElementById("right") as HTMLButtonElement;
+    const left = host.shadowRoot!.getElementById("left") as HTMLElement;
+    const center = host.shadowRoot!.getElementById("center") as HTMLElement;
+    const right = host.shadowRoot!.getElementById("right") as HTMLElement;
 
     left.click();
     center.click();

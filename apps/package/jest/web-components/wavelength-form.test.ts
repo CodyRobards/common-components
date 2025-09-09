@@ -2,6 +2,7 @@ import { fireEvent } from "@testing-library/dom";
 import { z } from "zod";
 import "../../src/web-components/wavelength-form";
 import "../../src/web-components/wavelength-input";
+import "../../src/web-components/wavelength-button";
 
 describe("wavelength-form web component", () => {
   afterEach(() => {
@@ -25,7 +26,7 @@ describe("wavelength-form web component", () => {
     fireEvent(input, new CustomEvent("inputChange", { detail: { value: "A" } }));
     expect(change).toHaveBeenCalledWith({ value: { name: "A" }, issues: [] });
 
-    const button = el.shadowRoot!.querySelector("button")!;
+    const button = el.shadowRoot!.querySelector("wavelength-button")!;
     fireEvent.click(button);
     expect(valid).toHaveBeenCalledWith({ value: { name: "A" }, issues: [] });
   });
@@ -39,7 +40,7 @@ describe("wavelength-form web component", () => {
     el.addEventListener("form-invalid", (e: Event) => invalid((e as CustomEvent).detail));
 
     el.rightButton = { label: "Submit" };
-    const button = el.shadowRoot!.querySelector("button")!;
+    const button = el.shadowRoot!.querySelector("wavelength-button")!;
     fireEvent.click(button);
     expect(invalid).toHaveBeenCalled();
     expect(invalid.mock.calls[0][0].issues.length).toBeGreaterThan(0);
@@ -57,7 +58,7 @@ describe("wavelength-form web component", () => {
     });
 
     el.rightButton = { label: "Submit" };
-    const button = el.shadowRoot!.querySelector("button")!;
+    const button = el.shadowRoot!.querySelector("wavelength-button")!;
     fireEvent.click(button);
 
     const input = el.shadowRoot!.querySelector("wavelength-input") as any;
@@ -88,7 +89,7 @@ describe("wavelength-form web component", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
     el.rightButton = { label: "Go" };
-    const button = el.shadowRoot!.querySelector("button")!;
+    const button = el.shadowRoot!.querySelector("wavelength-button")!;
     expect(button.textContent).toBe("Go");
   });
 
@@ -145,7 +146,7 @@ describe("wavelength-form web component", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
     el.schema = z.object({ name: z.string() });
-    const button = el.shadowRoot!.querySelector("button");
+    const button = el.shadowRoot!.querySelector("wavelength-button");
     expect(button).toBeNull();
   });
 
@@ -157,7 +158,7 @@ describe("wavelength-form web component", () => {
 
     const handler = jest.fn();
     el.addEventListener("form-back", handler);
-    const back = el.shadowRoot!.querySelector("button")!;
+    const back = el.shadowRoot!.querySelector("wavelength-button")!;
     fireEvent.click(back);
     expect(handler).toHaveBeenCalled();
   });

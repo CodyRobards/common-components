@@ -7,7 +7,7 @@ type Shape = ZodRawShape;
 
 type ButtonConfig = {
   label?: string;
-  buttonProps?: Partial<HTMLButtonElement>;
+  buttonProps?: Record<string, any>;
   eventName?: string;
 };
 
@@ -432,13 +432,23 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     rightSlot.className = "right";
 
     const buildButton = (cfg: ButtonConfig, defaultEvent: string, defaultType: "button" | "submit") => {
-      const btn = document.createElement("button");
+      const btn = document.createElement("wavelength-button");
+      const type = (cfg.buttonProps?.type as string) ?? defaultType;
+      if (cfg.buttonProps) {
+        for (const [key, value] of Object.entries(cfg.buttonProps)) {
+          if (key === "type") continue;
+          if (value !== undefined) btn.setAttribute(key, String(value));
+        }
+      }
+      btn.setAttribute("type", type);
       if (cfg.label) btn.textContent = cfg.label;
-      if (cfg.buttonProps) Object.assign(btn, cfg.buttonProps);
-      btn.type = cfg.buttonProps?.type ?? defaultType;
       btn.addEventListener("click", (e) => {
-        if (btn.type !== "submit") e.preventDefault();
         const ev = cfg.eventName ?? defaultEvent;
+        if (type === "submit") {
+          form.requestSubmit();
+        } else {
+          e.preventDefault();
+        }
         this.dispatchEvent(new CustomEvent(ev));
       });
       return btn;
