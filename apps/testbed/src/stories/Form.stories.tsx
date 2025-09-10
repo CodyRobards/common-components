@@ -61,7 +61,11 @@ const sampleSchema = z.object({
     .optional(),
 });
 
-<WavelengthForm schema={schema} value={{ "First Name": 'Clark', "Last Name": 'Kent' }} />`}
+<WavelengthForm
+  schema={sampleSchema}
+  inputProps={{ clearable: true }}
+  value={{ "First Name": 'Clark', "Last Name": 'Kent' }}
+/>`}
             language="tsx"
           />
           <p>
@@ -102,6 +106,9 @@ const sampleSchema = z.object({
   args: {
     schema: sampleSchema,
     value: { "First Name": "Clark", "Last Name": "Kent" },
+    inputProps: {
+      clearable: true,
+    },
   },
   tags: ["autodocs"],
 };
@@ -137,7 +144,7 @@ export const WithLayout: Story = {
   args: {
     schema: sampleSchema,
     value: { "First Name": "Clark", "Last Name": "Kent" },
-    layout: [3, 1],
+    layout: [2, 1, 1],
     formWidth: "600px",
   },
   render: (args) => <WavelengthForm {...args} />,
