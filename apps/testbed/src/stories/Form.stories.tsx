@@ -41,7 +41,26 @@ const meta: Meta<typeof WavelengthForm> = {
           <Source
             code={`import { WavelengthForm } from '@wavelengthusaf/components';
 
-const schema = z.object({ "First Name": z.string(), "Last Name": z.string() });
+const sampleSchema = z.object({
+  "First Name": z
+    .string()
+    .trim()
+    .min(1, { message: "FIRST NAME is required." })
+    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
+  "Middle Name": z
+    .string()
+    .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
+    .optional(),
+  "Last Name": z
+    .string()
+    .min(1, { message: "LAST NAME is required." })
+    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
+  "Additional Info": z
+    .string()
+    .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
+    .optional(),
+});
+
 <WavelengthForm schema={schema} value={{ "First Name": 'Clark', "Last Name": 'Kent' }} />`}
             language="tsx"
           />
