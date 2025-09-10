@@ -21,6 +21,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _leftButton?: ButtonConfig;
   private _centerButton?: ButtonConfig;
   private _rightButton?: ButtonConfig;
+  private _inputProps: Record<string, any> = {};
   private _idPrefix = "";
   private _title = "";
   private _titleAlign: string = "left";
@@ -88,6 +89,14 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   }
   get rightButton(): ButtonConfig | undefined {
     return this._rightButton;
+  }
+
+  set inputProps(v: Record<string, any> | undefined) {
+    this._inputProps = v ?? {};
+    this.render();
+  }
+  get inputProps(): Record<string, any> | undefined {
+    return this._inputProps;
   }
 
   set idPrefix(v: string | undefined) {
@@ -373,6 +382,12 @@ export class WavelengthForm<T extends object> extends HTMLElement {
             setAttribute: (k: string, v?: string) => void;
             removeAttribute: (k: string) => void;
           };
+
+          if (this._inputProps) {
+            for (const [key, value] of Object.entries(this._inputProps)) {
+              if (value !== undefined) input.setAttribute(key, String(value));
+            }
+          }
 
           input.setAttribute("data-name", f.name);
           input.setAttribute("name", f.name);

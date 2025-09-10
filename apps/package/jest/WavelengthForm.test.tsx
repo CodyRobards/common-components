@@ -137,6 +137,18 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(seen).toEqual(["back", "center", "submit"]);
   });
 
+  test("forwards inputProps to inputs", async () => {
+    const schema = z.object({ name: z.string() });
+    render(<WavelengthForm schema={schema} inputProps={{ width: "150px", "data-test": "foo" }} />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const input = host.shadowRoot!.querySelector("wavelength-input")!;
+    expect(input).toHaveAttribute("width", "150px");
+    expect(input).toHaveAttribute("data-test", "foo");
+  });
+
   test("propagates container background to inputs", async () => {
     const schema = z.object({ name: z.string() });
     const color = "rgb(1, 2, 3)";

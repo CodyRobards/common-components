@@ -122,6 +122,19 @@ describe("wavelength-form web component", () => {
     expect((rows[1] as HTMLElement).style.gridTemplateColumns).toBe("repeat(1, 1fr)");
   });
 
+  test("applies inputProps to all inputs", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.schema = z.object({ a: z.string(), b: z.string() });
+    el.inputProps = { width: "120px", "data-test": "shared" };
+
+    const inputs = el.shadowRoot!.querySelectorAll("wavelength-input");
+    inputs.forEach((input) => {
+      expect((input as HTMLElement).getAttribute("width")).toBe("120px");
+      expect((input as HTMLElement).getAttribute("data-test")).toBe("shared");
+    });
+  });
+
   test("defaults to single column when layout omitted", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
