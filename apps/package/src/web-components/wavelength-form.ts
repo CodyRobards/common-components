@@ -1,7 +1,7 @@
 import { ZodObject, ZodRawShape, ZodIssue } from "zod";
 import { zodToFields } from "../form/zodToFields";
 import { FieldDef, FormValue } from "../types/fields";
-import { Validator } from "../form/Validator"; // file 4 will re-export your existing Validator
+import { Validator } from "../form/validator"; // file 4 will re-export your existing Validator
 
 type Shape = ZodRawShape;
 

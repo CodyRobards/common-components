@@ -1,0 +1,210 @@
+import { Canvas, Controls, Source, Stories } from "@storybook/blocks";
+import type { Meta, StoryObj } from "@storybook/react";
+import { WavelengthForm } from "@wavelengthusaf/components";
+import { z } from "zod";
+
+const sampleSchema = z.object({
+  "First Name": z
+    .string()
+    .trim()
+    .min(1, { message: "FIRST NAME is required." })
+    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
+  "Middle Name": z
+    .string()
+    .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
+    .optional(),
+  "Last Name": z
+    .string()
+    .min(1, { message: "LAST NAME is required." })
+    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
+  "Additional Info": z
+    .string()
+    .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
+    .optional(),
+});
+
+const meta: Meta<typeof WavelengthForm> = {
+  title: "Forms/WavelengthForm",
+  component: WavelengthForm,
+  parameters: {
+    layout: "centered",
+    docs: {
+      page: () => (
+        <>
+          <h1>WavelengthForm Documentation</h1>
+          <p>
+            The <code>WavelengthForm</code> React wrapper bridges React with the underlying <code>&lt;wavelength-form&gt;</code> web component. Provide a Zod schema to describe the form fields and
+            optionally pass initial values.
+          </p>
+          <h2>Usage</h2>
+          <p>Import the component, create a schema, and pass it along with an optional value object:</p>
+          <Source
+            code={`import { WavelengthForm } from '@wavelengthusaf/components';
+
+const schema = z.object({ "First Name": z.string(), "Last Name": z.string() });
+<WavelengthForm schema={schema} value={{ "First Name": 'Clark', "Last Name": 'Kent' }} />`}
+            language="tsx"
+          />
+          <p>
+            Optional action buttons can be added via the <code>leftButton</code>,<code>centerButton</code>, and <code>rightButton</code> props. Each accepts a label, optional <code>buttonProps</code>{" "}
+            forwarded to the underlying
+            <code>&lt;wavelength-button&gt;</code> (for example, <code>variant</code> or
+            <code>size</code>), and an optional custom event name.
+          </p>
+          <p>
+            Provide a <code>title</code> to render a heading above the form and control its alignment with <code>titleAlign</code>.
+          </p>
+          <h2>Example</h2>
+          <Canvas />
+          <h2>Props</h2>
+          <Controls />
+          <Stories />
+        </>
+      ),
+    },
+  },
+  argTypes: {
+    schema: { control: "object", description: "Zod schema defining form shape" },
+    value: { control: "object", description: "Initial form values" },
+    leftButton: { control: "object", description: "Config for left-aligned button" },
+    centerButton: { control: "object", description: "Config for center-aligned button" },
+    rightButton: { control: "object", description: "Config for right-aligned button" },
+    inputProps: { control: "object", description: "Props applied to each WavelengthInput" },
+    idPrefix: { control: "text", description: "Prefix applied to generated input IDs" },
+    title: { control: "text", description: "Heading text displayed above the form" },
+    titleAlign: {
+      control: "select",
+      options: ["left", "center", "right"],
+      description: "Alignment for the heading text",
+    },
+    formWidth: { control: "text", description: "CSS width applied to the form" },
+    layout: { control: "object", description: "Array of column counts per row" },
+  },
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+  },
+  tags: ["autodocs"],
+};
+
+export default meta;
+
+type Story = StoryObj<typeof WavelengthForm>;
+
+export const Default: Story = {
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithIdPrefix: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+    idPrefix: "person",
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithTitle: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+    title: "Registration",
+    titleAlign: "center",
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithLayout: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+    layout: [3, 1],
+    formWidth: "600px",
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithLeftButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+    leftButton: {
+      label: "＜＜ Back",
+      buttonProps: { id: "back-btn", variant: "outlined", size: "small" },
+    },
+  },
+  render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} />,
+};
+
+export const WithCenterButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+    centerButton: {
+      label: "Help",
+      buttonProps: { id: "help-btn", variant: "contained", size: "medium" },
+    },
+  },
+  render: (args) => <WavelengthForm {...args} onCenter={() => console.log("center")} />,
+};
+
+export const WithRightButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+    rightButton: {
+      label: "Next ＞＞",
+      buttonProps: { id: "next-btn", variant: "outlined", size: "small" },
+    },
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithCustomInputAndButtonProps: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { "First Name": "Clark", "Last Name": "Kent" },
+    inputProps: {
+      "border-radius": "0px",
+      "helper-message": "Let's go Spungos!",
+      "background-color": "yellow",
+      "border-color": "black",
+      "focus-color": "lime",
+      "label-color": "orange",
+      "placeholder-color": "red",
+      "text-color": "blue",
+      "helper-color": "hotpink",
+    },
+    leftButton: {
+      label: "back",
+      buttonProps: {
+        id: "back-btn",
+        variant: "contained",
+        size: "small",
+        "color-one": "orange",
+        "color-two": "blue",
+      },
+    },
+    centerButton: {
+      label: "cancel",
+      buttonProps: {
+        id: "cancel-btn",
+        variant: "outlined",
+        size: "small",
+        "color-one": "red",
+        "color-two": "black",
+      },
+    },
+    rightButton: {
+      label: "next",
+      buttonProps: {
+        id: "next-btn",
+        variant: "contained",
+        size: "small",
+        "color-one": "orange",
+        "color-two": "blue",
+      },
+    },
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
