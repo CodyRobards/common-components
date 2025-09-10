@@ -13,6 +13,11 @@ export interface ButtonConfig {
   eventName?: string;
 }
 
+/** Attributes passed through to each generated `wavelength-input` */
+export interface WavelengthInputAttributes extends React.HTMLAttributes<HTMLElement> {
+  [key: string]: any;
+}
+
 interface WavelengthFormElement extends HTMLElement {
   schema?: unknown;
   value?: Record<string, unknown>;
@@ -20,6 +25,7 @@ interface WavelengthFormElement extends HTMLElement {
   leftButton?: ButtonConfig;
   centerButton?: ButtonConfig;
   rightButton?: ButtonConfig;
+  inputProps?: WavelengthInputAttributes;
   idPrefix?: string;
   title: string;
   titleAlign?: string;
@@ -45,6 +51,8 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   centerButton?: ButtonConfig;
   /** Configuration for an optional right-aligned button */
   rightButton?: ButtonConfig;
+  /** Props applied to each generated WavelengthInput */
+  inputProps?: WavelengthInputAttributes;
   /** Prefix applied to generated input IDs */
   idPrefix?: string;
   /** Optional heading text displayed above the form */
@@ -103,6 +111,7 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
     leftButton,
     centerButton,
     rightButton,
+    inputProps,
     idPrefix,
     title,
     titleAlign,
@@ -150,12 +159,26 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
     if (leftButton !== undefined) el.leftButton = leftButton as any;
     if (centerButton !== undefined) el.centerButton = centerButton as any;
     if (rightButton !== undefined) el.rightButton = rightButton as any;
+    if (inputProps !== undefined) el.inputProps = inputProps as any;
     el.idPrefix = idPrefix as any;
     if (title !== undefined) el.title = title;
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
     if (formWidth !== undefined) el.formWidth = formWidth;
     if (layout !== undefined) el.layout = layout;
-  }, [schema, value, leftButton, centerButton, rightButton, idPrefix, title, titleAlign, placeholders, formWidth, layout]);
+  }, [
+    schema,
+    value,
+    leftButton,
+    centerButton,
+    rightButton,
+    inputProps,
+    idPrefix,
+    title,
+    titleAlign,
+    placeholders,
+    formWidth,
+    layout,
+  ]);
 
   useEffect(() => {
     const el = hostRef.current;

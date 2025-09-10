@@ -55,6 +55,7 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
     leftButton: { control: "object", description: "Config for left-aligned button" },
     centerButton: { control: "object", description: "Config for center-aligned button" },
     rightButton: { control: "object", description: "Config for right-aligned button" },
+    inputProps: { control: "object", description: "Props applied to each WavelengthInput" },
     idPrefix: { control: "text", description: "Prefix applied to generated input IDs" },
     title: { control: "text", description: "Heading text displayed above the form" },
     titleAlign: {
@@ -117,6 +118,15 @@ export const WithLayout: Story = {
     value: { firstName: "Jane", lastName: "Doe" },
     layout: [2],
     formWidth: "400px",
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithInputProps: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
+    inputProps: { width: "300px", "data-test": "story" },
   },
   render: (args) => <WavelengthForm {...args} />,
 };
