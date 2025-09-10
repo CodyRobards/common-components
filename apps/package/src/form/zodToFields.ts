@@ -4,6 +4,13 @@ import { FieldDef } from "../types/fields";
 
 type Shape = ZodRawShape;
 
+function camelToPascalLabel(name: string): string {
+  return name
+    .replace(/([A-Z])/g, " $1")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+}
+
 /**
  * Unwrap common Zod wrappers (optional/nullable/default/effects)
  * without relying on deprecated typings. We intentionally use `any`
@@ -56,7 +63,7 @@ export function zodToFields(schema: ZodObject<Shape>): FieldDef[] {
       const anyZt: any = zt;
       const field: FieldDef = {
         name,
-        label: name.charAt(0).toUpperCase() + name.slice(1),
+        label: camelToPascalLabel(name),
         type,
         required: typeof anyZt.isOptional === "function" ? !anyZt.isOptional() : true,
       };

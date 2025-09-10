@@ -9,6 +9,22 @@ describe("wavelength-form web component", () => {
     document.body.innerHTML = "";
   });
 
+  test("formats camelCase keys into spaced labels", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.schema = z.object({
+      firstName: z.string(),
+      middleName: z.string(),
+      lastName: z.string(),
+    });
+
+    const inputs = el.shadowRoot!.querySelectorAll("wavelength-input");
+    const labels = Array.from(inputs).map((i) => (i as HTMLElement).getAttribute("label"));
+    const placeholders = Array.from(inputs).map((i) => (i as HTMLElement).getAttribute("placeholder"));
+    expect(labels).toEqual(["First Name", "Middle Name", "Last Name"]);
+    expect(placeholders).toEqual(["First Name", "Middle Name", "Last Name"]);
+  });
+
   test("emits change and valid events", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
