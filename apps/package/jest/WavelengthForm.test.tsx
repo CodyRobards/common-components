@@ -198,6 +198,17 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(heading.style.textAlign).toBe("center");
   });
 
+  test("renders non-selectable title", async () => {
+    const schema = z.object({ name: z.string() });
+    render(<WavelengthForm schema={schema} title="Example" />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const heading = host.shadowRoot!.querySelector("h2") as HTMLElement;
+    expect(heading.style.userSelect).toBe("none");
+  });
+
   test("renders title with color", async () => {
     const schema = z.object({ name: z.string() });
     render(<WavelengthForm schema={schema} title="My Form" titleColor="red" />);
