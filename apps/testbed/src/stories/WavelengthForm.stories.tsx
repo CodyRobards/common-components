@@ -40,6 +40,9 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
           <p>
             Provide a <code>title</code> to render a heading above the form and control its alignment with <code>titleAlign</code>.
           </p>
+          <p>
+            The form width defaults to <code>300px</code>. Override it with the <code>formWidth</code> prop.
+          </p>
           <h2>Example</h2>
           <Canvas />
           <h2>Props</h2>
@@ -64,7 +67,7 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
       description: "Alignment for the heading text",
     },
     titleColor: { control: "color", description: "Color for the heading text" },
-    formWidth: { control: "text", description: "CSS width applied to the form" },
+    formWidth: { control: "text", description: "CSS width applied to the form (default: 300px)" },
     layout: { control: "object", description: "Array of column counts per row" },
   },
   args: {
@@ -119,6 +122,14 @@ export const WithLayout: Story = {
     schema: sampleSchema,
     value: { firstName: "Jane", lastName: "Doe" },
     layout: [2],
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const CustomFormWidth: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Jane", lastName: "Doe" },
     formWidth: "400px",
   },
   render: (args) => <WavelengthForm {...args} />,

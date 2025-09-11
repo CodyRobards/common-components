@@ -163,14 +163,21 @@ describe("wavelength-form web component", () => {
     expect(Array.from(rows).every((r) => (r as HTMLElement).children.length === 1)).toBe(true);
   });
 
+  test("renders default form width", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    const form = el.shadowRoot!.querySelector("form") as HTMLFormElement;
+    expect(form.style.width).toBe("300px");
+  });
+
   test("applies formWidth style", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
-    el.formWidth = "300px";
+    el.formWidth = "400px";
     el.schema = z.object({ a: z.string() });
 
     const form = el.shadowRoot!.querySelector("form") as HTMLFormElement;
-    expect(form.style.width).toBe("300px");
+    expect(form.style.width).toBe("400px");
   });
 
   test("applies title-color style to heading", () => {

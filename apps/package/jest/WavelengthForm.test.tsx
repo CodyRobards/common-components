@@ -234,6 +234,17 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(input).toHaveAttribute("label", "Override");
   });
 
+  test("defaults formWidth to 300px when prop omitted", async () => {
+    const schema = z.object({ name: z.string() });
+    render(<WavelengthForm schema={schema} />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const form = host.shadowRoot!.querySelector("form") as HTMLFormElement;
+    expect(form.style.width).toBe("300px");
+  });
+
   test("forwards layout and formWidth", async () => {
     const schema = z.object({ a: z.string(), b: z.string(), c: z.string() });
     render(<WavelengthForm schema={schema} layout={[2, 1]} formWidth="350px" />);
