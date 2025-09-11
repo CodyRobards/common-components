@@ -4,7 +4,7 @@
 
 import "@testing-library/jest-dom";
 import { fireEvent } from "@testing-library/dom";
-import "../../package/src/web-components/wavelength-button";
+import "../../src/web-components/wavelength-button";
 
 describe("WavelengthButton Web Component", () => {
   let buttonEl: HTMLElement;
