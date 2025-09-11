@@ -173,6 +173,14 @@ describe("wavelength-form web component", () => {
     expect(form.style.width).toBe("300px");
   });
 
+  test("applies title-color style to heading", () => {
+    document.body.innerHTML = `<wavelength-form title="My Form" title-color="blue"></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    const heading = el.shadowRoot!.querySelector("h2") as HTMLElement;
+    expect(heading).not.toBeNull();
+    expect(heading.style.color).toBe("blue");
+  });
+
   test("can hide submit button", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;

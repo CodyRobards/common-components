@@ -63,6 +63,7 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
       options: ["left", "center", "right"],
       description: "Alignment for the heading text",
     },
+    titleColor: { control: "color", description: "Color for the heading text" },
     formWidth: { control: "text", description: "CSS width applied to the form" },
     layout: { control: "object", description: "Array of column counts per row" },
   },
@@ -108,6 +109,7 @@ export const WithTitle: Story = {
     value: { firstName: "Jane", lastName: "Doe" },
     title: "Registration",
     titleAlign: "center",
+    titleColor: "#ff0000",
   },
   render: (args) => <WavelengthForm {...args} />,
 };

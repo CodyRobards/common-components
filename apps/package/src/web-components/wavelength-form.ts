@@ -25,12 +25,13 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _idPrefix = "";
   private _title = "";
   private _titleAlign: string = "left";
+  private _titleColor = "";
   private _formWidth: string = "";
   private _layout?: number[];
 
   static get observedAttributes() {
     // schema is a property, not an attribute
-    return ["id-prefix", "title", "title-align", "form-width"];
+    return ["id-prefix", "title", "title-align", "title-color", "form-width"];
   }
 
   constructor() {
@@ -131,6 +132,20 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     return this._titleAlign;
   }
 
+  /** Color applied to the heading text */
+  set titleColor(v: string | undefined) {
+    this._titleColor = v ?? "";
+    if (v === undefined) {
+      this.removeAttribute("title-color");
+    } else {
+      this.setAttribute("title-color", this._titleColor);
+    }
+    this.render();
+  }
+  get titleColor(): string | undefined {
+    return this._titleColor || undefined;
+  }
+
   /** Width applied to the form element */
   set formWidth(v: string | undefined) {
     this._formWidth = v ?? "";
@@ -175,6 +190,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       this.render();
     } else if (name === "title-align") {
       this._titleAlign = value ?? "left";
+      this.render();
+    } else if (name === "title-color") {
+      this._titleColor = value ?? "";
       this.render();
     } else if (name === "form-width") {
       this._formWidth = value ?? "";
@@ -492,6 +510,9 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       const heading = document.createElement("h2");
       heading.textContent = this._title;
       heading.style.textAlign = this._titleAlign;
+      if (this._titleColor) {
+        heading.style.color = this._titleColor;
+      }
       this._shadow.appendChild(heading);
     }
     this._shadow.appendChild(form);
