@@ -26,7 +26,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private _title = "";
   private _titleAlign: string = "left";
   private _titleColor = "";
-  private _formWidth: string = "";
+  private _formWidth: string = "300px";
   private _layout?: number[];
 
   static get observedAttributes() {
@@ -148,7 +148,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
 
   /** Width applied to the form element */
   set formWidth(v: string | undefined) {
-    this._formWidth = v ?? "";
+    this._formWidth = v ?? "300px";
     if (v === undefined) {
       this.removeAttribute("form-width");
     } else {
@@ -156,8 +156,8 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     }
     this.render();
   }
-  get formWidth(): string | undefined {
-    return this._formWidth || undefined;
+  get formWidth(): string {
+    return this._formWidth;
   }
 
   /** Array describing how many fields appear in each row */
@@ -195,7 +195,10 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       this._titleColor = value ?? "";
       this.render();
     } else if (name === "form-width") {
-      this._formWidth = value ?? "";
+      this._formWidth = value ?? "300px";
+      if (value === null) {
+        this.removeAttribute("form-width");
+      }
       this.render();
     }
   }
@@ -348,9 +351,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     const form = document.createElement("form");
     form.noValidate = true;
     form.addEventListener("submit", this.onSubmit);
-    if (this._formWidth) {
-      form.style.width = this._formWidth;
-    }
+    form.style.width = this._formWidth;
 
     // determine layout rows
     const layout: number[] = this._layout && this._layout.length > 0 ? [...this._layout] : [];
