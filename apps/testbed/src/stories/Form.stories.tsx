@@ -41,31 +41,9 @@ const meta: Meta<typeof WavelengthForm> = {
           <Source
             code={`import { WavelengthForm } from '@wavelengthusaf/components';
 
-const sampleSchema = z.object({
-  firstName: z
-    .string()
-    .trim()
-    .min(1, { message: "FIRST NAME is required." })
-    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
-  middleName: z
-    .string()
-    .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
-    .optional(),
-  lastName: z
-    .string()
-    .min(1, { message: "LAST NAME is required." })
-    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
-  additionalInfo: z
-    .string()
-    .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
-    .optional(),
-});
+const schema = z.object({ firstName: z.string(), lastName: z.string() });
 
-<WavelengthForm
-  schema={sampleSchema}
-  inputProps={{ clearable: true }}
-  value={{ firstName: 'Clark', lastName: 'Kent' }}
-/>`}
+<WavelengthForm schema={schema} value={{ firstName: 'Clark', lastName: 'Kent' }} />`}
             language="tsx"
           />
           <p>
@@ -76,6 +54,9 @@ const sampleSchema = z.object({
           </p>
           <p>
             Provide a <code>title</code> to render a heading above the form and control its alignment with <code>titleAlign</code>.
+          </p>
+          <p>
+            The form width defaults to <code>300px</code>. Override it with the <code>formWidth</code> prop.
           </p>
           <h2>Example</h2>
           <Canvas />
@@ -152,13 +133,22 @@ export const WithLayout: Story = {
   render: (args) => <WavelengthForm {...args} />,
 };
 
-export const WithLeftButton: Story = {
+export const CustomFormWidth: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Clark", lastName: "Kent" },
+    formWidth: "400px",
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithBackButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Clark", lastName: "Kent" },
     leftButton: {
-      label: "＜＜ Back",
-      buttonProps: { id: "back-btn", variant: "outlined", size: "small" },
+      label: "Back",
+      buttonProps: { id: "back-btn", variant: "text", size: "small" },
     },
   },
   render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} />,
@@ -184,6 +174,27 @@ export const WithRightButton: Story = {
       label: "Next ＞＞",
       buttonProps: { id: "next-btn", variant: "outlined", size: "small" },
     },
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const CustomRightButton: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Clark", lastName: "Kent" },
+    rightButton: {
+      label: "Register",
+      buttonProps: { id: "register-btn", variant: "contained", size: "large" },
+    },
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithInputProps: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Clark", lastName: "Kent" },
+    inputProps: { width: "300px", "data-test": "story" },
   },
   render: (args) => <WavelengthForm {...args} />,
 };
