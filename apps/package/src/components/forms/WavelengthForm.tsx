@@ -29,6 +29,7 @@ interface WavelengthFormElement extends HTMLElement {
   idPrefix?: string;
   title: string;
   titleAlign?: string;
+  titleColor?: string;
   formWidth?: string;
   layout?: number[];
   addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
@@ -59,6 +60,8 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   title?: string;
   /** Alignment for the heading text (default: left) */
   titleAlign?: React.CSSProperties["textAlign"];
+  /** Color for the heading text */
+  titleColor?: React.CSSProperties["color"];
   /** Per-field placeholder overrides */
   placeholders?: Partial<Record<keyof T & string, string>>;
   /** CSS width applied to the underlying form element */
@@ -115,6 +118,7 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
     idPrefix,
     title,
     titleAlign,
+    titleColor,
     placeholders,
     formWidth,
     layout,
@@ -163,6 +167,7 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
     el.idPrefix = idPrefix as any;
     if (title !== undefined) el.title = title;
     if (titleAlign !== undefined) el.titleAlign = titleAlign as any;
+    if (titleColor !== undefined) el.titleColor = titleColor as any;
     if (formWidth !== undefined) el.formWidth = formWidth;
     if (layout !== undefined) el.layout = layout;
   }, [
@@ -175,6 +180,7 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
     idPrefix,
     title,
     titleAlign,
+    titleColor,
     placeholders,
     formWidth,
     layout,

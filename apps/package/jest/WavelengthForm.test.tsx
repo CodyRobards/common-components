@@ -198,6 +198,18 @@ describe("WavelengthForm (React Wrapper)", () => {
     expect(heading.style.textAlign).toBe("center");
   });
 
+  test("renders title with color", async () => {
+    const schema = z.object({ name: z.string() });
+    render(<WavelengthForm schema={schema} title="My Form" titleColor="red" />);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    const host = document.querySelector("wavelength-form")!;
+    const heading = host.shadowRoot!.querySelector("h2") as HTMLElement;
+    expect(heading).toBeInTheDocument();
+    expect(heading.style.color).toBe("red");
+  });
+
   test("uses placeholder from schema and mirrors label", async () => {
     const schema = z.object({ name: z.string().describe("Your name") });
     render(<WavelengthForm schema={schema} />);

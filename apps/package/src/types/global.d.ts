@@ -46,6 +46,7 @@ declare namespace JSX {
       "id-prefix"?: string;
       title?: string;
       "title-align"?: string;
+      "title-color"?: string;
       "form-width"?: string;
     };
 
