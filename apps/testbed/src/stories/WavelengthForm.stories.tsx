@@ -38,7 +38,7 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
             <code>size</code>), and an optional custom event name.
           </p>
           <p>
-            Provide a <code>title</code> to render a heading above the form and control its alignment with <code>titleAlign</code>.
+            Provide a <code>title</code> to render a non-selectable heading above the form and control its alignment with <code>titleAlign</code>.
           </p>
           <p>
             The form width defaults to <code>300px</code>. Override it with the <code>formWidth</code> prop.

@@ -514,6 +514,8 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       if (this._titleColor) {
         heading.style.color = this._titleColor;
       }
+      heading.style.userSelect = "none";
+      heading.style.setProperty("-webkit-user-select", "none");
       this._shadow.appendChild(heading);
     }
     this._shadow.appendChild(form);
