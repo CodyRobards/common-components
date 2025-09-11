@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { WavelengthProgressBar } from "../src/web-components/wavelength-progress-bar";
+import { WavelengthProgressBar } from "../../src/web-components/wavelength-progress-bar";
 
 if (!customElements.get("wavelength-progress-bar")) {
   customElements.define("wavelength-progress-bar", WavelengthProgressBar);
