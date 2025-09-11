@@ -179,8 +179,10 @@ describe("WavelengthForm (React Wrapper)", () => {
     const text = host.shadowRoot!.querySelector("wavelength-input")!;
 
     expect(checkbox.id).toBe("test-agree");
+    expect(checkbox.name).toBe("test-agree");
     expect(label.htmlFor).toBe("test-agree");
     expect(text.getAttribute("id")).toBe("test-name");
+    expect(text.getAttribute("name")).toBe("test-name");
   });
 
   test("renders title with alignment", async () => {

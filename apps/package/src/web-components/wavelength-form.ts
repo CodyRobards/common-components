@@ -353,14 +353,14 @@ export class WavelengthForm<T extends object> extends HTMLElement {
         const f = this._fields[fieldIndex++];
         const cell = document.createElement("div");
         cell.className = f.type === "checkbox" ? "row checkbox-row" : "row";
-        const id = this._idPrefix ? `${this._idPrefix}-${f.name}` : f.name;
+        const fieldId = this._idPrefix ? `${this._idPrefix}-${f.name}` : f.name;
 
         if (f.type === "checkbox") {
           const input = document.createElement("input");
           input.type = "checkbox";
-          input.id = id;
+          input.id = fieldId;
           input.setAttribute("data-name", f.name);
-          input.name = f.name;
+          input.name = fieldId;
           if (this._value[f.name] !== undefined) {
             input.checked = Boolean(this._value[f.name]);
           }
@@ -371,7 +371,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
           input.addEventListener("blur", () => this.onBlur(f.name));
 
           const label = document.createElement("label");
-          label.htmlFor = id;
+          label.htmlFor = fieldId;
           label.textContent = f.label;
 
           cell.appendChild(input);
@@ -390,7 +390,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
           }
 
           input.setAttribute("data-name", f.name);
-          input.setAttribute("name", f.name);
+          input.setAttribute("name", fieldId);
           if (f.placeholder !== undefined) {
             input.setAttribute("placeholder", f.placeholder);
             input.setAttribute("label", f.placeholder);
@@ -398,7 +398,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
             input.setAttribute("label", f.label);
           }
           input.setAttribute("validation-type", "manual"); // form drives error visuals
-          input.setAttribute("id", id);
+          input.setAttribute("id", fieldId);
           if (f.type === "number") {
             input.setAttribute("input-type", "number");
           }

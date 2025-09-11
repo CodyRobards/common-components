@@ -53,7 +53,7 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   rightButton?: ButtonConfig;
   /** Props applied to each generated WavelengthInput */
   inputProps?: WavelengthInputAttributes;
-  /** Prefix applied to generated input IDs */
+  /** Prefix applied to generated input IDs and names */
   idPrefix?: string;
   /** Optional heading text displayed above the form */
   title?: string;

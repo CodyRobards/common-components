@@ -93,7 +93,7 @@ const sampleSchema = z.object({
     centerButton: { control: "object", description: "Config for center-aligned button" },
     rightButton: { control: "object", description: "Config for right-aligned button" },
     inputProps: { control: "object", description: "Props applied to each WavelengthInput" },
-    idPrefix: { control: "text", description: "Prefix applied to generated input IDs" },
+    idPrefix: { control: "text", description: "Prefix applied to generated input IDs and names" },
     title: { control: "text", description: "Heading text displayed above the form" },
     titleAlign: {
       control: "select",
