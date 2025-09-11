@@ -4,20 +4,20 @@ import { WavelengthForm } from "@wavelengthusaf/components";
 import { z } from "zod";
 
 const sampleSchema = z.object({
-  "First Name": z
+  firstName: z
     .string()
     .trim()
     .min(1, { message: "FIRST NAME is required." })
     .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
-  "Middle Name": z
+  middleName: z
     .string()
     .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
     .optional(),
-  "Last Name": z
+  lastName: z
     .string()
     .min(1, { message: "LAST NAME is required." })
     .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
-  "Additional Info": z
+  additionalInfo: z
     .string()
     .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
     .optional(),
@@ -42,20 +42,20 @@ const meta: Meta<typeof WavelengthForm> = {
             code={`import { WavelengthForm } from '@wavelengthusaf/components';
 
 const sampleSchema = z.object({
-  "First Name": z
+  firstName: z
     .string()
     .trim()
     .min(1, { message: "FIRST NAME is required." })
     .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
-  "Middle Name": z
+  middleName: z
     .string()
     .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
     .optional(),
-  "Last Name": z
+  lastName: z
     .string()
     .min(1, { message: "LAST NAME is required." })
     .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\s'-]+$/), { message: "Alphabetical characters only." }),
-  "Additional Info": z
+  additionalInfo: z
     .string()
     .regex(new RegExp(/^(?![\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\s'-.]*$/), { message: "Alphabetical characters only." })
     .optional(),
@@ -64,7 +64,7 @@ const sampleSchema = z.object({
 <WavelengthForm
   schema={sampleSchema}
   inputProps={{ clearable: true }}
-  value={{ "First Name": 'Clark', "Last Name": 'Kent' }}
+  value={{ firstName: 'Clark', lastName: 'Kent' }}
 />`}
             language="tsx"
           />
@@ -100,12 +100,13 @@ const sampleSchema = z.object({
       options: ["left", "center", "right"],
       description: "Alignment for the heading text",
     },
-    formWidth: { control: "text", description: "CSS width applied to the form" },
+    titleColor: { control: "color", description: "Color for the heading text" },
+    formWidth: { control: "text", description: "CSS width applied to the form (default: 300px)" },
     layout: { control: "object", description: "Array of column counts per row" },
   },
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
+    value: { firstName: "Clark", lastName: "Kent" },
     inputProps: {
       clearable: true,
     },
@@ -124,7 +125,7 @@ export const Default: Story = {
 export const WithIdPrefix: Story = {
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
+    value: { firstName: "Clark", lastName: "Kent" },
     idPrefix: "person",
   },
   render: (args) => <WavelengthForm {...args} />,
@@ -133,9 +134,10 @@ export const WithIdPrefix: Story = {
 export const WithTitle: Story = {
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
+    value: { firstName: "Clark", lastName: "Kent" },
     title: "Registration",
     titleAlign: "center",
+    titleColor: "#808080",
   },
   render: (args) => <WavelengthForm {...args} />,
 };
@@ -143,8 +145,8 @@ export const WithTitle: Story = {
 export const WithLayout: Story = {
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
-    layout: [2, 1, 1],
+    value: { firstName: "Clark", lastName: "Kent" },
+    layout: [3, 1],
     formWidth: "600px",
   },
   render: (args) => <WavelengthForm {...args} />,
@@ -153,7 +155,7 @@ export const WithLayout: Story = {
 export const WithLeftButton: Story = {
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
+    value: { firstName: "Clark", lastName: "Kent" },
     leftButton: {
       label: "＜＜ Back",
       buttonProps: { id: "back-btn", variant: "outlined", size: "small" },
@@ -165,7 +167,7 @@ export const WithLeftButton: Story = {
 export const WithCenterButton: Story = {
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
+    value: { firstName: "Clark", lastName: "Kent" },
     centerButton: {
       label: "Help",
       buttonProps: { id: "help-btn", variant: "contained", size: "medium" },
@@ -177,7 +179,7 @@ export const WithCenterButton: Story = {
 export const WithRightButton: Story = {
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
+    value: { firstName: "Clark", lastName: "Kent" },
     rightButton: {
       label: "Next ＞＞",
       buttonProps: { id: "next-btn", variant: "outlined", size: "small" },
@@ -189,7 +191,7 @@ export const WithRightButton: Story = {
 export const WithCustomInputAndButtonProps: Story = {
   args: {
     schema: sampleSchema,
-    value: { "First Name": "Clark", "Last Name": "Kent" },
+    value: { firstName: "Clark", lastName: "Kent" },
     inputProps: {
       "border-radius": "0px",
       "helper-message": "Let's go Spungos!",
@@ -200,9 +202,10 @@ export const WithCustomInputAndButtonProps: Story = {
       "placeholder-color": "red",
       "text-color": "blue",
       "helper-color": "hotpink",
+      "validation-type": "always",
     },
     leftButton: {
-      label: "back",
+      label: "＜＜ Back",
       buttonProps: {
         id: "back-btn",
         variant: "contained",
@@ -222,7 +225,7 @@ export const WithCustomInputAndButtonProps: Story = {
       },
     },
     rightButton: {
-      label: "next",
+      label: "Next ＞＞",
       buttonProps: {
         id: "next-btn",
         variant: "contained",
