@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { WavelengthCommentDisplay } from "../src";
+import { WavelengthCommentDisplay } from "../../src";
 
 import { expect } from "@jest/globals";
 

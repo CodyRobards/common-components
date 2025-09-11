@@ -1,5 +1,5 @@
 import React from "react";
-import { WavelengthContentPlaceholder } from "../src";
+import { WavelengthContentPlaceholder } from "../../src";
 import { expect } from "@jest/globals";
 import { render, screen, fireEvent } from "@testing-library/react";
 

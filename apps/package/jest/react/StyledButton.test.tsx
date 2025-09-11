@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { expect } from "@jest/globals";
-import { WavelengthStyledButton } from "../src";
+import { WavelengthStyledButton } from "../../src";
 
 describe("WavelengthStyledButton", () => {
   it("renders with default type", () => {

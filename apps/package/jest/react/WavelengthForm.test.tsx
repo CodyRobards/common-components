@@ -3,10 +3,10 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { z } from "zod";
 
-import WavelengthForm from "../src/components/forms/WavelengthForm";
-import "../src/web-components/wavelength-form";
-import "../src/web-components/wavelength-input";
-import "../src/web-components/wavelength-button";
+import WavelengthForm from "../../src/components/forms/WavelengthForm";
+import "../../src/web-components/wavelength-form";
+import "../../src/web-components/wavelength-input";
+import "../../src/web-components/wavelength-button";
 
 // This test focuses on the React wrapper receiving the correct
 // detail payloads from the custom events.

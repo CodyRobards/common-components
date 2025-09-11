@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { WavelengthInput } from "../src/components/TextField/WavelengthInput";
+import { WavelengthInput } from "../../src/components/TextField/WavelengthInput";
 
-import "../src/web-components/wavelength-input";
+import "../../src/web-components/wavelength-input";
 
 describe("WavelengthInput (React Wrapper)", () => {
   test("renders and sets props as attributes", () => {

@@ -1,13 +1,13 @@
 import React from "react";
-import { WavelengthTitleBar } from "../src";
+import { SampleComponent } from "../../src";
 import { expect } from "@jest/globals";
 import { render, screen, fireEvent } from "@testing-library/react";
 
-describe("WavelengthTitleBar should", () => {
+describe("SampleComponent should", () => {
   it("render", async () => {
     render(
       <div data-testid="default">
-        <WavelengthTitleBar titleText="Test" subtitleText="Test" textColor="hotpink" textShadow />
+        <SampleComponent testProp="Sample Component" children="Sample Component" />
       </div>,
     );
     const titleBar = screen.getByTestId("default");

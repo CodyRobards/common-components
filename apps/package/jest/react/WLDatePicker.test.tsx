@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState, KeyboardEvent, act } from "react";
-import { WLDatePicker } from "../src";
+import { WLDatePicker } from "../../src";
 import { expect } from "@jest/globals";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
