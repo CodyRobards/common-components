@@ -1,7 +1,7 @@
 import React from "react";
 import { jest } from "@jest/globals";
 import { render, waitFor, screen, fireEvent } from "@testing-library/react";
-import { WavelengthManyPlanes } from "../src";
+import { WavelengthManyPlanes } from "../../src";
 
 function getManyPlanes() {
   return (

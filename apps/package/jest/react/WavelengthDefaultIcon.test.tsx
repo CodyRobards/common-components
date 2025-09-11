@@ -1,5 +1,5 @@
 import React from "react";
-import { WavelengthDefaultIcon, WavelengthFooter } from "../src";
+import { WavelengthDefaultIcon, WavelengthFooter } from "../../src";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 describe("Default Icon", () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { WavelengthNotAvailablePage } from "../src";
+import { WavelengthNotAvailablePage } from "../../src";
 import { expect } from "@jest/globals";
 import { render, screen, fireEvent } from "@testing-library/react";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { WavelengthDataTable } from "../src";
+import { WavelengthDataTable } from "../../src";
 import { expect } from "@jest/globals";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
