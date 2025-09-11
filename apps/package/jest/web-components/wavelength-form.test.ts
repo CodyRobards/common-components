@@ -120,8 +120,10 @@ describe("wavelength-form web component", () => {
     const text = el.shadowRoot!.querySelector("wavelength-input")!;
 
     expect(checkbox.id).toBe("form-agree");
+    expect(checkbox.name).toBe("form-agree");
     expect(label.htmlFor).toBe("form-agree");
     expect(text.getAttribute("id")).toBe("form-name");
+    expect(text.getAttribute("name")).toBe("form-name");
   });
 
   test("applies layout rows and columns", () => {
