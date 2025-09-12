@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Validator } from "../src/form/Validator";
+import { Validator } from "../src/form/validator";
 
 describe("Validator", () => {
   const schema = z.object({
