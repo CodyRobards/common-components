@@ -212,10 +212,11 @@ describe("<wavelength-input>", () => {
     const helper = element.shadowRoot!.getElementById("helper") as HTMLElement;
     expect(helper.style.color).toBe("rgb(0, 255, 0)");
 
+    element.setAttribute("error-message", "Forced error");
     element.setAttribute("force-error", "");
     (element as any).validate(true);
 
-    expect(helper.style.color).not.toBe("rgb(0, 255, 0)");
+    expect(helper.style.color).toBe("red");
   });
 
   test("upgrades property when already set before connection", () => {
