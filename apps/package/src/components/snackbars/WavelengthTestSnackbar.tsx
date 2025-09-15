@@ -84,3 +84,5 @@ export function WavelengthTestSnackbar({ isPopUpOpen, toggleOpen, type, message,
     </>
   );
 }
+
+WavelengthTestSnackbar.displayName = "WavelengthTestSnackbar";

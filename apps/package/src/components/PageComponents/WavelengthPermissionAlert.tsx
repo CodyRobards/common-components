@@ -68,4 +68,6 @@ export function WavelengthPermissionAlert({
   );
 }
 
+WavelengthPermissionAlert.displayName = "WavelengthPermissionAlert";
+
 export default WavelengthPermissionAlert;

@@ -26,4 +26,6 @@ export function WavelengthSearchTextField() {
   return <WavelengthSearchTextField />;
 }
 
+WavelengthSearchTextField.displayName = "WavelengthSearchTextField";
+
 export default WavelengthSearchTextField;

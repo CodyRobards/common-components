@@ -454,4 +454,6 @@ export function WavelengthStyledButton({ type = "default", styles, children, dis
   );
 }
 
+WavelengthStyledButton.displayName = "WavelengthStyledButton";
+
 export default WavelengthStyledButton;

@@ -160,5 +160,8 @@ export function WavelengthDropdown({
   );
 }
 
+WavelengthDropdown.displayName = "WavelengthDropdown";
+
 const WavelengthDropdownStyled = styled(WavelengthDropdown)``;
+WavelengthDropdownStyled.displayName = "WavelengthDropdownStyled";
 export default WavelengthDropdownStyled;

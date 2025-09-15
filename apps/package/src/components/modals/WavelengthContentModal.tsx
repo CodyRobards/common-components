@@ -37,4 +37,6 @@ export function WavelengthContentModal(props: WavelengthContentModalProps) {
   );
 }
 
+WavelengthContentModal.displayName = "WavelengthContentModal";
+
 export default WavelengthContentModal;

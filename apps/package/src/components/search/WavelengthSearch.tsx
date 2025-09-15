@@ -631,4 +631,6 @@ export function WavelengthSearch({
   return undefined;
 }
 
+WavelengthSearch.displayName = "WavelengthSearch";
+
 export default WavelengthSearch;

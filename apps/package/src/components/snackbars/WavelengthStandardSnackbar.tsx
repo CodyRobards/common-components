@@ -82,4 +82,6 @@ export function WavelengthStandardSnackbar({ type, show, icon, horryAlign, verty
     </Snackbar>
   );
 }
+
+WavelengthStandardSnackbar.displayName = "WavelengthStandardSnackbar";
 export default WavelengthStandardSnackbar;

@@ -66,3 +66,4 @@ export function WavelengthFooter({ text, textColor }: WavelengthFooterProps) {
     </Box>
   );
 }
+WavelengthFooter.displayName = "WavelengthFooter";

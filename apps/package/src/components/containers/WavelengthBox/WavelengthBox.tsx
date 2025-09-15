@@ -40,4 +40,6 @@ export function WavelengthBox({ width, height, children, borderBottomRadius, bor
   );
 }
 
+WavelengthBox.displayName = "WavelengthBox";
+
 export default WavelengthBox;

@@ -103,4 +103,6 @@ export function WavelengthAutocomplete({ label, width = 300, variant = "outlined
   );
 }
 
+WavelengthAutocomplete.displayName = "WavelengthAutocomplete";
+
 export default WavelengthAutocomplete;

@@ -135,4 +135,6 @@ export function WavelengthVariationPagination({ totalPages, current, variant, ha
   );
 }
 
+WavelengthVariationPagination.displayName = "WavelengthVariationPagination";
+
 export default WavelengthVariationPagination;

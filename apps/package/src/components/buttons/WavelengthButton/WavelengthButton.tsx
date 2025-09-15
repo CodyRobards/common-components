@@ -112,4 +112,6 @@ export const WavelengthButton: React.FC<WavelengthButtonProps> = ({
   );
 };
 
+WavelengthButton.displayName = "WavelengthButton";
+
 export default WavelengthButton;

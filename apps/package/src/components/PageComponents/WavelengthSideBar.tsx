@@ -131,4 +131,6 @@ export function WavelengthSideBar({ sections, txtColor, bgColor, labelColor, arr
   );
 }
 
+WavelengthSideBar.displayName = "WavelengthSideBar";
+
 export default WavelengthSideBar;

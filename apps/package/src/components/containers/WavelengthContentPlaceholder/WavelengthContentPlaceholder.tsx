@@ -59,4 +59,6 @@ export function WavelengthContentPlaceholder({ type, width, height, txtcolor, bg
   //#endregion
 }
 
+WavelengthContentPlaceholder.displayName = "WavelengthContentPlaceholder";
+
 export default WavelengthContentPlaceholder;

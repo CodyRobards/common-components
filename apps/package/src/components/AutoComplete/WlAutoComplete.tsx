@@ -320,4 +320,6 @@ export const WLAutoComplete = ({
   );
 };
 
+WLAutoComplete.displayName = "WLAutoComplete";
+
 export default WLAutoComplete;

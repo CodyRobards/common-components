@@ -44,4 +44,6 @@ export function WavelengthSlider({ width = "300px", color, valueDisplayed, marks
   );
 }
 
+WavelengthSlider.displayName = "WavelengthSlider";
+
 export default WavelengthSlider;

@@ -70,4 +70,6 @@ export function WavelengthSnackbar({ show, setShow, closeIcon, message, snackBar
   );
 }
 
+WavelengthSnackbar.displayName = "WavelengthSnackbar";
+
 export default WavelengthSnackbar;

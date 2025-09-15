@@ -39,4 +39,6 @@ export function GreenEllipse({ width = 65, height = 65, initials = "HW" }: Ellip
   );
 }
 
+GreenEllipse.displayName = "GreenEllipse";
+
 export default GreenEllipse;

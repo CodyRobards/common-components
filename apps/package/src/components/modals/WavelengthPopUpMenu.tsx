@@ -219,4 +219,6 @@ export function WavelengthPopUpMenu({ menuItems, customIcon = false, width, menu
   );
 }
 
+WavelengthPopUpMenu.displayName = "WavelengthPopUpMenu";
+
 export default WavelengthPopUpMenu;

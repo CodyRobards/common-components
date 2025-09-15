@@ -64,4 +64,6 @@ export function WavelengthCommentDisplay(props: CommentProps) {
   );
 }
 
+WavelengthCommentDisplay.displayName = "WavelengthCommentDisplay";
+
 export default WavelengthCommentDisplay;

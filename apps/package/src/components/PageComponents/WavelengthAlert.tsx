@@ -151,4 +151,6 @@ export function WavelengthAlert({
     );
   }
 }
+
+WavelengthAlert.displayName = "WavelengthAlert";
 export default WavelengthAlert;
