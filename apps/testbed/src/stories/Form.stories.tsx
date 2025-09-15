@@ -58,6 +58,52 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
           <p>
             The form width defaults to <code>300px</code>. Override it with the <code>formWidth</code> prop.
           </p>
+          <h2>Schema & Validation</h2>
+          <p>
+            Fields are validated with <code>zod</code>. Any validation errors are surfaced on the corresponding inputs and returned through the form&apos;s submit handler.
+          </p>
+          <Source
+            code={`const schema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+});
+
+<WavelengthForm schema={schema} onSubmit={(data) => console.log(data)} />`}
+            language="tsx"
+          />
+          <h2>Custom Buttons & Events</h2>
+          <p>
+            Use <code>onBack</code>, <code>onCenter</code>, <code>onRight</code>, and <code>onSubmit</code> to respond to button clicks or form submission.
+          </p>
+          <Source
+            code={`<WavelengthForm
+  schema={schema}
+  leftButton={{ label: 'Back' }}
+  centerButton={{ label: 'Help' }}
+  rightButton={{ label: 'Next' }}
+  onBack={() => console.log('back')}
+  onCenter={() => console.log('center')}
+  onRight={() => console.log('right')}
+  onSubmit={(values) => console.log('submit', values)}
+/>`}
+            language="tsx"
+          />
+          <h2>Layout & Styling</h2>
+          <p>
+            Control the layout with a <code>layout</code> array specifying column counts per row. Style the form with
+            <code>titleColor</code>, <code>formWidth</code>, and shared <code>inputProps</code> applied to each field.
+          </p>
+          <Source
+            code={`<WavelengthForm
+  schema={schema}
+  layout={[2, 2]}
+  title="Registration"
+  titleColor="#1976d2"
+  formWidth="500px"
+  inputProps={{ width: '250px' }}
+/>`}
+            language="tsx"
+          />
           <h2>Example</h2>
           <Canvas />
           <h2>Props</h2>
@@ -245,6 +291,45 @@ export const WithCustomInputAndButtonProps: Story = {
         "color-two": "blue",
       },
     },
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const WithSubmitHandler: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Clark", lastName: "Kent" },
+  },
+  render: (args) => <WavelengthForm {...args} onSubmit={(data) => console.log("submit", data)} />,
+};
+
+export const WithButtonEvents: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Clark", lastName: "Kent" },
+    leftButton: { label: "Back" },
+    centerButton: { label: "Help" },
+    rightButton: { label: "Next" },
+  },
+  render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} onCenter={() => console.log("center")} onRight={() => console.log("right")} />,
+};
+
+export const MultiRowLayout: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Clark", lastName: "Kent" },
+    layout: [2, 2],
+  },
+  render: (args) => <WavelengthForm {...args} />,
+};
+
+export const StyledForm: Story = {
+  args: {
+    schema: sampleSchema,
+    value: { firstName: "Clark", lastName: "Kent" },
+    title: "Styled",
+    titleColor: "#1976d2",
+    formWidth: "500px",
   },
   render: (args) => <WavelengthForm {...args} />,
 };
