@@ -459,4 +459,6 @@ export const ChildDataTable = <T extends DataType>({ data, columns, downloadArro
   );
 };
 
+ChildDataTable.displayName = "ChildDataTable";
+
 export default ChildDataTable;

@@ -153,4 +153,6 @@ export function WavelengthButtonPagination({ totalPages, current, handleChangePa
   );
 }
 
+WavelengthButtonPagination.displayName = "WavelengthButtonPagination";
+
 export default WavelengthButtonPagination;

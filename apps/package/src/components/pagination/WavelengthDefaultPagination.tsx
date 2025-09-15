@@ -115,4 +115,6 @@ export function DefaultPagination({ totalPages, currentPageNumber, siblingCount 
   }
 }
 
+DefaultPagination.displayName = "DefaultPagination";
+
 export default DefaultPagination;

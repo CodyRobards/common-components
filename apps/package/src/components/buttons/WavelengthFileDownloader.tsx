@@ -39,4 +39,6 @@ export function WavelengthFileDownloader({ fileLoc, fileURL, fileName, button, i
   }
 }
 
+WavelengthFileDownloader.displayName = "WavelengthFileDownloader";
+
 export default WavelengthFileDownloader;

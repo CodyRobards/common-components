@@ -61,6 +61,8 @@ export function ButtonIcon({ text, numIcon = "0", children, active = false, widt
   );
 }
 
+ButtonIcon.displayName = "ButtonIcon";
+
 function renderButtonIcon(children: ReactNode) {
   for (const c of React.Children.toArray(children)) {
     const obj = c as { type: { name: string } };
@@ -77,6 +79,8 @@ interface ButtonMenuProps {
 export function ButtonMenu({ children }: ButtonMenuProps) {
   return <div style={{ background: "transparent" }}>{children}</div>;
 }
+
+ButtonMenu.displayName = "ButtonMenu";
 
 function renderButtonMenu(children: ReactNode) {
   for (const c of React.Children.toArray(children)) {
@@ -108,5 +112,7 @@ export function WavelengthDropdownButton({ children, onClick }: ButtonProps): Re
     </>
   );
 }
+
+WavelengthDropdownButton.displayName = "WavelengthDropdownButton";
 
 export default WavelengthDropdownButton;

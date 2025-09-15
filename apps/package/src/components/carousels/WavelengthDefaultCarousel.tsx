@@ -92,4 +92,6 @@ export const DefaultCarousel: React.FC<carouselConfigArray & adjustableDimension
   );
 };
 
+DefaultCarousel.displayName = "DefaultCarousel";
+
 export default DefaultCarousel;

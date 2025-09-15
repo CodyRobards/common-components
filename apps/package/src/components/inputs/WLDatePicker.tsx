@@ -156,4 +156,6 @@ export const WLDatePicker = ({ labelVariant, labelColor, borderColor, FocusBorde
   );
 };
 
+WLDatePicker.displayName = "WLDatePicker";
+
 export default WLDatePicker;

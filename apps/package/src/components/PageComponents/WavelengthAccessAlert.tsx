@@ -144,4 +144,6 @@ export function WavelengthAccessAlert({
   }
 }
 
+WavelengthAccessAlert.displayName = "WavelengthAccessAlert";
+
 export default WavelengthAccessAlert;

@@ -216,4 +216,6 @@ export const NestedDataTable = <T extends DataType>({ data, columns }: Props<T>)
   );
 };
 
+NestedDataTable.displayName = "NestedDataTable";
+
 export default NestedDataTable;

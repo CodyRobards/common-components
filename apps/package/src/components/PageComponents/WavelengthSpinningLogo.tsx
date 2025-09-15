@@ -68,4 +68,6 @@ export function WavelengthSpinningOuterCircle({ size, id, clip, color, gradient,
   );
 }
 
+WavelengthSpinningOuterCircle.displayName = "WavelengthSpinningOuterCircle";
+
 export default WavelengthSpinningOuterCircle;

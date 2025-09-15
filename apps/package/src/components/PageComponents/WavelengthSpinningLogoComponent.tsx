@@ -75,4 +75,6 @@ export function WavelengthSpinningLogo({ svg = <span>SVG Goes Here</span>, size 
   return loadingSymbol;
 }
 
+WavelengthSpinningLogo.displayName = "WavelengthSpinningLogo";
+
 export default WavelengthSpinningLogo;

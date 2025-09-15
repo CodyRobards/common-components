@@ -478,4 +478,6 @@ export const WavelengthDataTable = <T extends DataType>({ data, columns, itemsPe
   );
 };
 
+WavelengthDataTable.displayName = "WavelengthDataTable";
+
 export default WavelengthDataTable;

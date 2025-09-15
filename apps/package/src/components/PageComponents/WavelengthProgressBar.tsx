@@ -31,4 +31,6 @@ export const WavelengthProgressBar: React.FC<WavelengthProgressBarProps> = ({ na
   return <wavelength-progress-bar ref={ref} {...rest} />;
 };
 
+WavelengthProgressBar.displayName = "WavelengthProgressBar";
+
 export default WavelengthProgressBar;

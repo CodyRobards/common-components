@@ -38,4 +38,6 @@ export function WavelengthDefaultIcon({ width = "180", height = 140 }: DefaultPr
   );
 }
 
+WavelengthDefaultIcon.displayName = "WavelengthDefaultIcon";
+
 export default WavelengthDefaultIcon;

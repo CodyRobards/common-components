@@ -53,4 +53,6 @@ export function WavelengthConfirmationModal(props: WavelengthConfirmationModalPr
   );
 }
 
+WavelengthConfirmationModal.displayName = "WavelengthConfirmationModal";
+
 export default WavelengthConfirmationModal;

@@ -53,4 +53,6 @@ export function WavelengthPlaneTrail({ trailDir = "right", id, color }: Waveleng
   );
 }
 
+WavelengthPlaneTrail.displayName = "WavelengthPlaneTrail";
+
 export default WavelengthPlaneTrail;

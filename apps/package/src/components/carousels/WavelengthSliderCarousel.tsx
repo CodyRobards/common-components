@@ -118,4 +118,6 @@ export const SliderCardCarousel: React.FC<carouselConfigArray & adjustDimenforCa
   );
 };
 
+SliderCardCarousel.displayName = "SliderCardCarousel";
+
 export default SliderCardCarousel;

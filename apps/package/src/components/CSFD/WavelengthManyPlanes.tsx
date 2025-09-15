@@ -69,4 +69,6 @@ export function WavelengthManyPlanes({ numberOfPlanes = 5, trailDir = "left", co
   return PlaneGridWrapper(numberOfPlanes, opacity);
 }
 
+WavelengthManyPlanes.displayName = "WavelengthManyPlanes";
+
 export default WavelengthManyPlanes;

@@ -33,4 +33,6 @@ export function WavelengthBanner({ bannerText, bannerColor, textColor, opacity =
   return <wavelength-banner ref={ref} />;
 }
 
+WavelengthBanner.displayName = "WavelengthBanner";
+
 export default WavelengthBanner;

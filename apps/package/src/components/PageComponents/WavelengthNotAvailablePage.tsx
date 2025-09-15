@@ -35,4 +35,6 @@ export function WavelengthNotAvailablePage({ WavelengthAppLogoName, errorMessage
   );
 }
 
+WavelengthNotAvailablePage.displayName = "WavelengthNotAvailablePage";
+
 export default WavelengthNotAvailablePage;

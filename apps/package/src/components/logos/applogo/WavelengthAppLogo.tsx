@@ -380,6 +380,7 @@ export function WavelengthAppLogo({ width, height, name = "", grayscale, id }: W
   }
   return <div>{logo}</div>;
 }
+WavelengthAppLogo.displayName = "WavelengthAppLogo";
 /* eslint-ignore */
 
 export default WavelengthAppLogo;

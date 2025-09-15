@@ -34,4 +34,6 @@ export const SampleComponent: React.FC<SampleComponentProps> = ({
   );
 };
 
+SampleComponent.displayName = "SampleComponent";
+
 export default SampleComponent;

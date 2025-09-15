@@ -38,4 +38,6 @@ export function WavelengthExampleComponent({ width = 100, height = 100 }: Wavele
   );
 }
 
+WavelengthExampleComponent.displayName = "WavelengthExampleComponent";
+
 export default WavelengthExampleComponent;

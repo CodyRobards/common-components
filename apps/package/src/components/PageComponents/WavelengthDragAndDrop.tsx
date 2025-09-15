@@ -91,4 +91,6 @@ export function WavelengthDragAndDrop({
   );
 }
 
+WavelengthDragAndDrop.displayName = "WavelengthDragAndDrop";
+
 export default WavelengthDragAndDrop;

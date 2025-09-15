@@ -23,4 +23,6 @@ export function WavelengthTitleBar({ titleText, subtitleText, textColor, textSha
   return <wavelength-title-bar ref={ref}></wavelength-title-bar>;
 }
 
+WavelengthTitleBar.displayName = "WavelengthTitleBar";
+
 export default WavelengthTitleBar;

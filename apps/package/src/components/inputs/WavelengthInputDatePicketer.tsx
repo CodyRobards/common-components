@@ -13,6 +13,7 @@ export const WLInputDatePicker: React.FC = () => {
 
   return <wavelength-input-date-picker ref={ref} />;
 };
+WLInputDatePicker.displayName = "WLInputDatePicker";
 //WLInputDatePicker
 export default WLInputDatePicker;
 
