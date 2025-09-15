@@ -236,7 +236,10 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
   return <wavelength-form ref={hostRef as any} className={className} style={style} />;
 }
 
-export const WavelengthForm = React.forwardRef(WavelengthFormInner) as <T extends object = Record<string, unknown>>(
+const WavelengthFormForwardRef = React.forwardRef(WavelengthFormInner);
+WavelengthFormForwardRef.displayName = "WavelengthForm";
+
+export const WavelengthForm = WavelengthFormForwardRef as <T extends object = Record<string, unknown>>(
   props: WavelengthFormProps<T> & React.RefAttributes<WavelengthFormRef<T>>,
 ) => React.ReactElement | null;
 
