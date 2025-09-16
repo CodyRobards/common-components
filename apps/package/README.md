@@ -18,7 +18,7 @@ npm install @wavelengthusaf/components
 `centerButton`, and/or `rightButton` object with a `label`, optional
 `buttonProps` forwarded as attributes to the underlying `<wavelength-button>`,
 and an optional `eventName` to customize the emitted event. Default events are
-`form-back`, `form-center`, and `form-submit`.
+`form-left`, `form-center`, and `form-right`.
 
 ```tsx
 <WavelengthForm
@@ -33,17 +33,20 @@ and an optional `eventName` to customize the emitted event. Default events are
   }}
   rightButton={{
     label: "Next",
-    buttonProps: { id: "next-btn", variant: "contained", size: "large" },
+    buttonProps: { id: "next-btn", type: "submit", variant: "contained", size: "large" },
   }}
-  onBack={() => console.log("back")}
+  onLeft={() => console.log("left")}
   onCenter={() => console.log("center")}
-  onSubmit={() => console.log("submit")}
+  onRight={() => console.log("right")}
+  onSubmit={(event) => console.log("submit", event)}
 />
 ```
 
 The `buttonProps` object is forwarded as attributes to
 `<wavelength-button>`, allowing you to customize each button via properties
-like `variant` or `size`.
+like `variant` or `size`. Any action button can submit the form by setting
+`buttonProps.type = 'submit'`; pair it with the `onSubmit` callback to tap into
+the native `SubmitEvent` when you need to work with the posted form data.
 
 ## Release Notes
 

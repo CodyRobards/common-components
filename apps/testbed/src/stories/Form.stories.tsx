@@ -68,23 +68,25 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
   lastName: z.string().min(1),
 });
 
-<WavelengthForm schema={schema} onSubmit={(data) => console.log(data)} />`}
+<WavelengthForm schema={schema} onValid={(data) => console.log(data)} />`}
             language="tsx"
           />
           <h2>Custom Buttons & Events</h2>
           <p>
-            Use <code>onBack</code>, <code>onCenter</code>, <code>onRight</code>, and <code>onSubmit</code> to respond to button clicks or form submission.
+            Use <code>onLeft</code>, <code>onCenter</code>, <code>onRight</code>, and <code>onSubmit</code> (native submit) to
+            respond to button clicks or form submission. Set <code>buttonProps.type</code> to
+            <code>&#39;submit&#39;</code> on any button when you want it to trigger the form submission flow.
           </p>
           <Source
             code={`<WavelengthForm
   schema={schema}
   leftButton={{ label: 'Back' }}
   centerButton={{ label: 'Help' }}
-  rightButton={{ label: 'Next' }}
-  onBack={() => console.log('back')}
+  rightButton={{ label: 'Next', buttonProps: { type: 'submit' } }}
+  onLeft={() => console.log('left')}
   onCenter={() => console.log('center')}
   onRight={() => console.log('right')}
-  onSubmit={(values) => console.log('submit', values)}
+  onSubmit={(event) => console.log('submit', event)}
 />`}
             language="tsx"
           />
@@ -188,7 +190,7 @@ export const CustomFormWidth: Story = {
   render: (args) => <WavelengthForm {...args} />,
 };
 
-export const WithBackButton: Story = {
+export const WithLeftButton: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Clark", lastName: "Kent" },
@@ -197,7 +199,7 @@ export const WithBackButton: Story = {
       buttonProps: { id: "back-btn", variant: "text", size: "small" },
     },
   },
-  render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} />,
+  render: (args) => <WavelengthForm {...args} onLeft={() => console.log("left")} />,
 };
 
 export const WithCenterButton: Story = {
@@ -299,8 +301,12 @@ export const WithSubmitHandler: Story = {
   args: {
     schema: sampleSchema,
     value: { firstName: "Clark", lastName: "Kent" },
+    rightButton: {
+      label: "Submit",
+      buttonProps: { type: "submit" },
+    },
   },
-  render: (args) => <WavelengthForm {...args} onSubmit={(data) => console.log("submit", data)} />,
+  render: (args) => <WavelengthForm {...args} onSubmit={(event) => console.log("submit", event)} />,
 };
 
 export const WithButtonEvents: Story = {
@@ -311,7 +317,14 @@ export const WithButtonEvents: Story = {
     centerButton: { label: "Help" },
     rightButton: { label: "Next" },
   },
-  render: (args) => <WavelengthForm {...args} onBack={() => console.log("back")} onCenter={() => console.log("center")} onRight={() => console.log("right")} />,
+  render: (args) => (
+    <WavelengthForm
+      {...args}
+      onLeft={() => console.log("left")}
+      onCenter={() => console.log("center")}
+      onRight={() => console.log("right")}
+    />
+  ),
 };
 
 export const MultiRowLayout: Story = {
