@@ -272,18 +272,20 @@ describe("WavelengthForm (React Wrapper)", () => {
 
   test("default button events trigger callbacks", async () => {
     const schema = z.object({ name: z.string() });
-    const onBack = jest.fn();
+    const onLeft = jest.fn();
     const onCenter = jest.fn();
+    const onRight = jest.fn();
     const onSubmit = jest.fn();
     render(
       <WavelengthForm
         schema={schema}
-        onBack={onBack}
+        onLeft={onLeft}
         onCenter={onCenter}
+        onRight={onRight}
         onSubmit={onSubmit}
         leftButton={{ label: "Back" }}
         centerButton={{ label: "Center" }}
-        rightButton={{ label: "Next" }}
+        rightButton={{ label: "Next", buttonProps: { type: "submit" } }}
       />,
     );
 
@@ -296,9 +298,14 @@ describe("WavelengthForm (React Wrapper)", () => {
     back.click();
     center.click();
     submit.click();
+    await new Promise((r) => setTimeout(r, 0));
 
-    expect(onBack).toHaveBeenCalled();
+    expect(onLeft).toHaveBeenCalled();
     expect(onCenter).toHaveBeenCalled();
+    expect(onRight).toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalled();
+    const submitEvent = onSubmit.mock.calls[0]?.[0];
+    expect(submitEvent).toBeInstanceOf(Event);
+    expect(submitEvent?.type).toBe("submit");
   });
 });

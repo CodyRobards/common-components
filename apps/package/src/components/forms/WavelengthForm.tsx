@@ -77,12 +77,14 @@ export interface WavelengthFormProps<T extends object = Record<string, unknown>>
   onChange?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
   onValid?: (value: T, issues: z.ZodIssue[]) => void;
   onInvalid?: (value: Partial<T>, issues: z.ZodIssue[]) => void;
-  /** Fired when the default back event is triggered */
-  onBack?: () => void;
+  /** Fired when the default left event is triggered */
+  onLeft?: () => void;
   /** Fired when the default center event is triggered */
   onCenter?: () => void;
-  /** Fired when the default submit event is triggered */
-  onSubmit?: () => void;
+  /** Fired when the default right event is triggered */
+  onRight?: () => void;
+  /** Fired when the underlying form emits a native submit event */
+  onSubmit?: (event: SubmitEvent) => void;
 }
 
 export interface WavelengthFormRef<T extends object = Record<string, unknown>> {
@@ -122,8 +124,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
     placeholders,
     formWidth,
     layout,
-    onBack,
+    onLeft,
     onCenter,
+    onRight,
     onSubmit,
   } = props;
   const hostRef = useRef<WavelengthFormElement | null>(null);
@@ -131,8 +134,9 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
   const onChangeStable = useStableCallback(onChange);
   const onValidStable = useStableCallback(onValid);
   const onInvalidStable = useStableCallback(onInvalid);
-  const onBackStable = useStableCallback(onBack);
+  const onLeftStable = useStableCallback(onLeft);
   const onCenterStable = useStableCallback(onCenter);
+  const onRightStable = useStableCallback(onRight);
   const onSubmitStable = useStableCallback(onSubmit);
 
   // Set properties & bind events
@@ -206,19 +210,29 @@ function WavelengthFormInner<T extends object = Record<string, unknown>>(props: 
     el.addEventListener("form-change", handleChange as EventListener);
     el.addEventListener("form-valid", handleValid as EventListener);
     el.addEventListener("form-invalid", handleInvalid as EventListener);
-    el.addEventListener("form-back", onBackStable as EventListener);
+    el.addEventListener("form-left", onLeftStable as EventListener);
     el.addEventListener("form-center", onCenterStable as EventListener);
-    el.addEventListener("form-submit", onSubmitStable as EventListener);
+    el.addEventListener("form-right", onRightStable as EventListener);
+    el.addEventListener("submit", onSubmitStable as EventListener);
 
     return () => {
       el.removeEventListener("form-change", handleChange as EventListener);
       el.removeEventListener("form-valid", handleValid as EventListener);
       el.removeEventListener("form-invalid", handleInvalid as EventListener);
-      el.removeEventListener("form-back", onBackStable as EventListener);
+      el.removeEventListener("form-left", onLeftStable as EventListener);
       el.removeEventListener("form-center", onCenterStable as EventListener);
-      el.removeEventListener("form-submit", onSubmitStable as EventListener);
+      el.removeEventListener("form-right", onRightStable as EventListener);
+      el.removeEventListener("submit", onSubmitStable as EventListener);
     };
-  }, [onChangeStable, onValidStable, onInvalidStable, onBackStable, onCenterStable, onSubmitStable]);
+  }, [
+    onChangeStable,
+    onValidStable,
+    onInvalidStable,
+    onLeftStable,
+    onCenterStable,
+    onRightStable,
+    onSubmitStable,
+  ]);
 
   // Expose an imperative API (validate/getValue/setValue)
   useImperativeHandle(

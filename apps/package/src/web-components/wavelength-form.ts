@@ -315,6 +315,11 @@ export class WavelengthForm<T extends object> extends HTMLElement {
   private onSubmit = (e: Event) => {
     e.preventDefault();
     const res = this.validateAll();
+    const submitEvent =
+      typeof SubmitEvent === "function"
+        ? new SubmitEvent("submit", { bubbles: true, cancelable: true, composed: true })
+        : new Event("submit", { bubbles: true, cancelable: true, composed: true });
+    this.dispatchEvent(submitEvent);
     if (res.isValid) {
       this.dispatchEvent(new CustomEvent("form-valid", { detail: { value: res.value, issues: [] } }));
     } else {
@@ -465,9 +470,10 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     const rightSlot = document.createElement("div");
     rightSlot.className = "right";
 
-    const buildButton = (cfg: ButtonConfig, defaultEvent: string, defaultType: "button" | "submit") => {
+    const buildButton = (cfg: ButtonConfig, defaultEvent: string) => {
       const btn = document.createElement("wavelength-button");
-      const type = (cfg.buttonProps?.type as string) ?? defaultType;
+      const requestedType = (cfg.buttonProps?.type as string) ?? "";
+      const type = requestedType === "submit" ? "submit" : "button";
       if (cfg.buttonProps) {
         for (const [key, value] of Object.entries(cfg.buttonProps)) {
           if (key === "type") continue;
@@ -478,7 +484,7 @@ export class WavelengthForm<T extends object> extends HTMLElement {
       if (cfg.label) btn.textContent = cfg.label;
       btn.addEventListener("click", (e) => {
         const ev = cfg.eventName ?? defaultEvent;
-        if (type === "submit") {
+        if (requestedType === "submit") {
           form.requestSubmit();
         } else {
           e.preventDefault();
@@ -489,15 +495,15 @@ export class WavelengthForm<T extends object> extends HTMLElement {
     };
 
     if (this._leftButton) {
-      leftSlot.appendChild(buildButton(this._leftButton, "form-back", "button"));
+      leftSlot.appendChild(buildButton(this._leftButton, "form-left"));
     }
 
     if (this._centerButton) {
-      centerSlot.appendChild(buildButton(this._centerButton, "form-center", "button"));
+      centerSlot.appendChild(buildButton(this._centerButton, "form-center"));
     }
 
     if (this._rightButton) {
-      rightSlot.appendChild(buildButton(this._rightButton, "form-submit", "submit"));
+      rightSlot.appendChild(buildButton(this._rightButton, "form-right"));
     }
 
     if (leftSlot.children.length + centerSlot.children.length + rightSlot.children.length > 0) {

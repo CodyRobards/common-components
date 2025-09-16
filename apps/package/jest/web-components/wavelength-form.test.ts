@@ -35,7 +35,7 @@ describe("wavelength-form web component", () => {
     el.addEventListener("form-change", (e: Event) => change((e as CustomEvent).detail));
     el.addEventListener("form-valid", (e: Event) => valid((e as CustomEvent).detail));
 
-    el.rightButton = { label: "Submit" };
+    el.rightButton = { label: "Submit", buttonProps: { type: "submit" } };
 
     const input = el.shadowRoot!.querySelector("wavelength-input") as any;
     input.value = "A";
@@ -55,7 +55,7 @@ describe("wavelength-form web component", () => {
     const invalid = jest.fn();
     el.addEventListener("form-invalid", (e: Event) => invalid((e as CustomEvent).detail));
 
-    el.rightButton = { label: "Submit" };
+    el.rightButton = { label: "Submit", buttonProps: { type: "submit" } };
     const button = el.shadowRoot!.querySelector("wavelength-button")!;
     fireEvent.click(button);
     expect(invalid).toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe("wavelength-form web component", () => {
       password: z.string().min(5, { message: "Too short" }).regex(/[A-Z]/, { message: "Must include capital" }),
     });
 
-    el.rightButton = { label: "Submit" };
+    el.rightButton = { label: "Submit", buttonProps: { type: "submit" } };
     const button = el.shadowRoot!.querySelector("wavelength-button")!;
     fireEvent.click(button);
 
@@ -204,16 +204,37 @@ describe("wavelength-form web component", () => {
     expect(button).toBeNull();
   });
 
-  test("emits form-back when back button clicked", () => {
+  test("emits form-left when left button clicked", () => {
     document.body.innerHTML = `<wavelength-form></wavelength-form>`;
     const el = document.querySelector("wavelength-form") as any;
     el.leftButton = { label: "Back" };
     el.schema = z.object({ name: z.string() });
 
     const handler = jest.fn();
-    el.addEventListener("form-back", handler);
+    el.addEventListener("form-left", handler);
     const back = el.shadowRoot!.querySelector("wavelength-button")!;
     fireEvent.click(back);
+    expect(handler).toHaveBeenCalled();
+  });
+
+  test("requests submit when submit-type button clicked", () => {
+    document.body.innerHTML = `<wavelength-form></wavelength-form>`;
+    const el = document.querySelector("wavelength-form") as any;
+    el.rightButton = { label: "Submit", buttonProps: { type: "submit" } };
+    el.schema = z.object({ name: z.string() });
+
+    const handler = jest.fn();
+    el.addEventListener("form-right", handler);
+
+    const form = el.shadowRoot!.querySelector("form") as HTMLFormElement & {
+      requestSubmit: jest.Mock;
+    };
+    form.requestSubmit = jest.fn();
+
+    const button = el.shadowRoot!.querySelector("wavelength-button:last-of-type")!;
+    fireEvent.click(button);
+
+    expect(form.requestSubmit).toHaveBeenCalled();
     expect(handler).toHaveBeenCalled();
   });
 });
