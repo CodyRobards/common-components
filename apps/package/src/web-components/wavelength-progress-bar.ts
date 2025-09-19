@@ -90,4 +90,6 @@ export class WavelengthProgressBar extends HTMLElement {
   }
 }
 
-customElements.define("wavelength-progress-bar", WavelengthProgressBar);
+if (!customElements.get("wavelength-progress-bar")) {
+  customElements.define("wavelength-progress-bar", WavelengthProgressBar);
+}

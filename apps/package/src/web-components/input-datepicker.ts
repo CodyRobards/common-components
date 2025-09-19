@@ -31,4 +31,6 @@ export class WLInputDatePicker extends HTMLElement {
   }
 }
 
-customElements.define("wavelength-input-date-picker", WLInputDatePicker);
+if (!customElements.get("wavelength-input-date-picker")) {
+  customElements.define("wavelength-input-date-picker", WLInputDatePicker);
+}
