@@ -1,4 +1,5 @@
 import React, { useEffect, useImperativeHandle, useRef } from "react";
+import "../web-components/wavelength-form";
 import { z } from "zod";
 
 // ---- Types that mirror the web component's API ----

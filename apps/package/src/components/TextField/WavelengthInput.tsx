@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle, ChangeEvent, CSSProperties } from "react";
+import "../../web-components/wavelength-input";
 
 interface WavelengthInputProps extends React.HTMLAttributes<HTMLElement> {
   id?: string;

@@ -15,6 +15,17 @@ import "./web-components/wavelength-form";
 import "./web-components/wavelength-progress-bar";
 import "./web-components/wavelength-input";
 import "./web-components/wavelength-title-bar";
+import "./web-components/input-datepicker";
+
+// Web Component Class Exports
+export { SampleComponent } from "./web-components/sample-component";
+export { WavelengthBanner } from "./web-components/wavelength-banner";
+export { WavelengthButton } from "./web-components/wavelength-button";
+export { WavelengthForm as WavelengthFormElement } from "./web-components/wavelength-form";
+export { WavelengthProgressBar } from "./web-components/wavelength-progress-bar";
+export { WavelengthInput as WavelengthInputElement } from "./web-components/wavelength-input";
+export { WavelengthTitleBar } from "./web-components/wavelength-title-bar";
+export { WLInputDatePicker } from "./web-components/input-datepicker";
 
 // Function Exports
 export * from "./functions/math";
