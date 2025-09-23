@@ -7,11 +7,11 @@
 // You'll need to import your Web Components here:
 
 // Web Components
-import "./web-components/sample-component";
-import "./web-components/wavelength-banner";
-import "./web-components/wavelength-button";
-import "./web-components/wavelength-form";
-import "./web-components/wavelength-progress-bar";
-import "./web-components/wavelength-input";
-import "./web-components/wavelength-title-bar";
-import "./web-components/wavelength-date-picker";
+export * from "./web-components/sample-component";
+export * from "./web-components/wavelength-banner";
+export * from "./web-components/wavelength-button";
+export * from "./web-components/wavelength-form";
+export * from "./web-components/wavelength-progress-bar";
+export * from "./web-components/wavelength-input";
+export * from "./web-components/wavelength-title-bar";
+export * from "./web-components/wavelength-date-picker";
