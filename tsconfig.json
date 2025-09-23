@@ -32,7 +32,7 @@
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     "typeRoots": ["src/types", "./node_modules/@types"] /* Specify multiple folders that act like './node_modules/@types'. */,
-    "types": ["cypress-real-events"] /* Specify type package names to be included without being referenced in a source file. */,
+    // "types": ["cypress-real-events"] /* Specify type package names to be included without being referenced in a source file. */,
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
     // "allowImportingTsExtensions": true /* Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set. */,
@@ -106,8 +106,9 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["./apps/package/src/**/*", "./apps/testbed/src/**/*"],
+  "include": ["apps/packages/react-components/react-components/src/**/*", "apps/packages/react-components/web-components/src/**/*", "./apps/testbed/src/**/*"],
   // "files": [],
-  // "references": [{ "path": "./apps/package/" }, { "path": "./apps/testbed/" }]
-  "@wavelengthusaf/components": ["./apps/package/src"]
+  // "references": [{ "path": "./apps/packages/react-components" }, { "path": "./apps/testbed/" }]
+  "@wavelengthusaf/components": ["./apps/packages/react-components/src"],
+  "@wavelengthusaf/web-components": ["./apps/packages/web-components/src"]
 }

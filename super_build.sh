@@ -15,7 +15,8 @@ print_step() {
 }
 
 # Define directories
-PACKAGE_DIR="apps/package"
+WEB_DIR="apps/packages/web-components"
+REACT_DIR="apps/packages/react-components"
 TESTBED_DIR="apps/testbed"
 
 # Step 1: Uninstall all installation and build files
@@ -31,13 +32,17 @@ echo -e "${GREEN}public directories uninstalled.${NC}"
 print_step "Step 2: Reinstall Node Modules"
 npm install
 
-# Step 3: Re-build apps/package directory
-print_step "Step 3: Re-build apps/package directory"
-npm run build:package
+# Step 3: Re-build apps/packages/react-components directory
+print_step "Step 3: Re-build apps/packages/react-components directory"
+npm run build:packages
 
 # Step 4: Re-link the package >> testbed
 print_step "Step 4: Re-link the package to testbed"
-cd ${PACKAGE_DIR}
+cd ${WEB_DIR}
+npm link
+cd -
+cd ${REACT_DIR}
+npm link @wavelengthusaf/web-components
 npm link
 cd -
 cd ${TESTBED_DIR}

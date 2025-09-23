@@ -54,9 +54,9 @@ const meta: Meta<typeof WavelengthTitleBar> = {
       control: "color",
       description: "Sets the color for the main title and subtitle.",
     },
-    textShadow: {
-      control: "boolean",
-      description: "Sets the text shadow for the main title.",
+    shadowColor: {
+      control: "color",
+      description: "Sets the text shadow color for the main title.",
     },
   },
 } satisfies Meta<typeof WavelengthTitleBar>;
@@ -68,6 +68,6 @@ export const TitleBar: Story = {
     titleText: "Channel 01",
     subtitleText: "350th Spectrum Warfare Wing Applications",
     textColor: "#34649b",
-    textShadow: true,
+    shadowColor: "#ffffff",
   },
 };

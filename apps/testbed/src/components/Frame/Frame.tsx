@@ -16,7 +16,6 @@ const sections = [
         items: [
           { title: "Instructions", path: "/" },
           { title: "FAQs", path: "/Faqs" },
-          { title: "Playground", path: "/Playground" },
         ],
       },
     ],

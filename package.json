@@ -4,39 +4,42 @@
   "license": "MIT",
   "version": "0.0.0",
   "description": "Common component library used by Wavelength developers",
-  "main": "./apps/package/dist/index.js",
-  "module": "./apps/package/dist/index.mjs",
-  "types": "./apps/package/dist/index.d.ts",
   "type": "module",
+  "private": true,
   "workspaces": [
-    "/apps/package",
+    "/apps/packages/web-components",
+    "/apps/packages/react-components",
     "/apps/testbed"
   ],
   "files": [
-    "./apps/package/dist",
+    "./apps/packages/web-components/dist",
+    "./apps/packages/react-components/dist",
     "package.json",
     "README.md"
   ],
   "scripts": {
     "dev": "cd apps/testbed && npm run dev",
     "compile": "tsc",
-    "clean": "rm -rf apps/package/dist apps/testbed/dist",
+    "clean": "rm -rf apps/packages/react-components/dist apps/testbed/dist",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "test": "npm run test:jest && npm run test:cypress",
-    "test:jest": "cd apps/package && jest --runInBand --coverage",
+    "test": "npm run test:web && npm run test:react",
+    "test:react": "cd apps/packages/react-components && jest --runInBand --coverage",
+    "test:web": "cd apps/packages/web-components && jest --runInBand --coverage",
     "test:cypress": "cd apps/testbed && cypress run --browser electron --component",
-    "watch": "cd apps/package && npm run watch",
-    "watch:esm": "cd apps/package && npm run watch:esm",
-    "watch:cjs": "cd apps/package && npm run watch:cjs",
-    "build": "npm run clean && npm run build:package && npm run build:testbed",
-    "build:package": "cd apps/package && npm run build",
+    "watch:web": "cd apps/packages/web-components && npm run watch",
+    "watch:react": "cd apps/packages/react-components && npm run watch",
+    "watch": "concurrently -k \"npm run watch:web\" \"npm run watch:react\"",
+    "build": "npm run clean && npm run build:packages && npm run build:testbed",
+    "build:react": "cd apps/packages/react-components && npm run build",
+    "build:web": "cd apps/packages/web-components && npm run build",
+    "build:packages": "npm run build:web && npm run build:react",
     "build:testbed": "cd apps/testbed && npm run build",
     "publish": "npm publish",
     "storybook": "cd apps/testbed && npm run storybook"
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.wavelengthusaf.com/wavelength1/common-components"
+    "url": "https://gitlab.wavelengthusaf.com/common-components/common-components"
   },
   "keywords": [
     "usaf",
@@ -47,10 +50,8 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.25.7",
-    "@cypress/code-coverage": "^3.12.45",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.0",
-    "@types/cypress": "^1.1.6",
     "@types/jest": "^29.5.14",
     "@types/prismjs": "^1.26.4",
     "@types/react": "^18.3.10",
@@ -63,8 +64,6 @@
     "babel-plugin-prismjs": "^2.1.0",
     "concurrently": "^9.1.2",
     "css-loader": "^7.1.2",
-    "cypress": "^13.14.2",
-    "cypress-real-events": "^1.13.0",
     "eslint": "^8.57.1",
     "eslint-config-love": "^64.0.0",
     "eslint-config-prettier": "^9.1.0",
@@ -80,7 +79,6 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
-    "typescript": "^5.5.2",
     "vite": "^5.4.9"
   },
   "dependencies": {
@@ -89,6 +87,7 @@
     "@mui/icons-material": "^5.16.5",
     "@mui/material": "^5.15.7",
     "@storybook/manager-api": "^8.6.14",
+    "@testing-library/jest-dom": "^6.6.3",
     "react": "^18.2.0",
     "react-confetti-explosion": "^2.1.2",
     "react-copy-to-clipboard": "^5.1.0",
@@ -96,6 +95,7 @@
     "react-router-dom": "^6.26.2",
     "react-syntax-highlighter": "^15.5.0",
     "styled-components": "^6.1.12",
+    "typescript": "^5.5.2",
     "zod": "^4.0.17"
   }
 }

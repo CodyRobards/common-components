@@ -41,9 +41,27 @@ const meta: Meta<typeof WavelengthForm> = {
           <Source
             code={`import { WavelengthForm } from '@wavelengthusaf/components';
 
-const schema = z.object({ firstName: z.string(), lastName: z.string() });
+const sampleSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(1, { message: "FIRST NAME is required." })
+    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\\s'-]+$/), { message: "Alphabetical characters only." }),
+  middleName: z
+    .string()
+    .regex(new RegExp(/^(?![\\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\\s'-.]*$/), { message: "Alphabetical characters only." })
+    .optional(),
+  lastName: z
+    .string()
+    .min(1, { message: "LAST NAME is required." })
+    .regex(new RegExp(/^[a-zA-Zà-ÿÀ-Ÿ\\s'-]+$/), { message: "Alphabetical characters only." }),
+  additionalInfo: z
+    .string()
+    .regex(new RegExp(/^(?![\\s.]+$)[a-zA-Zà-ÿÀ-Ÿ\\s'-.]*$/), { message: "Alphabetical characters only." })
+    .optional(),
+});
 
-<WavelengthForm schema={schema} value={{ firstName: 'Clark', lastName: 'Kent' }} />`}
+<WavelengthForm inputProps={{ clearable: true }} schema={sampleSchema} value={{ firstName: 'Clark', lastName: 'Kent' }} />`}
             language="tsx"
           />
           <p>
@@ -73,8 +91,8 @@ const schema = z.object({ firstName: z.string(), lastName: z.string() });
           />
           <h2>Custom Buttons & Events</h2>
           <p>
-            Use <code>onLeft</code>, <code>onCenter</code>, <code>onRight</code>, and <code>onSubmit</code> (native submit) to
-            respond to button clicks or form submission. Set <code>buttonProps.type</code> to
+            Use <code>onLeft</code>, <code>onCenter</code>, <code>onRight</code>, and <code>onSubmit</code> (native submit) to respond to button clicks or form submission. Set{" "}
+            <code>buttonProps.type</code> to
             <code>&#39;submit&#39;</code> on any button when you want it to trigger the form submission flow.
           </p>
           <Source
@@ -195,11 +213,11 @@ export const WithLeftButton: Story = {
     schema: sampleSchema,
     value: { firstName: "Clark", lastName: "Kent" },
     leftButton: {
-      label: "Back",
+      label: "＜＜ Back",
       buttonProps: { id: "back-btn", variant: "text", size: "small" },
     },
   },
-  render: (args) => <WavelengthForm {...args} onLeft={() => console.log("left")} />,
+  render: (args) => <WavelengthForm {...args} onLeft={() => alert("＜＜ Back")} />,
 };
 
 export const WithCenterButton: Story = {
@@ -211,7 +229,7 @@ export const WithCenterButton: Story = {
       buttonProps: { id: "help-btn", variant: "contained", size: "medium" },
     },
   },
-  render: (args) => <WavelengthForm {...args} onCenter={() => console.log("center")} />,
+  render: (args) => <WavelengthForm {...args} onCenter={() => alert("Help")} />,
 };
 
 export const WithRightButton: Story = {
@@ -223,28 +241,7 @@ export const WithRightButton: Story = {
       buttonProps: { id: "next-btn", variant: "outlined", size: "small" },
     },
   },
-  render: (args) => <WavelengthForm {...args} />,
-};
-
-export const CustomRightButton: Story = {
-  args: {
-    schema: sampleSchema,
-    value: { firstName: "Clark", lastName: "Kent" },
-    rightButton: {
-      label: "Register",
-      buttonProps: { id: "register-btn", variant: "contained", size: "large" },
-    },
-  },
-  render: (args) => <WavelengthForm {...args} />,
-};
-
-export const WithInputProps: Story = {
-  args: {
-    schema: sampleSchema,
-    value: { firstName: "Clark", lastName: "Kent" },
-    inputProps: { width: "300px", "data-test": "story" },
-  },
-  render: (args) => <WavelengthForm {...args} />,
+  render: (args) => <WavelengthForm {...args} onRight={() => alert("Next ＞＞")} />,
 };
 
 export const WithCustomInputAndButtonProps: Story = {
@@ -307,42 +304,4 @@ export const WithSubmitHandler: Story = {
     },
   },
   render: (args) => <WavelengthForm {...args} onSubmit={(event) => console.log("submit", event)} />,
-};
-
-export const WithButtonEvents: Story = {
-  args: {
-    schema: sampleSchema,
-    value: { firstName: "Clark", lastName: "Kent" },
-    leftButton: { label: "Back" },
-    centerButton: { label: "Help" },
-    rightButton: { label: "Next" },
-  },
-  render: (args) => (
-    <WavelengthForm
-      {...args}
-      onLeft={() => console.log("left")}
-      onCenter={() => console.log("center")}
-      onRight={() => console.log("right")}
-    />
-  ),
-};
-
-export const MultiRowLayout: Story = {
-  args: {
-    schema: sampleSchema,
-    value: { firstName: "Clark", lastName: "Kent" },
-    layout: [2, 2],
-  },
-  render: (args) => <WavelengthForm {...args} />,
-};
-
-export const StyledForm: Story = {
-  args: {
-    schema: sampleSchema,
-    value: { firstName: "Clark", lastName: "Kent" },
-    title: "Styled",
-    titleColor: "#1976d2",
-    formWidth: "500px",
-  },
-  render: (args) => <WavelengthForm {...args} />,
 };

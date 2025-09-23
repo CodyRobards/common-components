@@ -13,7 +13,8 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     resolve: {
       alias: {
-        "@wavelengthusaf/components": path.resolve(__dirname, isCI ? "../../node_modules/@wavelengthusaf/components/dist/esm/index.js" : "../package/dist/esm/index.js"),
+        "@wavelengthusaf/components": path.resolve(__dirname, isCI ? "../../node_modules/@wavelengthusaf/components/dist/esm/index.js" : "../packages/react-components/dist/esm/index.js"),
+        "@wavelengthusaf/web-components": path.resolve(__dirname, isCI ? "../../node_modules/@wavelengthusaf/web-components/dist/esm/index.js" : "../packages/web-components/dist/esm/index.js"),
       },
     },
     server: {
@@ -42,7 +43,7 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
     },
     optimizeDeps: {
-      exclude: ["@wavelengthusaf/components"],
+      exclude: ["@wavelengthusaf/components", "@wavelengthusaf/web-components"],
     },
   };
 });

@@ -15,7 +15,8 @@ print_step() {
 }
 
 # Define directories
-PACKAGE_DIR="apps/package"
+WEB_DIR="apps/packages/web-components"
+REACT_DIR="apps/packages/react-components"
 TESTBED_DIR="apps/testbed"
 
 # Step 1: Compile the project
@@ -29,30 +30,40 @@ npm run lint
 
 # Step 3: Run Jest tests
 print_step "Step 3: Run Jest tests"
-npm run test:jest
+npm run test
 
-# Step 4: Run Cypress tests
-print_step "Step 4: Run Cypress tests"
-npx cypress install
-npm run test:cypress
-
-# Step 5: Simulate Publish Job
-print_step "Step 5: Simulate Publish Job"
-cd $PACKAGE_DIR
+# Step 4: Simulate Publish Job
+print_step "Step 4: Simulate Publish Job"
+cd $WEB_DIR
 
 if [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ]; then
     echo -e "${GREEN}Non-main branch detected. Packing and validating the package...${NC}"
     npm pack
     tar -tf $(npm pack | tail -n 1) || exit 1
     echo -e "${GREEN}Package validation completed. Ready for main branch merge.${NC}"
+    rm -rf *.tgz
 else
     echo -e "${GREEN}Main branch detected. Make sure that your changes work on a separate branch first before submitting a merge request. DO NOT PUSH CHANGES UP FROM MAIN BRANCH UNLESS YOU ARE TROUBLESHOOTING SOMETHING FOR IT!${NC}"
 fi
 
-cd ../../
+cd ../../../
 
-# Step 6: Simulate Website Build
-print_step "Step 6: Build the Website"
+cd $REACT_DIR
+
+if [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ]; then
+    echo -e "${GREEN}Non-main branch detected. Packing and validating the package...${NC}"
+    npm pack
+    tar -tf $(npm pack | tail -n 1) || exit 1
+    echo -e "${GREEN}Package validation completed. Ready for main branch merge.${NC}"
+    rm -rf *.tgz
+else
+    echo -e "${GREEN}Main branch detected. Make sure that your changes work on a separate branch first before submitting a merge request. DO NOT PUSH CHANGES UP FROM MAIN BRANCH UNLESS YOU ARE TROUBLESHOOTING SOMETHING FOR IT!${NC}"
+fi
+
+cd ../../../
+
+# Step 5: Simulate Website Build
+print_step "Step 5: Build the Website"
 cd $TESTBED_DIR
 npm install
 npm run build

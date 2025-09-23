@@ -128,7 +128,7 @@ export const RequiredField: Story = {
     placeholder: "This field is required",
     required: true,
     validationType: "onBlur",
-    errorMessage: "This field cannot be empty",
+    errorMessage: "This field cannot be empty.",
     width: "300px",
   },
 };

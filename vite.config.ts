@@ -15,7 +15,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@wavelengthusaf/components": path.resolve(__dirname, "../package/src"),
+      "@wavelengthusaf/components": path.resolve(__dirname, "../packages/react-components/src"),
     },
   },
 });

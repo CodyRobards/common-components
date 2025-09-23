@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import PageTitle from "./pages/PageTitle";
 import PageTrail from "./pages/PagePlaneTrail";
 import PageFooter from "./pages/PageFooter";
+import PageTextField from "./pages/PageTextField";
 // import PageCardFlip from './pages/PageCardFlip';
 // import PageCardFront from './pages/PageCardFront';
 // import PageCardBack from './pages/PageCardBack';
@@ -34,7 +35,6 @@ import PageFileDownloader from "./pages/PageFileDownloader";
 import PageDropdown from "./pages/PageDropdown";
 import PageSlider from "./pages/PageSlider";
 import PageFaq from "./pages/PageFaq";
-import PagePlayground from "./pages/PagePlayground";
 import { WavelengthFooter } from "@wavelengthusaf/components";
 import PageStyledButton from "./pages/PageStyledButton";
 // import PageTextField from "./pages/PageTextField";
@@ -45,7 +45,7 @@ import PageSubDataTableFive from "./pages/PageSubDataFive";
 import PageCommentDisplay from "./pages/PageCommentDisplay";
 // import PageWavelengthTestSnackbar from './pages/PageWavelengthTestSnackbar';
 import PageChildData from "./pages/pageChildDat";
-import PageDataInputTestThree from "./pages/dateInputTest";
+// import PageDataInputTestThree from "./pages/dateInputTest";
 import PageAutoTest from "./pages/ewAutoTest";
 // import PageInputDatePicker from "./pages/PageInputDatePicker";
 
@@ -72,7 +72,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PageHome />} />
           <Route path="/Faqs" element={<PageFaq />} />
-          <Route path="/Playground" element={<PagePlayground />} />
           <Route path="/Button" element={<PageButton />} />
           <Route path="/SearchBar" element={<PageSearchBar />} />
           <Route path="/Title&Subtitle" element={<PageTitle />} />
@@ -82,7 +81,7 @@ export default function App() {
           <Route path="/DragAndDrop" element={<PageDragAndDrop />} />
           <Route path="/Comment" element={<PageCommentDisplay />} />
           <Route path="/ProgressBar" element={<PageProgressBar />} />
-          <Route path="/DateInputThree" element={<PageDataInputTestThree />} />
+          {/* <Route path="/DateInputThree" element={<PageDataInputTestThree />} /> */}
           {/* <Route path="/InputDatePicker" element={<PageInputDatePicker />} /> */}
           {/* <Route path="/StandardComponent" element={<PageStandardComponent />} /> */}
           <Route path="/Footer" element={<PageFooter />} />
@@ -91,7 +90,7 @@ export default function App() {
           {/* <Route path="/WavelengthAppLogo" element={<PageWavelengthAppLogo />} /> */}
           <Route path="/FileDownloader" element={<PageFileDownloader />} />
           <Route path="/Slider" element={<PageSlider />} />
-          <Route path="/PageAutoTest" element={<PageAutoTest />} />
+          {/* <Route path="/PageAutoTest" element={<PageAutoTest />} /> */}
           {/* <Route path="/old563EWSLogo" element={<PageOld563EWSLogo />} />
           <Route path="/ARROW" element={<PageArrow />} />
           <Route path="/Portal" element={<PagePortal />} />
@@ -119,6 +118,8 @@ export default function App() {
           <Route path="/SpinningLogo" element={<PageSpinningLogo />} />
           <Route path="/SubDataFour" element={<PageSubDataTableFour />} />
           <Route path="/SubDataFive" element={<PageSubDataTableFive />} />
+          <Route path="/TextField" element={<PageTextField />} />
+
           {/* AutoTestThree */}
           {/* <Route path="/WavelengthTestSnackbar" element={<PageWavelengthTestSnackbar />} /> */}
         </Routes>
