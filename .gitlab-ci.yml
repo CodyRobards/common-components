@@ -1,0 +1,122 @@
+stages:
+  - setup
+  - build
+  - deploy
+  - post_deploy
+  - pages
+
+default:
+  image: node:20
+  before_script:
+    - corepack enable
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm
+
+install_dependencies:
+  stage: setup
+  script:
+    - npm ci
+  artifacts:
+    name: "node-modules-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - node_modules/
+      - apps/packages/web-components/node_modules/
+      - apps/packages/react-components/node_modules/
+      - apps/testbed/node_modules/
+    expire_in: 1 week
+
+build_packages:
+  stage: build
+  needs:
+    - job: install_dependencies
+      artifacts: true
+  script:
+    - npm run build:packages
+  artifacts:
+    name: "package-builds-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - apps/packages/web-components/dist/
+      - apps/packages/react-components/dist/
+    expire_in: 1 week
+
+deploy_packages:
+  stage: deploy
+  needs:
+    - job: install_dependencies
+      artifacts: true
+    - job: build_packages
+      artifacts: true
+  script:
+    - set -euo pipefail
+    - mkdir -p dist-artifacts
+    - |
+      pack_package() {
+        local package_dir="$1"
+        echo "Packing ${package_dir}"
+        (cd "${package_dir}" && npm pack --pack-destination "$CI_PROJECT_DIR/dist-artifacts")
+      }
+    - |
+      publish_package() {
+        local package_dir="$1"
+        local package_name package_version
+        package_name=$(node -p "require('${package_dir}/package.json').name")
+        package_version=$(node -p "require('${package_dir}/package.json').version")
+        if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
+          echo "${package_name}@${package_version} already exists, skipping publish."
+        else
+          echo "Publishing ${package_name}@${package_version}"
+          (cd "${package_dir}" && npm publish --access public)
+        fi
+      }
+    - |
+      if [ "${CI_COMMIT_BRANCH}" = "main" ]; then
+        if [ -z "${NPM_TOKEN:-}" ]; then
+          echo "NPM_TOKEN is required to publish" >&2
+          exit 1
+        fi
+        npm config set //registry.npmjs.org/:_authToken="${NPM_TOKEN}"
+        publish_package apps/packages/web-components
+        publish_package apps/packages/react-components
+      else
+        pack_package apps/packages/web-components
+        pack_package apps/packages/react-components
+      fi
+  artifacts:
+    when: always
+    name: "package-artifacts-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - dist-artifacts/
+    expire_in: 1 week
+
+storybook_build:
+  stage: post_deploy
+  needs:
+    - job: deploy_packages
+      artifacts: true
+    - job: install_dependencies
+      artifacts: true
+    - job: build_packages
+      artifacts: true
+  script:
+    - npm run build-storybook --workspace common-components-testbed
+  artifacts:
+    name: "storybook-${CI_COMMIT_REF_SLUG}"
+    paths:
+      - apps/testbed/storybook-static/
+    expire_in: 1 week
+
+pages:
+  stage: pages
+  needs:
+    - job: storybook_build
+      artifacts: true
+  script:
+    - rm -rf public
+    - mv apps/testbed/storybook-static public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
