@@ -65,7 +65,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.16.5",
     "@mui/material": "^5.15.7",
-    "@wavelengthusaf/web-components": "^1.0.1",
+    "@wavelengthusaf/web-components": "workspace:*",
     "react": "^18.2.0",
     "react-router-dom": "^6.26.2",
     "styled-components": "^6.1.12",
