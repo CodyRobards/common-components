@@ -19,6 +19,7 @@
     "dist/**/*"
   ],
   "scripts": {
+    "prebuild": "npm run build --workspace @wavelengthusaf/web-components",
     "compile": "tsc",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "jest --runInBand --coverage",
@@ -65,7 +66,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.16.5",
     "@mui/material": "^5.15.7",
-    "@wavelengthusaf/web-components": "workspace:*",
+    "@wavelengthusaf/web-components": "file:../web-components",
     "react": "^18.2.0",
     "react-router-dom": "^6.26.2",
     "styled-components": "^6.1.12",
