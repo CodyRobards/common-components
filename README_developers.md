@@ -18,15 +18,20 @@
 
 1. When you are ready to push changes to your branch, run the `pipeline_check.sh` script to ensure that your changes will pass the pipeline. If any of the stages fails, go back and fix any issues and then run the script again.
 
-1. Once the locally-run pipeline is passing, run `cd apps/packages` from the root directory, and then run `npm version <major|minor|patch>`. Select the version update type that corresponds to the changes you made. Use your best judgement when making your decision:
+1. Once the locally-run pipeline is passing, follow the [dual-package release workflow](docs/dual-publish/release-workflow.md) to determine which workspaces need new versions:
 
-   1. `patch` - used when refactoring or updating existing components.
-   2. `minor` - used when making new components.
-   3. `major` - used when overhauling a large portion of the project.
+   - `@wavelengthusaf/web-components` (located in `apps/packages/web-components`)
+   - `@wavelengthusaf/components` (located in `apps/packages/react-components`)
 
-1. Go into `apps/testbed/src/stories/Configure.mdx` and update the version number manually (should be around line 39).
+   Run `npm version <major|minor|patch>` inside **each** workspace directory that needs a release. The workflow guide contains detailed guidance about when to bump one package versus coordinating both, along with semantic-versioning examples.
 
-1. Go into the `README.md` file (located in the `apps/packages` directory) and update the release notes to include the new version number and description of the changes you made.
+1. Update release documentation for every workspace that is shipping:
+
+   - Add entries to both package READMEs: [`apps/packages/web-components/README.md`](apps/packages/web-components/README.md) and [`apps/packages/react-components/README.md`](apps/packages/react-components/README.md).
+   - Update the Storybook version badge in [`apps/testbed/src/stories/Configure.mdx`](apps/testbed/src/stories/Configure.mdx) so it matches the React package version that will be published.
+   - Verify that the published npm pages reflect the new versions after release: [`@wavelengthusaf/web-components`](https://www.npmjs.com/package/@wavelengthusaf/web-components) and [`@wavelengthusaf/components`](https://www.npmjs.com/package/@wavelengthusaf/components).
+
+   Refer back to the release workflow for the full coordinated checklist, including Storybook validation steps.
 
 1. Now your ready to push your changes to your branch. Enter the following commands:
 
@@ -37,6 +42,8 @@
 1. Now that your new version of the package is ready to be pushed up and merged into main, you may now submit a merge request on GitLab. Make sure that you assign the request to yourself and to assign one of the Common Components reps as a reviewer. Have them review your changes and if they are good, have them approve the merge request. Common Components reps have the Owner role on the GitLab, which means they are the only ones who can approve of merge requests.
 
 1. Go to `https://www.npmjs.com/package/@wavelengthusaf/components` to confirm that the package has been updated with your new changes.
+
+1. If the release required publishing both packages, repeat the npm verification step for `https://www.npmjs.com/package/@wavelengthusaf/web-components`.
 
 1. Go back to your VS Code and run `git checkout main`, followed by `git pull`. Once you've pulled the changes down, switch back to your existing branch using `git checkout <branch>`, and then run `git merge main`. If there are any merge conflicts, make sure you resolve them at this step. If you have uncommitted files before the merge, make sure you run `git stash` before switching to the `main` branch. After merging, run `git stash apply` and fix any merge conflicts.
 

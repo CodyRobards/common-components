@@ -113,3 +113,9 @@ Web Components are ideal for:
 - <b>Design Systems</b> – Encapsulated styles, reusable components across frameworks.
 - <b>Embedded Widgets</b> – Drop a component into any page via CDN or script tag.
 - <b>CMS Plugins</b> – Add dynamic, styled functionality to CMS content safety.
+
+## Releasing updates
+
+- Follow the [dual-package release workflow](docs/dual-publish/release-workflow.md) when preparing a new version. It explains how `@wavelengthusaf/web-components` drives the React wrapper package (`@wavelengthusaf/components`) and when the versions should be bumped together.
+- Any change that alters the generated custom elements (new attributes, bug fixes, styling, etc.) requires a matching React wrapper release so the dependency range in `@wavelengthusaf/components` includes the new tarball version.
+- Update the web-components “Release Notes” section in this README alongside the React package’s release notes and adjust the Storybook landing badge (`apps/testbed/src/stories/Configure.mdx`) before publishing. Coordinating these updates keeps the npm pages and Storybook deployment in sync with the shipped functionality.
