@@ -11,7 +11,7 @@ export * from "./functions/math";
 export * from "./functions/string";
 
 // Buttons
-export * from "./components/buttons/WavelengthButton/WavelengthButton";
+export { WavelengthButton } from "@wavelengthusaf/web-components";
 export * from "./components/buttons/WavelengthDropdownButton/WavelengthDropdownButton";
 export * from "./components/buttons/WavelengthDropdownButton/WavelengthAutocomplete";
 export * from "./components/buttons/WavelengthFileDownloader";
@@ -34,7 +34,7 @@ export * from "./components/PageComponents/WavelengthSideBar";
 export * from "./components/PageComponents/WavelengthSpinningLogo";
 export * from "./components/PageComponents/WavelengthSpinningLogoComponent";
 export * from "./components/PageComponents/WavelengthDragAndDrop";
-export * from "./components/PageComponents/WavelengthProgressBar";
+export { WavelengthProgressBar } from "@wavelengthusaf/web-components";
 export * from "./components/PageComponents/WavelengthCommentDisplay";
 export * from "./components/PageComponents/WavelengthPermissionAlert";
 export * from "./components/PageComponents/WavelengthAccessAlert";
@@ -44,11 +44,11 @@ export * from "./components/PageComponents/WavelengthAlert";
 export * from "./components/footers/WavelengthFooter/WavelengthFooter";
 
 // Forms
-export * from "./components/forms/WavelengthForm";
+export { WavelengthForm } from "@wavelengthusaf/web-components";
 
 // Headers
-export * from "./components/headers/WavelengthTitleBar/WavelengthTitleBar";
-export * from "./components/headers/WavelengthTitleBar/WavelengthBanner";
+export { WavelengthTitleBar } from "@wavelengthusaf/web-components";
+export { WavelengthBanner } from "@wavelengthusaf/web-components";
 
 // Logos
 export * from "./components/logos/applogo/WavelengthAppLogo";
@@ -83,7 +83,7 @@ export * from "./components/carousels/WavelengthSliderCarousel";
 export * from "./components/pagination/WavelengthDefaultPagination";
 
 // TextField
-export * from "./components/TextField/WavelengthInput";
+export { WavelengthInput } from "@wavelengthusaf/web-components";
 
 // DataTable
 export * from "./components/DataTable/WavelengthDataTable";
@@ -94,7 +94,7 @@ export * from "./components/DataTable/NestedDataTable/NestedDataTable";
 export * from "./components/AutoComplete/WavelengthAutoComplete";
 
 // Inputs
-export * from "./components/inputs/WavelengthDatePicker";
+export { WavelengthDatePicker } from "@wavelengthusaf/web-components";
 
 // Samples
-export * from "./components/samples/SampleComponent";
+export { SampleComponent } from "@wavelengthusaf/web-components";
