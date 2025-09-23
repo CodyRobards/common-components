@@ -1,85 +1,79 @@
 #!/bin/bash
 
-# Exit on error
-set -e
+set -euo pipefail
 
-# Define colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Helper function to print a step header
+ROOT_DIR="$(pwd)"
+WEB_DIR="apps/packages/web-components"
+REACT_DIR="apps/packages/react-components"
+
 print_step() {
     echo -e "\n${YELLOW}>>> $1 <<<${NC}\n"
 }
 
-# Define directories
-WEB_DIR="apps/packages/web-components"
-REACT_DIR="apps/packages/react-components"
-TESTBED_DIR="apps/testbed"
+cleanup_tarball() {
+    local tarball_path="$1"
+    if [ -f "$tarball_path" ]; then
+        rm -f "$tarball_path"
+    fi
+}
 
-# Step 1: Compile the project
-print_step "Step 1: Compile the project"
+check_react_dependency_range() {
+    local web_version="$1"
+    local react_range
+    react_range=$(node -p "require('${REACT_DIR}/package.json').dependencies['@wavelengthusaf/web-components']")
+
+    if ! npx --yes semver "$web_version" -r "$react_range" >/dev/null 2>&1; then
+        echo -e "${RED}React dependency range '${react_range}' does not include web components version ${web_version}.${NC}"
+        exit 1
+    fi
+}
+
+pack_workspace() {
+    local workspace_dir="$1"
+    local workspace_name
+    workspace_name=$(basename "$workspace_dir")
+
+    print_step "Packing ${workspace_name}"
+
+    pushd "$workspace_dir" >/dev/null
+    local tarball
+    tarball=$(npm pack)
+    tar -tf "$tarball" >/dev/null
+    local tarball_path="${workspace_dir}/${tarball}"
+    popd >/dev/null
+
+    echo -e "${GREEN}Packed ${workspace_name} -> ${tarball}${NC}"
+
+    if [ "$workspace_dir" = "$WEB_DIR" ]; then
+        local web_version
+        web_version=$(node -p "require('${workspace_dir}/package.json').version")
+        check_react_dependency_range "$web_version"
+    fi
+
+    cleanup_tarball "$tarball_path"
+}
+
+print_step "Install workspace dependencies"
 npm ci
-npm run build
 
-# Step 2: Lint the project
-print_step "Step 2: Run Linter"
+print_step "Build package workspaces"
+npm run build:packages
+
+print_step "Run lint checks"
 npm run lint
 
-# Step 3: Run Jest tests
-print_step "Step 3: Run Jest tests"
+print_step "Run unit tests"
 npm run test
 
-# Step 4: Simulate Publish Job
-print_step "Step 4: Simulate Publish Job"
-cd $WEB_DIR
+pack_workspace "$WEB_DIR"
+pack_workspace "$REACT_DIR"
 
-if [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ]; then
-    echo -e "${GREEN}Non-main branch detected. Packing and validating the package...${NC}"
-    npm pack
-    tar -tf $(npm pack | tail -n 1) || exit 1
-    echo -e "${GREEN}Package validation completed. Ready for main branch merge.${NC}"
-    rm -rf *.tgz
-else
-    echo -e "${GREEN}Main branch detected. Make sure that your changes work on a separate branch first before submitting a merge request. DO NOT PUSH CHANGES UP FROM MAIN BRANCH UNLESS YOU ARE TROUBLESHOOTING SOMETHING FOR IT!${NC}"
-fi
+print_step "Build Storybook"
+npm run build-storybook --workspace common-components-testbed
 
-cd ../../../
-
-cd $REACT_DIR
-
-if [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ]; then
-    echo -e "${GREEN}Non-main branch detected. Packing and validating the package...${NC}"
-    npm pack
-    tar -tf $(npm pack | tail -n 1) || exit 1
-    echo -e "${GREEN}Package validation completed. Ready for main branch merge.${NC}"
-    rm -rf *.tgz
-else
-    echo -e "${GREEN}Main branch detected. Make sure that your changes work on a separate branch first before submitting a merge request. DO NOT PUSH CHANGES UP FROM MAIN BRANCH UNLESS YOU ARE TROUBLESHOOTING SOMETHING FOR IT!${NC}"
-fi
-
-cd ../../../
-
-# Step 5: Simulate Website Build
-print_step "Step 5: Build the Website"
-cd $TESTBED_DIR
-npm install
-npm run build
-
-cd ../../
-
-if [ -d "public" ]; then
-    echo -e "${GREEN}Public directory already exists. Skipping creation.${NC}"
-else
-    echo "Creating public directory."
-    echo -e "${GREEN}Creating public directory.${NC}"
-    mkdir public
-    cp -R apps/testbed/dist/. public/.
-fi
-
-cd ../../
-
-# Success
 print_step "Pipeline simulation completed successfully!"
