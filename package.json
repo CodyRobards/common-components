@@ -6,11 +6,12 @@
   "description": "Common component library used by Wavelength developers",
   "type": "module",
   "private": true,
-  "workspaces": [
-    "/apps/packages/web-components",
-    "/apps/packages/react-components",
-    "/apps/testbed"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/packages/*",
+      "apps/testbed"
+    ]
+  },
   "files": [
     "./apps/packages/web-components/dist",
     "./apps/packages/react-components/dist",

@@ -12,6 +12,8 @@
 
 1. After making a new branch, run the `super_build.sh` script. Once the script finishes, all node modules should be installed and built, and the directories linked to each other. You are now ready to start developing!
 
+1. Building the React component package (`npm run build:react`) will now automatically build the Web Components workspace first so that `@wavelengthusaf/web-components` type declarations are always available. You no longer need to manually run the Web Components build before compiling React components from a clean checkout.
+
 1. For building new components, It is recommended to copy an existing component, and changing the necessary code to match the design you are working with. The same goes for the webpage; copy an existing webpage and change it to your needs.
 
 1. When you are ready to push changes to your branch, run the `pipeline_check.sh` script to ensure that your changes will pass the pipeline. If any of the stages fails, go back and fix any issues and then run the script again.
