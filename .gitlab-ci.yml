@@ -1,5 +1,6 @@
 stages:
   - setup
+  - test
   - build
   - deploy
   - post_deploy
@@ -26,6 +27,22 @@ install_dependencies:
       - apps/packages/react-components/node_modules/
       - apps/testbed/node_modules/
     expire_in: 1 week
+
+lint_checks:
+  stage: test
+  needs:
+    - job: install_dependencies
+      artifacts: true
+  script:
+    - npm run lint
+
+unit_tests:
+  stage: test
+  needs:
+    - job: install_dependencies
+      artifacts: true
+  script:
+    - npm run test
 
 build_packages:
   stage: build
