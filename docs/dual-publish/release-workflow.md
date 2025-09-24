@@ -74,7 +74,7 @@ The repository ships with both a local helper script and a GitLab pipeline that 
 2. **CI stages** – the [`.gitlab-ci.yml`](../../.gitlab-ci.yml) pipeline performs the same steps and, on `main`, publishes the packages and Storybook:
    - `install_dependencies` installs all workspaces and caches the `node_modules` folders.
    - `build_packages` runs `npm run build:packages` so both `dist/` folders are ready.
-   - `deploy_packages` packs both packages on branches and publishes them when running on `main` (requires `NPM_TOKEN`).
+  - `deploy_packages` packs both packages on branches and publishes them when running on `main` (requires an npm auth token exposed via `NPM_TOKEN` or `NODE_AUTH_TOKEN`).
    - `storybook_build` builds the `common-components-testbed` Storybook using the freshly built packages.
    - `pages` publishes the Storybook static site when the pipeline runs on `main`.
 
