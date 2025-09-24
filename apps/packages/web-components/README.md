@@ -14,6 +14,11 @@ npm install @wavelengthusaf/web-components
 
 ## Release Notes
 
+### 1.0.1
+
+- 2025-09-24
+- Disabled sourcemap emission for production builds, trimming the npm tarball from roughly 1000 KB to 616 KB (~38% smaller).
+
 ### 1.0.0
 
 - 9/X/2025
