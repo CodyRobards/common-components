@@ -16,7 +16,8 @@
   },
   "type": "module",
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "!dist/**/*.map"
   ],
   "scripts": {
     "prebuild": "npm run build --workspace @wavelengthusaf/web-components",
@@ -26,8 +27,8 @@
     "build:esm": "tsup src/index.ts --format esm --dts --outDir dist/esm",
     "build:cjs": "tsup src/index.ts --format cjs --outDir dist/cjs",
     "build": "npm run build:esm && npm run build:cjs",
-    "watch:esm": "tsup src/index.ts --format esm --dts --outDir dist/esm --watch && tsc --jsx react-jsx --project ./tsconfig.json",
-    "watch:cjs": "tsup src/index.ts --format cjs --outDir dist/cjs --watch && tsc --jsx react-jsx --project ./tsconfig.json",
+    "watch:esm": "tsup src/index.ts --format esm --dts --outDir dist/esm --sourcemap --watch && tsc --jsx react-jsx --project ./tsconfig.json",
+    "watch:cjs": "tsup src/index.ts --format cjs --outDir dist/cjs --sourcemap --watch && tsc --jsx react-jsx --project ./tsconfig.json",
     "watch": "concurrently -k \"npm run watch:esm\" \"npm run watch:cjs\""
   },
   "repository": {
