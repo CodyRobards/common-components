@@ -25,7 +25,7 @@ cleanup_tarball() {
 check_react_dependency_range() {
     local web_version="$1"
     local react_range
-    react_range=$(node -p "require('${REACT_DIR}/package.json').dependencies['@wavelengthusaf/web-components']")
+    react_range=$(node -p "const path=require('path');require(path.resolve('${REACT_DIR}', 'package.json')).dependencies['@wavelengthusaf/web-components']")
 
     if ! npx --yes semver "$web_version" -r "$react_range" >/dev/null 2>&1; then
         echo -e "${RED}React dependency range '${react_range}' does not include web components version ${web_version}.${NC}"
@@ -51,7 +51,7 @@ pack_workspace() {
 
     if [ "$workspace_dir" = "$WEB_DIR" ]; then
         local web_version
-        web_version=$(node -p "require('${workspace_dir}/package.json').version")
+        web_version=$(node -p "const path=require('path');require(path.resolve('${workspace_dir}', 'package.json')).version")
         check_react_dependency_range "$web_version"
     fi
 
