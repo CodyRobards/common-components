@@ -10,4 +10,5 @@ export default defineConfig({
   outDir: "dist",
   minify: false,
   target: "es2020",
+  external: ["zod"],
 });
